@@ -556,5 +556,281 @@
             "po"
         ],
         "type": "katakana"
+    },
+    {
+        "id": "kya",
+        "kana": "キャ",
+        "romaji": [
+            "kya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "kyu",
+        "kana": "キュ",
+        "romaji": [
+            "kyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "kyo",
+        "kana": "キョ",
+        "romaji": [
+            "kyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "sha",
+        "kana": "シャ",
+        "romaji": [
+            "sha",
+            "sya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "shu",
+        "kana": "シュ",
+        "romaji": [
+            "shu",
+            "syu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "sho",
+        "kana": "ショ",
+        "romaji": [
+            "sho",
+            "syo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "cha",
+        "kana": "チャ",
+        "romaji": [
+            "cha",
+            "tya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "chu",
+        "kana": "チュ",
+        "romaji": [
+            "chu",
+            "tyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "cho",
+        "kana": "チョ",
+        "romaji": [
+            "cho",
+            "tyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "nya",
+        "kana": "ニャ",
+        "romaji": [
+            "nya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "nyu",
+        "kana": "ニュ",
+        "romaji": [
+            "nyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "nyo",
+        "kana": "ニョ",
+        "romaji": [
+            "nyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "hya",
+        "kana": "ヒャ",
+        "romaji": [
+            "hya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "hyu",
+        "kana": "ヒュ",
+        "romaji": [
+            "hyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "hyo",
+        "kana": "ヒョ",
+        "romaji": [
+            "hyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "mya",
+        "kana": "ミャ",
+        "romaji": [
+            "mya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "myu",
+        "kana": "ミュ",
+        "romaji": [
+            "myu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "myo",
+        "kana": "ミョ",
+        "romaji": [
+            "myo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "rya",
+        "kana": "リャ",
+        "romaji": [
+            "rya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "ryu",
+        "kana": "リュ",
+        "romaji": [
+            "ryu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "ryo",
+        "kana": "リョ",
+        "romaji": [
+            "ryo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "gya",
+        "kana": "ギャ",
+        "romaji": [
+            "gya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "gyu",
+        "kana": "ギュ",
+        "romaji": [
+            "gyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "gyo",
+        "kana": "ギョ",
+        "romaji": [
+            "gyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "ja",
+        "kana": "ジャ",
+        "romaji": [
+            "ja",
+            "jya",
+            "zya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "ju",
+        "kana": "ジュ",
+        "romaji": [
+            "ju",
+            "jyu",
+            "zyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "jo",
+        "kana": "ジョ",
+        "romaji": [
+            "jo",
+            "jyo",
+            "zyo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "bya",
+        "kana": "ビャ",
+        "romaji": [
+            "bya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "byu",
+        "kana": "ビュ",
+        "romaji": [
+            "byu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "byo",
+        "kana": "ビョ",
+        "romaji": [
+            "byo"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "pya",
+        "kana": "ピャ",
+        "romaji": [
+            "pya"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "pyu",
+        "kana": "ピュ",
+        "romaji": [
+            "pyu"
+        ],
+        "type": "katakana"
+    },
+    {
+        "id": "pyo",
+        "kana": "ピョ",
+        "romaji": [
+            "pyo"
+        ],
+        "type": "katakana"
     }
 ]
