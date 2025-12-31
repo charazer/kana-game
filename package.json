@@ -1,0 +1,18 @@
+{
+    "name": "kana-game",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "eslint . --ext .ts,.js",
+        "test": "echo \"No tests yet\" && exit 0",
+        "test:responsive": "node test-responsive.js"
+    },
+    "devDependencies": {
+        "puppeteer": "^24.34.0",
+        "typescript": "^5.0.0",
+        "vite": "^5.0.0"
+    }
+}

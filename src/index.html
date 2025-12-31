@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kana Game (Prototype)</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <div class="header-title">
+          <h1>🎌 Kana Game</h1>
+        </div>
+        <div class="header-controls">
+          <!-- Settings Section -->
+          <div class="control-section settings-section">
+            <div class="section-label">Settings</div>
+            <div class="section-items">
+              <div class="setting-item">
+                <label for="game-mode">Mode</label>
+                <select id="game-mode">
+                  <option value="timed">Timed</option>
+                  <option value="practice">Practice</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label for="kana-set">Kana Set</label>
+                <select id="kana-set">
+                  <option value="hiragana">Hiragana</option>
+                  <option value="katakana">Katakana</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label for="audio-toggle">Audio</label>
+                <label class="checkbox-control" for="audio-toggle">
+                  <input type="checkbox" id="audio-toggle" />
+                  <span>🔊 Enabled</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Stats Section -->
+          <div class="control-section stats-section">
+            <div class="section-label">Stats</div>
+            <div class="section-items">
+              <div class="stat-box score-box">
+                <label>Score</label>
+                <div id="score">0</div>
+              </div>
+              <div class="stat-box combo-box">
+                <label>Combo</label>
+                <div id="combo">0x</div>
+              </div>
+              <div class="stat-box speed-box">
+                <label>Speed</label>
+                <div id="speed">1.0x</div>
+              </div>
+              <div class="stat-box lives-box">
+                <label>Lives</label>
+                <div id="lives">❤️ ❤️ ❤️</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Controls Section -->
+          <div class="control-section controls-section">
+            <div class="section-label">Controls</div>
+            <div class="section-items">
+              <button id="end-game" class="btn-end-game">
+                <span class="btn-left">🛑</span>
+                <span class="btn-label">End</span>
+                <span class="btn-right"><kbd>Esc</kbd></span>
+              </button>
+              <button id="pause" class="btn-pause">
+                <span class="btn-left">⏸️</span>
+                <span class="btn-label">Pause</span>
+                <span class="btn-right"><kbd>Space</kbd></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="game-area">
+        <div id="tokens"></div>
+        <div id="start-screen">
+          <div class="start-screen-content">
+            <h2>🎌 Kana Game</h2>
+            <p>Type the romaji for falling kana characters!</p>
+            <div id="high-scores-start" class="high-scores-list"></div>
+            <button id="start" class="btn-start">
+              <span class="btn-left">🎌</span>
+              <span class="btn-label">Start Game</span>
+              <span class="btn-right"><kbd>Enter</kbd></span>
+            </button>
+          </div>
+        </div>
+        <div id="game-over" class="hidden">
+          <div class="game-over-content">
+            <h2>Game Over!</h2>
+            <p class="final-score">Final Score: <span id="final-score">0</span></p>
+            <p id="new-high-score" class="new-high-score hidden">🎉 New High Score! 🎉</p>
+            <div id="high-scores-end" class="high-scores-list"></div>
+            <button id="restart" class="btn-restart">
+              <span class="btn-left">🔁</span>
+              <span class="btn-label">Play Again</span>
+              <span class="btn-right"><kbd>Enter</kbd></span>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <div id="input-display">
+          <label>Your input:</label>
+          <div id="input-echo">_</div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
