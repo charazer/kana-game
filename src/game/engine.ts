@@ -15,6 +15,48 @@ export type Renderer = {
 
 import type { InputManager } from './input'
 
+// Game constants
+const INITIAL_LIVES = 3
+const BASE_POINTS = 10
+const MAX_TIME_BONUS = 10
+const COMBO_MULTIPLIER = 0.05
+const SPAWN_INTERVAL = 0.9 // seconds
+const DANGER_ZONE = 80 // pixels from bottom
+const TOKEN_WIDTH = 72 // pixels
+const SPAWN_MARGIN = 20 // pixels
+const MIN_TOKEN_DISTANCE = 100 // pixels
+const MAX_SPAWN_ATTEMPTS = 10
+
+// Speed progression constants (timed mode)
+const SPEED_INCREASE_INTERVAL = 15 // seconds
+const SPEED_INCREASE_PERCENT = 0.10 // 10% per interval
+const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
+
+// Token flash timing
+const FLASH_SUCCESS_DURATION = 200 // ms
+const FLASH_MISS_DURATION = 300 // ms
+
+// Weighted spawn system
+const WEIGHT_UNSEEN = 10000
+const WEIGHT_VERY_RECENT = 1 // < 5 seconds
+const WEIGHT_RECENT = 10 // 5-15 seconds
+const WEIGHT_MODERATE = 50 // 15-30 seconds
+const WEIGHT_OLD = 100 // > 30 seconds
+const TIME_THRESHOLD_VERY_RECENT = 5000 // ms
+const TIME_THRESHOLD_RECENT = 15000 // ms
+const TIME_THRESHOLD_MODERATE = 30000 // ms
+
+// Spawn overlap detection
+const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
+
+// Practice mode settings
+const PRACTICE_BASE_SPEED = 20 // pixels/sec
+const PRACTICE_MAX_TOKENS = 5
+
+// Timed mode settings
+const TIMED_BASE_SPEED = 40 // pixels/sec (reduced from 60)
+const TIMED_MAX_TOKENS = 8
+
 export class GameEngine {
   renderer: Renderer
   input: InputManager
@@ -22,7 +64,7 @@ export class GameEngine {
   last = 0
   tokens: Array<{ id: string; entry: KanaEntry; el: HTMLElement; kana: string; y: number; x:number; spawnTime: number }>
   score = 0
-  lives = 3
+  lives = INITIAL_LIVES
   combo = 0
   gameTime = 0 // total time elapsed in current game
   gameMode: 'practice' | 'timed' = 'timed'
@@ -34,11 +76,11 @@ export class GameEngine {
   kanaSet: KanaEntry[] = []
   kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown
   spawnAccumulator = 0
-  spawnInterval = 0.9 // seconds
-  baseSpeed = 60 // base pixels/sec
-  speed = 60 // current pixels/sec
+  spawnInterval = SPAWN_INTERVAL
+  baseSpeed = TIMED_BASE_SPEED
+  speed = TIMED_BASE_SPEED
   lastSpeedMultiplier = 1.0 // track last speed multiplier to detect changes
-  maxActiveTokens = 8 // limit to prevent overwhelming player
+  maxActiveTokens = TIMED_MAX_TOKENS
 
   constructor(opts: { renderer: Renderer; input: InputManager; onScore?: (s: number) => void; onLivesChange?: (lives: number, previousLives?: number) => void; onGameOver?: () => void; onCombo?: (combo: number) => void; onSpeedChange?: (multiplier: number) => void }){
     this.renderer = opts.renderer
@@ -64,13 +106,13 @@ export class GameEngine {
     this.gameMode = mode
     // Adjust settings based on mode
     if(mode === 'practice'){
-      this.baseSpeed = 40 // slower for practice
-      this.speed = 40
-      this.maxActiveTokens = 5 // fewer tokens
+      this.baseSpeed = PRACTICE_BASE_SPEED
+      this.speed = PRACTICE_BASE_SPEED
+      this.maxActiveTokens = PRACTICE_MAX_TOKENS
     } else {
-      this.baseSpeed = 60 // normal speed for timed
-      this.speed = 60
-      this.maxActiveTokens = 8
+      this.baseSpeed = TIMED_BASE_SPEED
+      this.speed = TIMED_BASE_SPEED
+      this.maxActiveTokens = TIMED_MAX_TOKENS
     }
   }
 
@@ -89,7 +131,7 @@ export class GameEngine {
   reset(){
     this.running = false
     this.score = 0
-    this.lives = 3
+    this.lives = INITIAL_LIVES
     this.combo = 0
     this.gameTime = 0
     this.speed = this.baseSpeed
@@ -111,11 +153,11 @@ export class GameEngine {
     // Track game time and increase speed gradually (only in timed mode)
     this.gameTime += dt
     if(this.gameMode === 'timed'){
-      // Speed increases by 10% every 15 seconds (no cap)
-      const speedMultiplier = 1 + (Math.floor(this.gameTime / 15) * 0.10)
-      // Notify only when multiplier increases AND game has been running for at least 1 second
+      // Speed increases by SPEED_INCREASE_PERCENT every SPEED_INCREASE_INTERVAL seconds (no cap)
+      const speedMultiplier = 1 + (Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL) * SPEED_INCREASE_PERCENT)
+      // Notify only when multiplier increases AND game has been running for at least SPEED_CHANGE_DELAY
       // (prevents triggering on game start)
-      if(speedMultiplier > this.lastSpeedMultiplier && this.gameTime > 1.0 && this.onSpeedChange){
+      if(speedMultiplier > this.lastSpeedMultiplier && this.gameTime > SPEED_CHANGE_DELAY && this.onSpeedChange){
         this.onSpeedChange(speedMultiplier)
       }
       this.lastSpeedMultiplier = speedMultiplier
@@ -130,7 +172,7 @@ export class GameEngine {
     }
 
     // update tokens
-    const failureY = this.renderer.getHeight() - 80 // 80px danger zone
+    const failureY = this.renderer.getHeight() - DANGER_ZONE
     for(const t of [...this.tokens]){
       t.y += this.speed * dt
       this.renderer.setTokenPosition(t.el, t.x, t.y)
@@ -139,7 +181,7 @@ export class GameEngine {
         this.renderer.flashToken(t.el, false)
         setTimeout(() => {
           this.renderer.removeTokenEl(t.el)
-        }, 300)
+        }, FLASH_MISS_DURATION)
         this.tokens = this.tokens.filter(x=>x!==t)
         
         // In practice mode, don't lose lives
@@ -184,20 +226,17 @@ export class GameEngine {
       const timeSince = now - lastSeen
       
       // Weight increases with time since last seen
-      // Never seen = max weight (10000)
-      // Recent (< 5s) = low weight (1)
-      // Old (> 30s) = high weight (100)
-      let weight = 1
+      let weight = WEIGHT_VERY_RECENT
       if(lastSeen === 0){
-        weight = 10000 // strongly prefer unseen kana
-      } else if(timeSince < 5000){
-        weight = 1 // very recently seen
-      } else if(timeSince < 15000){
-        weight = 10 // somewhat recent
-      } else if(timeSince < 30000){
-        weight = 50 // moderately old
+        weight = WEIGHT_UNSEEN // strongly prefer unseen kana
+      } else if(timeSince < TIME_THRESHOLD_VERY_RECENT){
+        weight = WEIGHT_VERY_RECENT
+      } else if(timeSince < TIME_THRESHOLD_RECENT){
+        weight = WEIGHT_RECENT
+      } else if(timeSince < TIME_THRESHOLD_MODERATE){
+        weight = WEIGHT_MODERATE
       } else {
-        weight = 100 // not seen in a while
+        weight = WEIGHT_OLD // not seen in a while
       }
       weights.push(weight)
     }
@@ -220,24 +259,21 @@ export class GameEngine {
     
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
     const width = (this.renderer as any).getWidth ? (this.renderer as any).getWidth() : 400
-    const tokenWidth = 72 // token width from CSS
-    const margin = 20 // left/right margin
     
     // Calculate safe spawn range to prevent cutoff
-    const safeWidth = width - (margin * 2) - tokenWidth
-    let x = margin + Math.floor(Math.random() * Math.max(0, safeWidth))
+    const safeWidth = width - (SPAWN_MARGIN * 2) - TOKEN_WIDTH
+    let x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))
     
     // Check for overlap with existing tokens and adjust if needed
-    const minDistance = 100 // minimum horizontal distance between tokens
     let attempts = 0
-    while(attempts < 10){
+    while(attempts < MAX_SPAWN_ATTEMPTS){
       const overlapping = this.tokens.some(t => {
         const distance = Math.abs(t.x - x)
         const verticalDiff = Math.abs(t.y - 0)
-        return distance < minDistance && verticalDiff < 150
+        return distance < MIN_TOKEN_DISTANCE && verticalDiff < VERTICAL_OVERLAP_THRESHOLD
       })
       if(!overlapping) break
-      x = margin + Math.floor(Math.random() * Math.max(0, safeWidth))
+      x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))
       attempts++
     }
     
@@ -262,15 +298,15 @@ export class GameEngine {
         this.renderer.flashToken(t.el, true)
         setTimeout(() => {
           this.renderer.removeTokenEl(t.el)
-        }, 200)
+        }, FLASH_SUCCESS_DURATION)
         this.tokens.splice(idx,1)
         
         // Calculate score with combo multiplier
-        const basePoints = 10
+        const basePoints = BASE_POINTS
         const elapsed = (performance.now() - t.spawnTime) / 1000
-        const lifetime = (this.renderer.getHeight() - 80) / this.speed // time to reach danger zone
-        const timeBonus = Math.max(0, Math.min(10, Math.round((lifetime - elapsed) / lifetime * 10)))
-        const comboMultiplier = 1 + (this.combo * 0.05)
+        const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
+        const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
+        const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
         const points = Math.round((basePoints + timeBonus) * comboMultiplier)
         
         this.combo++
@@ -303,15 +339,15 @@ export class GameEngine {
       this.renderer.flashToken(t.el, true)
       setTimeout(() => {
         this.renderer.removeTokenEl(t.el)
-      }, 200)
+      }, FLASH_SUCCESS_DURATION)
       this.tokens.splice(matchIndex,1)
       
       // Calculate score with combo multiplier
-      const basePoints = 10
+      const basePoints = BASE_POINTS
       const elapsed = (performance.now() - t.spawnTime) / 1000
-      const lifetime = (this.renderer.getHeight() - 80) / this.speed // time to reach danger zone
-      const timeBonus = Math.max(0, Math.min(10, Math.round((lifetime - elapsed) / lifetime * 10)))
-      const comboMultiplier = 1 + (this.combo * 0.05)
+      const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
+      const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
+      const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
       const points = Math.round((basePoints + timeBonus) * comboMultiplier)
       
       this.combo++
