@@ -289,10 +289,8 @@ export class GameEngine {
         this.input.buffer = this.input.buffer.slice(matchedLength)
         this.input.onKey(this.input.buffer)
         
-        // If there's remaining buffer, try to match again recursively
-        if(this.input.buffer.length > 0){
-          setTimeout(() => this.handleCommit(this.input.buffer), 50)
-        }
+        // Don't recursively match - wait for next keystroke
+        // This prevents multiple tokens from being cleared in one action
         return
       }
     }
