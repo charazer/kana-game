@@ -3,26 +3,60 @@ import { DOMRenderer } from './game/renderer_dom'
 import { InputManager } from './game/input'
 import { AudioManager } from './game/audio'
 import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage'
+import {
+  type GameMode,
+  GAME_MODE_PRACTICE,
+  GAME_MODE_CHALLENGE,
+  KANA_SET_HIRAGANA,
+  FLOAT_TYPE_SPEED,
+  DOM_ID_TOKENS,
+  DOM_ID_SCORE,
+  DOM_ID_COMBO,
+  DOM_ID_SPEED,
+  DOM_ID_LIVES,
+  DOM_ID_GAME_MODE,
+  DOM_ID_KANA_SET,
+  DOM_ID_AUDIO_TOGGLE,
+  DOM_ID_INPUT_ECHO,
+  DOM_ID_END_GAME,
+  DOM_ID_PAUSE,
+  DOM_ID_START_SCREEN,
+  DOM_ID_START,
+  DOM_ID_GAME_OVER,
+  DOM_ID_FINAL_SCORE,
+  DOM_ID_NEW_HIGH_SCORE,
+  DOM_ID_HIGH_SCORES_START,
+  DOM_ID_HIGH_SCORES_END,
+  DOM_ID_RESTART,
+  DOM_ID_GAME_AREA,
+  CSS_CLASS_STAT_HIGHLIGHT,
+  CSS_CLASS_STAT_SHAKE,
+  CSS_CLASS_SPEED_FLASH,
+  CSS_CLASS_HIDDEN,
+  ANIM_DURATION_STAT_HIGHLIGHT,
+  ANIM_DURATION_STAT_SHAKE,
+  ANIM_DURATION_SPEED_FLASH
+} from './game/constants'
 
-const tokensLayer = document.getElementById('tokens')!
-const scoreEl = document.getElementById('score')!
-const comboEl = document.getElementById('combo')!
-const speedEl = document.getElementById('speed')!
-const livesEl = document.getElementById('lives')!
-const gameModeSelect = document.getElementById('game-mode') as HTMLSelectElement | null
-const kanaSelect = document.getElementById('kana-set') as HTMLSelectElement | null
-const audioToggle = document.getElementById('audio-toggle') as HTMLInputElement | null
-const inputEcho = document.getElementById('input-echo')!
-const endGameBtn = document.getElementById('end-game') as HTMLButtonElement | null
-const pauseBtn = document.getElementById('pause') as HTMLButtonElement | null
-const startScreenEl = document.getElementById('start-screen')!
-const startBtn = document.getElementById('start') as HTMLButtonElement | null
-const gameOverEl = document.getElementById('game-over')!
-const finalScoreEl = document.getElementById('final-score')!
-const newHighScoreEl = document.getElementById('new-high-score')!
-const highScoresStartEl = document.getElementById('high-scores-start')!
-const highScoresEndEl = document.getElementById('high-scores-end')!
-const restartBtn = document.getElementById('restart') as HTMLButtonElement | null
+const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
+const scoreEl = document.getElementById(DOM_ID_SCORE)!
+const comboEl = document.getElementById(DOM_ID_COMBO)!
+const speedEl = document.getElementById(DOM_ID_SPEED)!
+const livesEl = document.getElementById(DOM_ID_LIVES)!
+const gameModeSelect = document.getElementById(DOM_ID_GAME_MODE) as HTMLSelectElement | null
+const kanaSelect = document.getElementById(DOM_ID_KANA_SET) as HTMLSelectElement | null
+const audioToggle = document.getElementById(DOM_ID_AUDIO_TOGGLE) as HTMLInputElement | null
+const inputEcho = document.getElementById(DOM_ID_INPUT_ECHO)!
+const endGameBtn = document.getElementById(DOM_ID_END_GAME) as HTMLButtonElement | null
+const pauseBtn = document.getElementById(DOM_ID_PAUSE) as HTMLButtonElement | null
+const startScreenEl = document.getElementById(DOM_ID_START_SCREEN)!
+const startBtn = document.getElementById(DOM_ID_START) as HTMLButtonElement | null
+const gameOverEl = document.getElementById(DOM_ID_GAME_OVER)!
+const finalScoreEl = document.getElementById(DOM_ID_FINAL_SCORE)!
+const newHighScoreEl = document.getElementById(DOM_ID_NEW_HIGH_SCORE)!
+const highScoresStartEl = document.getElementById(DOM_ID_HIGH_SCORES_START)!
+const highScoresEndEl = document.getElementById(DOM_ID_HIGH_SCORES_END)!
+const restartBtn = document.getElementById(DOM_ID_RESTART) as HTMLButtonElement | null
 
 function renderHighScores(container: HTMLElement, highlightScore?: number){
 	const scores = getHighScores()
@@ -44,10 +78,10 @@ function renderHighScores(container: HTMLElement, highlightScore?: number){
 	container.innerHTML = `<h3>High Scores</h3>${entries}`
 }
 
-function updateLivesDisplay(mode: 'practice' | 'challenge'){
+function updateLivesDisplay(mode: GameMode){
 	const livesDisplay = livesEl.parentElement
 	if(livesDisplay){
-		if(mode === 'practice'){
+		if(mode === GAME_MODE_PRACTICE){
 			livesDisplay.style.display = 'none'
 		} else {
 			livesDisplay.style.display = 'flex'
@@ -89,32 +123,32 @@ const engine = new GameEngine({
 	input, 
 	onScore: (s) => { 
 		scoreEl.textContent = `${s}`
-		scoreEl.parentElement?.classList.add('stat-highlight')
-		setTimeout(() => scoreEl.parentElement?.classList.remove('stat-highlight'), 300)
+		scoreEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
+		setTimeout(() => scoreEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
 		audio.playSuccess()
 	},
 	onCombo: (combo) => { 
 		comboEl.textContent = `${combo}x`
 		if(combo > 0) {
-			comboEl.parentElement?.classList.add('stat-highlight')
-			setTimeout(() => comboEl.parentElement?.classList.remove('stat-highlight'), 300)
+			comboEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
+			setTimeout(() => comboEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
 		}
 	},
 	onSpeedChange: (multiplier) => {
 		speedEl.textContent = `${multiplier.toFixed(1)}x`
-		speedEl.parentElement?.classList.add('stat-highlight')
-		setTimeout(() => speedEl.parentElement?.classList.remove('stat-highlight'), 300)
+		speedEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
+		setTimeout(() => speedEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
 		
 		// Visual flash effect on game area
-		const gameArea = document.getElementById('game-area')
+		const gameArea = document.getElementById(DOM_ID_GAME_AREA)
 		if(gameArea) {
-			gameArea.classList.add('speed-flash')
-			setTimeout(() => gameArea.classList.remove('speed-flash'), 600)
+			gameArea.classList.add(CSS_CLASS_SPEED_FLASH)
+			setTimeout(() => gameArea.classList.remove(CSS_CLASS_SPEED_FLASH), ANIM_DURATION_SPEED_FLASH)
 		}
 		
 		// Show floating text notification
 		const width = renderer.getHeight() * 0.6 // Approximate game area width
-		renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(1)}x`, 'speed')
+		renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(1)}x`, FLOAT_TYPE_SPEED)
 		
 		audio.playSpeedIncrease()
 	},
@@ -122,8 +156,8 @@ const engine = new GameEngine({
 		livesEl.textContent = '❤️ '.repeat(lives).trim()
 		// Only play sound and animate if lives actually decreased
 		if(previousLives !== undefined && lives < previousLives) {
-			livesEl.parentElement?.classList.add('stat-shake')
-			setTimeout(() => livesEl.parentElement?.classList.remove('stat-shake'), 400)
+			livesEl.parentElement?.classList.add(CSS_CLASS_STAT_SHAKE)
+			setTimeout(() => livesEl.parentElement?.classList.remove(CSS_CLASS_STAT_SHAKE), ANIM_DURATION_STAT_SHAKE)
 			audio.playLifeLost()
 		}
 	},
@@ -140,16 +174,16 @@ const engine = new GameEngine({
 		enableGameSettings()
 		
 		// Only check for high scores in challenge mode
-		if(engine.gameMode === 'challenge' && isHighScore(finalScore)){
-			newHighScoreEl.classList.remove('hidden')
+		if(engine.gameMode === GAME_MODE_CHALLENGE && isHighScore(finalScore)){
+			newHighScoreEl.classList.remove(CSS_CLASS_HIDDEN)
 			addHighScore(finalScore)
 			renderHighScores(highScoresEndEl, finalScore)
 		} else {
-			newHighScoreEl.classList.add('hidden')
+			newHighScoreEl.classList.add(CSS_CLASS_HIDDEN)
 			renderHighScores(highScoresEndEl)
 		}
 		
-		gameOverEl.classList.remove('hidden')
+		gameOverEl.classList.remove(CSS_CLASS_HIDDEN)
 	}
 })
 
@@ -171,11 +205,11 @@ if(audioToggle){
 }
 
 if(gameModeSelect){
-	gameModeSelect.value = saved.gameMode || 'challenge'
-	engine.setGameMode(gameModeSelect.value as 'practice' | 'challenge')
-	updateLivesDisplay(gameModeSelect.value as 'practice' | 'challenge')
+	gameModeSelect.value = saved.gameMode || GAME_MODE_CHALLENGE
+	engine.setGameMode(gameModeSelect.value as GameMode)
+	updateLivesDisplay(gameModeSelect.value as GameMode)
 	gameModeSelect.addEventListener('change', ()=>{
-		const mode = gameModeSelect.value as 'practice' | 'challenge'
+		const mode = gameModeSelect.value as GameMode
 		engine.setGameMode(mode)
 		updateLivesDisplay(mode)
 		const s = loadSettings()
@@ -185,12 +219,12 @@ if(gameModeSelect){
 }
 
 if(kanaSelect){
-	kanaSelect.value = saved.kanaSet || 'hiragana'
-	engine.loadKana(kanaSelect.value)
+	kanaSelect.value = saved.kanaSet || KANA_SET_HIRAGANA
+	engine.loadKana(kanaSelect.value as any)
 	kanaSelect.addEventListener('change', ()=>{
-		engine.loadKana(kanaSelect.value)
+		engine.loadKana(kanaSelect.value as any)
 		const s = loadSettings()
-		s.kanaSet = kanaSelect.value
+		s.kanaSet = kanaSelect.value as any
 		saveSettings(s)
 	})
 }
@@ -272,7 +306,7 @@ renderHighScores(highScoresStartEl)
 
 if(startBtn){
 	startBtn.addEventListener('click', ()=>{
-		startScreenEl.classList.add('hidden')
+		startScreenEl.classList.add(CSS_CLASS_HIDDEN)
 		speedEl.textContent = '1.0x' // Reset speed display without effects
 		if(window.enablePauseButton) window.enablePauseButton()
 		if(window.enableEndGameButton) window.enableEndGameButton()
@@ -283,7 +317,7 @@ if(startBtn){
 
 if(restartBtn){
 	restartBtn.addEventListener('click', ()=>{
-		gameOverEl.classList.add('hidden')
+		gameOverEl.classList.add(CSS_CLASS_HIDDEN)
 		speedEl.textContent = '1.0x' // Reset speed display without effects
 		engine.reset()
 		if(window.enablePauseButton) window.enablePauseButton()
@@ -298,12 +332,12 @@ document.addEventListener('keydown', (e) => {
 	// Enter for start/restart (only when game is not running)
 	if(e.code === 'Enter' && !engine.running){
 		// Check if start screen is visible
-		if(!startScreenEl.classList.contains('hidden') && startBtn){
+		if(!startScreenEl.classList.contains(CSS_CLASS_HIDDEN) && startBtn){
 			e.preventDefault()
 			startBtn.click()
 		}
 		// Check if game over screen is visible
-		else if(!gameOverEl.classList.contains('hidden') && restartBtn){
+		else if(!gameOverEl.classList.contains(CSS_CLASS_HIDDEN) && restartBtn){
 			e.preventDefault()
 			restartBtn.click()
 		}

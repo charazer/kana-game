@@ -2,13 +2,25 @@ import kanaHiragana from '../data/kana/hiragana.json'
 import kanaKatakana from '../data/kana/katakana.json'
 import type { KanaEntry } from './types'
 import { exactMatch, longestRomajiMatch } from './matcher'
+import { 
+  type GameMode, 
+  type FloatingTextType,
+  type KanaSet,
+  GAME_MODE_PRACTICE,
+  GAME_MODE_CHALLENGE,
+  KANA_SET_HIRAGANA,
+  KANA_SET_KATAKANA,
+  FLOAT_TYPE_LIFE,
+  FLOAT_TYPE_POINTS,
+  FLOAT_TYPE_COMBO
+} from './constants'
 
 export type Renderer = {
   createTokenEl: (id: string, kana: string) => HTMLElement
   removeTokenEl: (el: HTMLElement) => void
   setTokenPosition: (el: HTMLElement, x: number, y: number) => void
   flashToken: (el: HTMLElement, success: boolean) => void
-  showFloatingText: (x: number, y: number, text: string, type: 'points' | 'combo' | 'life' | 'speed') => void
+  showFloatingText: (x: number, y: number, text: string, type: FloatingTextType) => void
   getHeight: () => number
 }
 
@@ -67,7 +79,7 @@ export class GameEngine {
   lives = INITIAL_LIVES
   combo = 0
   gameTime = 0 // total time elapsed in current game
-  gameMode: 'practice' | 'challenge' = 'challenge'
+  gameMode: GameMode = GAME_MODE_CHALLENGE
   onScore: (s: number) => void
   onLivesChange: (lives: number, previousLives?: number) => void
   onGameOver: () => void
@@ -93,7 +105,7 @@ export class GameEngine {
     this.onSpeedChange = opts.onSpeedChange
     this.input.onKey = (buffer) => this.handleInput(buffer)
     this.input.onCommit = (value) => this.handleCommit(value)
-    this.loadKana('hiragana')
+    this.loadKana(KANA_SET_HIRAGANA)
   }
 
   start(){
@@ -102,10 +114,10 @@ export class GameEngine {
     requestAnimationFrame(this.loop.bind(this))
   }
 
-  setGameMode(mode: 'practice' | 'challenge'){
+  setGameMode(mode: GameMode){
     this.gameMode = mode
     // Adjust settings based on mode
-    if(mode === 'practice'){
+    if(mode === GAME_MODE_PRACTICE){
       this.baseSpeed = PRACTICE_BASE_SPEED
       this.speed = PRACTICE_BASE_SPEED
       this.maxActiveTokens = PRACTICE_MAX_TOKENS
@@ -152,7 +164,7 @@ export class GameEngine {
     
     // Track game time and increase speed gradually (only in challenge mode)
     this.gameTime += dt
-    if(this.gameMode === 'challenge'){
+    if(this.gameMode === GAME_MODE_CHALLENGE){
       // Speed increases by SPEED_INCREASE_PERCENT every SPEED_INCREASE_INTERVAL seconds (no cap)
       const speedMultiplier = 1 + (Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL) * SPEED_INCREASE_PERCENT)
       // Notify only when multiplier increases AND game has been running for at least SPEED_CHANGE_DELAY
@@ -185,7 +197,7 @@ export class GameEngine {
         this.tokens = this.tokens.filter(x=>x!==t)
         
         // In practice mode, don't lose lives
-        if(this.gameMode === 'challenge'){
+        if(this.gameMode === GAME_MODE_CHALLENGE){
           // Lose a life and reset combo
           const previousLives = this.lives
           this.lives--
@@ -194,7 +206,7 @@ export class GameEngine {
           if(this.onCombo) this.onCombo(this.combo)
           
           // Show life lost indicator
-          this.renderer.showFloatingText(t.x + 36, t.y + 36, '💔 -1', 'life')
+          this.renderer.showFloatingText(t.x + 36, t.y + 36, '💔 -1', FLOAT_TYPE_LIFE)
           
           // Check for game over
           if(this.lives <= 0){
@@ -315,9 +327,9 @@ export class GameEngine {
         if(this.onCombo) this.onCombo(this.combo)
         
         // Show floating points text
-        this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, 'points')
+        this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, FLOAT_TYPE_POINTS)
         if(this.combo > 1) {
-          this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, 'combo')
+          this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, FLOAT_TYPE_COMBO)
         }
         
         // Consume only the matched portion from buffer
@@ -356,9 +368,9 @@ export class GameEngine {
       if(this.onCombo) this.onCombo(this.combo)
       
       // Show floating points text
-      this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, 'points')
+      this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, FLOAT_TYPE_POINTS)
       if(this.combo > 1) {
-        this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, 'combo')
+        this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, FLOAT_TYPE_COMBO)
       }
       // Clear buffer for exact kana match (IME)
       this.input.buffer = ''
@@ -367,8 +379,8 @@ export class GameEngine {
     }
   }
 
-  async loadKana(setName: string){
-    if(setName === 'katakana'){
+  async loadKana(setName: KanaSet){
+    if(setName === KANA_SET_KATAKANA){
       this.kanaSet = kanaKatakana as any
     } else {
       // default to hiragana

@@ -1,8 +1,10 @@
+import { type GameMode, type KanaSet } from './constants'
+
 const STORAGE_KEY = 'kana-game:v1'
 
 export type Settings = {
-  kanaSet?: string
-  gameMode?: 'practice' | 'challenge'
+  kanaSet?: KanaSet
+  gameMode?: GameMode
   audioEnabled?: boolean
   highScores?: Array<{score:number,date:string}>
 }

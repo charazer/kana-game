@@ -1,3 +1,13 @@
+import {
+  type FloatingTextType,
+  CSS_CLASS_TOKEN,
+  CSS_CLASS_TOKEN_SUCCESS,
+  CSS_CLASS_TOKEN_MISS,
+  CSS_CLASS_FLOATING_TEXT,
+  DATASET_KANA_ID,
+  ANIM_DURATION_FLOATING_TEXT
+} from './constants'
+
 export class DOMRenderer{
   container: HTMLElement
   constructor(container: HTMLElement){
@@ -6,8 +16,8 @@ export class DOMRenderer{
 
   createTokenEl(id: string, kana: string){
     const el = document.createElement('div')
-    el.className = 'token'
-    el.dataset.kanaId = id
+    el.className = CSS_CLASS_TOKEN
+    el.dataset[DATASET_KANA_ID] = id
     el.textContent = kana
     this.container.appendChild(el)
     return el
@@ -22,18 +32,18 @@ export class DOMRenderer{
   }
 
   flashToken(el: HTMLElement, success: boolean){
-    el.classList.add(success ? 'token-success' : 'token-miss')
+    el.classList.add(success ? CSS_CLASS_TOKEN_SUCCESS : CSS_CLASS_TOKEN_MISS)
   }
 
-  showFloatingText(x: number, y: number, text: string, type: 'points' | 'combo' | 'life' | 'speed'){
+  showFloatingText(x: number, y: number, text: string, type: FloatingTextType){
     const floater = document.createElement('div')
-    floater.className = `floating-text floating-${type}`
+    floater.className = `${CSS_CLASS_FLOATING_TEXT} floating-${type}`
     floater.textContent = text
     floater.style.left = `${x}px`
     floater.style.top = `${y}px`
     this.container.appendChild(floater)
     
-    setTimeout(() => floater.remove(), 1000)
+    setTimeout(() => floater.remove(), ANIM_DURATION_FLOATING_TEXT)
   }
 
   getWidth(){
