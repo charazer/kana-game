@@ -2,7 +2,7 @@ const STORAGE_KEY = 'kana-game:v1'
 
 export type Settings = {
   kanaSet?: string
-  gameMode?: 'practice' | 'timed'
+  gameMode?: 'practice' | 'challenge'
   audioEnabled?: boolean
   highScores?: Array<{score:number,date:string}>
 }

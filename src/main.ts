@@ -44,7 +44,7 @@ function renderHighScores(container: HTMLElement, highlightScore?: number){
 	container.innerHTML = `<h3>High Scores</h3>${entries}`
 }
 
-function updateLivesDisplay(mode: 'practice' | 'timed'){
+function updateLivesDisplay(mode: 'practice' | 'challenge'){
 	const livesDisplay = livesEl.parentElement
 	if(livesDisplay){
 		if(mode === 'practice'){
@@ -139,8 +139,8 @@ const engine = new GameEngine({
 		if(window.disableEndGameButton) window.disableEndGameButton()
 		enableGameSettings()
 		
-		// Only check for high scores in timed mode
-		if(engine.gameMode === 'timed' && isHighScore(finalScore)){
+		// Only check for high scores in challenge mode
+		if(engine.gameMode === 'challenge' && isHighScore(finalScore)){
 			newHighScoreEl.classList.remove('hidden')
 			addHighScore(finalScore)
 			renderHighScores(highScoresEndEl, finalScore)
@@ -171,11 +171,11 @@ if(audioToggle){
 }
 
 if(gameModeSelect){
-	gameModeSelect.value = saved.gameMode || 'timed'
-	engine.setGameMode(gameModeSelect.value as 'practice' | 'timed')
-	updateLivesDisplay(gameModeSelect.value as 'practice' | 'timed')
+	gameModeSelect.value = saved.gameMode || 'challenge'
+	engine.setGameMode(gameModeSelect.value as 'practice' | 'challenge')
+	updateLivesDisplay(gameModeSelect.value as 'practice' | 'challenge')
 	gameModeSelect.addEventListener('change', ()=>{
-		const mode = gameModeSelect.value as 'practice' | 'timed'
+		const mode = gameModeSelect.value as 'practice' | 'challenge'
 		engine.setGameMode(mode)
 		updateLivesDisplay(mode)
 		const s = loadSettings()

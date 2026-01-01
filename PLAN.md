@@ -8,27 +8,27 @@ Overview
 - Language: TypeScript for logic, minimal HTML/CSS for UI, optional Canvas for performance.
 
 Core gameplay (MVP)
-- ✅ Tokens: Visual DOM elements displaying a single kana character. Properties: kana, romaji(s), id, position (x, y), velocity (60 px/sec base in Timed mode, increases progressively; 40 px/sec constant in Practice mode), spawnTime.
+- ✅ Tokens: Visual DOM elements displaying a single kana character. Properties: kana, romaji(s), id, position (x, y), velocity (60 px/sec base in Challenge mode, increases progressively; 40 px/sec constant in Practice mode), spawnTime.
 - ✅ Mechanics: Tokens spawn at 0.9s intervals and move downward. Player types romaji to match tokens. Exact matches clear tokens and increment score with time bonus and combo multiplier.
 - ✅ Weighted kana selection: Tokens are selected using weighted random based on recency (unseen kana strongly preferred, recently shown kana avoided).
-- ✅ Failure: Token expiration at bottom boundary (80px danger zone) decrements lives in Timed mode or just resets combo in Practice mode.
-- ✅ Lives system: Player starts with 3 lives in Timed mode, game ends when lives reach 0. No lives in Practice mode.
+- ✅ Failure: Token expiration at bottom boundary (80px danger zone) decrements lives in Challenge mode or just resets combo in Practice mode.
+- ✅ Lives system: Player starts with 3 lives in Challenge mode, game ends when lives reach 0. No lives in Practice mode.
 - ✅ Start screen: Manual game start with high scores display.
-- ✅ Progressive difficulty: Speed increases 5% every 30 seconds in Timed mode (capped at 2x base speed, 60→120 px/sec). No speed increase in Practice mode.
-- ✅ Game Modes: Practice mode (slower, no lives, no speed increase, 5 max tokens) and Timed mode (faster, lives, progressive difficulty, 8 max tokens).
+- ✅ Progressive difficulty: Speed increases 5% every 30 seconds in Challenge mode (capped at 2x base speed, 60→120 px/sec). No speed increase in Practice mode.
+- ✅ Game Modes: Practice mode (slower, no lives, no speed increase, 5 max tokens) and Challenge mode (faster, lives, progressive difficulty, 8 max tokens).
 - ✅ Scoring: Points calculated with base + time bonus, multiplied by combo multiplier (1 + combo * 0.05).
 - ✅ Visual feedback: Floating text shows points/combo gains, life losses. Score/combo/lives displays animate on change. Green glow on success, red on miss.
 
 Acceptance criteria for MVP
 - ✅ Player can select Hiragana or Katakana set (dropdown in settings, persisted to localStorage).
-- ✅ Player can select game mode: Practice (relaxed learning) or Timed (challenge mode).
+- ✅ Player can select game mode: Practice (relaxed learning) or Challenge (challenge mode).
 - ✅ Tokens spawn with weighted random selection favoring unseen/old kana (0.9s intervals, 40-120 px/sec depending on mode).
 - ✅ Player input (romaji only) clears matching tokens; cleared token increments score with time bonus and combo multiplier.
 - ✅ Visual feedback: Floating text shows points gained, combo multiplier, life losses, and speed increases at appropriate positions.
 - ✅ Audio feedback: Distinct sounds for success, miss, life loss, speed increase, and game over.
-- ✅ Tokens that reach the failure zone (80px danger zone) decrement lives in Timed mode or just reset combo in Practice mode.
-- ✅ Game over when lives reach 0 in Timed mode. Practice mode continues indefinitely.
-- ✅ UI shows score, combo (Nx multiplier), speed (X.Xx multiplier), lives (hearts in Timed mode only), pause/resume button, and mode selector.
+- ✅ Tokens that reach the failure zone (80px danger zone) decrement lives in Challenge mode or just reset combo in Practice mode.
+- ✅ Game over when lives reach 0 in Challenge mode. Practice mode continues indefinitely.
+- ✅ UI shows score, combo (Nx multiplier), speed (X.Xx multiplier), lives (hearts in Challenge mode only), pause/resume button, and mode selector.
 - ✅ Start screen with manual start button and high scores display.
 - ✅ High score persistence in localStorage (top 10 scores with dates).
 - ✅ Responsive layout optimized for mobile and desktop screens.
@@ -56,14 +56,14 @@ Game loop & timing
 - ✅ Spawn logic: tokens spawn at 0.9 second intervals using accumulator-based timer with weighted random selection.
 - ✅ Weighted selection: Kana are chosen based on recency - unseen kana get weight 10,000, recent (<5s) get weight 1, old (>30s) get weight 100.
 - ✅ Current settings:
-  - Timed mode: spawnInterval = 0.9s, baseSpeed = 60 px/sec (progressive, no cap), max 8 tokens
+  - Challenge mode: spawnInterval = 0.9s, baseSpeed = 60 px/sec (progressive, no cap), max 8 tokens
   - Practice mode: spawnInterval = 0.9s, speed = 40 px/sec (constant), max 5 tokens
   - Token size = 72px, constrained to 900px centered area
 - ✅ Token positioning: Smart spawn with collision avoidance (100px min distance) and edge detection to prevent cutoff
 - ✅ Visual feedback: Green glow on correct match, red glow on missed token, visible danger zone at bottom (80px red gradient), blue flash on speed increase
-- ✅ Progressive difficulty: Speed increases by 10% every 15 seconds in Timed mode (no cap)
+- ✅ Progressive difficulty: Speed increases by 10% every 15 seconds in Challenge mode (no cap)
 - ✅ Game time tracking: Total elapsed time tracked for speed scaling with smart change detection to avoid triggering on game start
-- ✅ Collision/hit detection: tokens expire when reaching bottom of viewport (y >= failureY), triggering life loss in Timed mode or just combo reset in Practice mode.
+- ✅ Collision/hit detection: tokens expire when reaching bottom of viewport (y >= failureY), triggering life loss in Challenge mode or just combo reset in Practice mode.
 - ⏳ Touch interaction for mobile not yet implemented.
 
 Rendering & animation strategy
@@ -81,7 +81,7 @@ Audio & assets
 
 UI & screens
 - ✅ Start screen: Game title, Start button, high scores display with top 10 scores.
-- ✅ Settings bar: Game mode selector (Practice/Timed), kana set selector (hiragana/katakana), audio toggle checkbox, integrated into compact gradient header.
+- ✅ Settings bar: Game mode selector (Practice/Challenge), kana set selector (hiragana/katakana), audio toggle checkbox, integrated into compact gradient header.
 - ✅ Gameplay HUD: Score display (green), combo display (purple, Nx format), speed display (blue, X.Xx format), lives display (red, hearts - hidden in Practice mode), pause/resume button (disabled until game starts).
 - ✅ Game over screen: Final score, "New High Score" indicator (pulsing animation), high scores list with highlighting, Play Again button.
 - ✅ Visual feedback: Floating text animations for points (+N), combo (Nx), life loss (💔 -1), and speed increase (SPEED UP! X.Xx). Stat displays pulse on updates, lives shake on loss, game area flashes blue on speed increase.
@@ -93,7 +93,7 @@ UI & screens
 Persistence
 - ✅ Settings and high scores stored in `localStorage` under namespace `kana-game:v1`.
 - ✅ Implemented in `storage.ts` with loadSettings/saveSettings/getHighScores/addHighScore/isHighScore functions.
-- ✅ Current persisted data: gameMode ('practice'|'timed'), kanaSet ('hiragana'|'katakana'), highScores (array of {score, date} objects).
+- ✅ Current persisted data: gameMode ('practice'|'challenge'), kanaSet ('hiragana'|'katakana'), highScores (array of {score, date} objects).
 - ✅ Settings load on page boot, save on user changes (game mode, kana set selection).
 - ✅ High score management: Automatically saves top 10 scores with dates, displays on start screen and game over screen.
 - ✅ High score highlighting: New high scores are highlighted with pulsing animation and special indicator.
@@ -169,7 +169,7 @@ Milestones & roadmap
 
 4) ✅ Add game modes and intelligent spawning — COMPLETE
    - ✅ Practice mode (40 px/sec constant, 5 max tokens, no lives, no speed increase)
-   - ✅ Timed mode (60+ px/sec progressive no cap, 8 max tokens, 3 lives, progressive difficulty)
+   - ✅ Challenge mode (60+ px/sec progressive no cap, 8 max tokens, 3 lives, progressive difficulty)
    - ✅ Weighted kana selection based on recency (distributed practice)
    - ✅ Mode selector in settings with persistence
    - ✅ Lives display hidden in Practice mode
@@ -211,7 +211,7 @@ Open questions / decisions to confirm
   - `hiragana.json` - 71 entries with multiple romaji alternatives
   - `katakana.json` - 71 entries with multiple romaji alternatives
 - **Core modules**:
-  - `engine.ts` - Game loop with RAF, spawn timer (0.9s), token lifecycle, game mode support, lives system (Timed mode), combo tracking, progressive speed (10% every 15s, no cap), game time tracking, weighted kana selection based on recency, smart speed change detection
+  - `engine.ts` - Game loop with RAF, spawn timer (0.9s), token lifecycle, game mode support, lives system (Challenge mode), combo tracking, progressive speed (10% every 15s, no cap), game time tracking, weighted kana selection based on recency, smart speed change detection
   - `renderer_dom.ts` - DOM-based renderer with translate3d positioning, flashToken effects, showFloatingText for visual feedback including 'speed' type
   - `input.ts` - Keyboard input capture (romaji only), auto-commit on keystroke, backspace support
   - `matcher.ts` - exactMatch, isPrefix, longestRomajiMatch functions with buffer consumption
@@ -220,7 +220,7 @@ Open questions / decisions to confirm
   - `audio.ts` - Web Audio API manager with all SFX (playSuccess, playMiss, playCombo, playLifeLost, playSpeedIncrease, playGameOver)
 - **UI**:
   - Start screen with high scores display and Start button
-  - Settings bar with game mode selector (Practice/Timed), kana set selector (Japanese labels), audio toggle checkbox, integrated into compact responsive gradient header
+  - Settings bar with game mode selector (Practice/Challenge), kana set selector (Japanese labels), audio toggle checkbox, integrated into compact responsive gradient header
   - Game area (900px centered) with token container and danger zone visualization
   - HUD showing score (green), combo (purple, Nx), speed (blue, X.Xx), lives (red, hearts - hidden in Practice mode), pause/resume button (state-aware)
   - Game over screen with final score, "New High Score" indicator, high scores list with highlighting, Play Again button
@@ -240,10 +240,10 @@ Open questions / decisions to confirm
   - 80px danger zone with red gradient and dashed border
   - High score list with highlighting and scrolling
 - **Game features**:
-  - Two game modes: Practice (40 px/sec constant, 5 max tokens, no lives) and Timed (60+ px/sec progressive no cap, 8 max tokens, 3 lives)
+  - Two game modes: Practice (40 px/sec constant, 5 max tokens, no lives) and Challenge (60+ px/sec progressive no cap, 8 max tokens, 3 lives)
   - Weighted kana selection: unseen kana strongly preferred (weight 10,000), recent (<5s) avoided (weight 1), old (>30s) prioritized (weight 100)
   - Combo/multiplier system (1 + combo * 0.05)
-  - Progressive difficulty in Timed mode (speed +10% every 15s, no cap)
+  - Progressive difficulty in Challenge mode (speed +10% every 15s, no cap)
   - Real-time speed display with multiplier (X.Xx format)
   - Score calculation (base + time bonus) * combo multiplier
   - Pause/resume functionality (state-aware button)
@@ -290,10 +290,10 @@ Next steps
 - ✅ Add progressive difficulty (DONE)
 - ✅ Add visual feedback for score/combo/lives (DONE)
 - ✅ Wire high scores to UI with persistence (DONE)
-- ✅ Add game modes (Practice/Timed) with mode-specific settings (DONE)
+- ✅ Add game modes (Practice/Challenge) with mode-specific settings (DONE)
 - ✅ Implement weighted kana selection based on recency (DONE)
 - ✅ Remove IME support (simplified to romaji-only input) (DONE)
-- ✅ Increase speed and token limits (60 px/sec base, 8 max tokens in Timed) (DONE)
+- ✅ Increase speed and token limits (60 px/sec base, 8 max tokens in Challenge) (DONE)
 - ✅ Fix pause button to be state-aware (disabled before game starts) (DONE)
 - ✅ Add audio/SFX system with Web Audio API (DONE)
 - ✅ Add responsive layout for mobile and desktop (DONE)

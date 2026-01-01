@@ -6,13 +6,13 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana characters
 
 ### Game Modes
 - **Practice Mode** - Relaxed learning environment with slower speed and no lives system. Perfect for beginners getting familiar with kana characters.
-- **Timed Mode** - Challenge yourself with progressive difficulty, limited lives, and increasing speed. Test your skills and compete for high scores!
+- **Challenge Mode** - Challenge yourself with progressive difficulty, limited lives, and increasing speed. Test your skills and compete for high scores!
 
 ### Core Gameplay
 - **Falling Tokens** - Kana characters descend down the screen. Type their romaji equivalents to clear them.
 - **Smart Spawning** - Intelligent weighted selection ensures you see characters you haven't practiced recently more often.
 - **Combo System** - Chain correct answers together for bonus score multipliers.
-- **Progressive Difficulty** - In Timed mode, speed gradually increases to keep you challenged.
+- **Progressive Difficulty** - In Challenge mode, speed gradually increases to keep you challenged.
 - **Real-time Feedback** - Visual and audio cues for successes, misses, combos, and speed changes.
 
 ### Learning Features
@@ -70,11 +70,11 @@ npm run test:responsive
 
 ## 🎯 How to Play
 
-1. **Choose Your Settings** - Select your preferred kana set (Hiragana/Katakana) and game mode (Practice/Timed)
+1. **Choose Your Settings** - Select your preferred kana set (Hiragana/Katakana) and game mode (Practice/Challenge)
 2. **Start the Game** - Click the Start button when ready
 3. **Type Romaji** - As kana tokens fall, type their romaji equivalents to clear them
 4. **Build Combos** - Chain correct answers for score multipliers
-5. **Survive** - In Timed mode, don't let tokens reach the danger zone or you'll lose lives!
+5. **Survive** - In Challenge mode, don't let tokens reach the danger zone or you'll lose lives!
 
 ### Controls
 - **Keyboard** - Type romaji characters (a-z)

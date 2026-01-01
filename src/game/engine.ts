@@ -27,7 +27,7 @@ const SPAWN_MARGIN = 20 // pixels
 const MIN_TOKEN_DISTANCE = 100 // pixels
 const MAX_SPAWN_ATTEMPTS = 10
 
-// Speed progression constants (timed mode)
+// Speed progression constants (challenge mode)
 const SPEED_INCREASE_INTERVAL = 15 // seconds
 const SPEED_INCREASE_PERCENT = 0.10 // 10% per interval
 const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
@@ -53,9 +53,9 @@ const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
 const PRACTICE_BASE_SPEED = 20 // pixels/sec
 const PRACTICE_MAX_TOKENS = 5
 
-// Timed mode settings
-const TIMED_BASE_SPEED = 40 // pixels/sec (reduced from 60)
-const TIMED_MAX_TOKENS = 8
+// Challenge mode settings
+const CHALLENGE_BASE_SPEED = 40 // pixels/sec (reduced from 60)
+const CHALLENGE_MAX_TOKENS = 8
 
 export class GameEngine {
   renderer: Renderer
@@ -67,7 +67,7 @@ export class GameEngine {
   lives = INITIAL_LIVES
   combo = 0
   gameTime = 0 // total time elapsed in current game
-  gameMode: 'practice' | 'timed' = 'timed'
+  gameMode: 'practice' | 'challenge' = 'challenge'
   onScore: (s: number) => void
   onLivesChange: (lives: number, previousLives?: number) => void
   onGameOver: () => void
@@ -77,10 +77,10 @@ export class GameEngine {
   kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown
   spawnAccumulator = 0
   spawnInterval = SPAWN_INTERVAL
-  baseSpeed = TIMED_BASE_SPEED
-  speed = TIMED_BASE_SPEED
+  baseSpeed = CHALLENGE_BASE_SPEED
+  speed = CHALLENGE_BASE_SPEED
   lastSpeedMultiplier = 1.0 // track last speed multiplier to detect changes
-  maxActiveTokens = TIMED_MAX_TOKENS
+  maxActiveTokens = CHALLENGE_MAX_TOKENS
 
   constructor(opts: { renderer: Renderer; input: InputManager; onScore?: (s: number) => void; onLivesChange?: (lives: number, previousLives?: number) => void; onGameOver?: () => void; onCombo?: (combo: number) => void; onSpeedChange?: (multiplier: number) => void }){
     this.renderer = opts.renderer
@@ -102,7 +102,7 @@ export class GameEngine {
     requestAnimationFrame(this.loop.bind(this))
   }
 
-  setGameMode(mode: 'practice' | 'timed'){
+  setGameMode(mode: 'practice' | 'challenge'){
     this.gameMode = mode
     // Adjust settings based on mode
     if(mode === 'practice'){
@@ -110,9 +110,9 @@ export class GameEngine {
       this.speed = PRACTICE_BASE_SPEED
       this.maxActiveTokens = PRACTICE_MAX_TOKENS
     } else {
-      this.baseSpeed = TIMED_BASE_SPEED
-      this.speed = TIMED_BASE_SPEED
-      this.maxActiveTokens = TIMED_MAX_TOKENS
+      this.baseSpeed = CHALLENGE_BASE_SPEED
+      this.speed = CHALLENGE_BASE_SPEED
+      this.maxActiveTokens = CHALLENGE_MAX_TOKENS
     }
   }
 
@@ -150,9 +150,9 @@ export class GameEngine {
     const dt = (now - this.last)/1000
     this.last = now
     
-    // Track game time and increase speed gradually (only in timed mode)
+    // Track game time and increase speed gradually (only in challenge mode)
     this.gameTime += dt
-    if(this.gameMode === 'timed'){
+    if(this.gameMode === 'challenge'){
       // Speed increases by SPEED_INCREASE_PERCENT every SPEED_INCREASE_INTERVAL seconds (no cap)
       const speedMultiplier = 1 + (Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL) * SPEED_INCREASE_PERCENT)
       // Notify only when multiplier increases AND game has been running for at least SPEED_CHANGE_DELAY
@@ -185,7 +185,7 @@ export class GameEngine {
         this.tokens = this.tokens.filter(x=>x!==t)
         
         // In practice mode, don't lose lives
-        if(this.gameMode === 'timed'){
+        if(this.gameMode === 'challenge'){
           // Lose a life and reset combo
           const previousLives = this.lives
           this.lives--
