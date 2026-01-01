@@ -12,7 +12,11 @@ import {
   KANA_SET_KATAKANA,
   FLOAT_TYPE_LIFE,
   FLOAT_TYPE_POINTS,
-  FLOAT_TYPE_COMBO
+  FLOAT_TYPE_COMBO,
+  FLOATING_TEXT_OFFSET_X,
+  FLOATING_TEXT_OFFSET_Y,
+  FLOATING_TEXT_COMBO_OFFSET_Y,
+  COMBO_DISPLAY_SUFFIX
 } from './constants'
 
 export type Renderer = {
@@ -206,7 +210,7 @@ export class GameEngine {
           if(this.onCombo) this.onCombo(this.combo)
           
           // Show life lost indicator
-          this.renderer.showFloatingText(t.x + 36, t.y + 36, '💔 -1', FLOAT_TYPE_LIFE)
+          this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', FLOAT_TYPE_LIFE)
           
           // Check for game over
           if(this.lives <= 0){
@@ -327,9 +331,9 @@ export class GameEngine {
         if(this.onCombo) this.onCombo(this.combo)
         
         // Show floating points text
-        this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, FLOAT_TYPE_POINTS)
+        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
         if(this.combo > 1) {
-          this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, FLOAT_TYPE_COMBO)
+          this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
         }
         
         // Consume only the matched portion from buffer
@@ -368,9 +372,9 @@ export class GameEngine {
       if(this.onCombo) this.onCombo(this.combo)
       
       // Show floating points text
-      this.renderer.showFloatingText(t.x + 36, t.y + 36, `+${points}`, FLOAT_TYPE_POINTS)
+      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
       if(this.combo > 1) {
-        this.renderer.showFloatingText(t.x + 36, t.y + 60, `${this.combo}x`, FLOAT_TYPE_COMBO)
+        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
       }
       // Clear buffer for exact kana match (IME)
       this.input.buffer = ''

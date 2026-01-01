@@ -35,7 +35,17 @@ import {
   CSS_CLASS_HIDDEN,
   ANIM_DURATION_STAT_HIGHLIGHT,
   ANIM_DURATION_STAT_SHAKE,
-  ANIM_DURATION_SPEED_FLASH
+  ANIM_DURATION_SPEED_FLASH,
+  GAME_AREA_WIDTH_MULTIPLIER,
+  SPEED_DISPLAY_DECIMAL_PLACES,
+  SPEED_INITIAL_DISPLAY,
+  COMBO_DISPLAY_SUFFIX,
+  UI_DISABLED_OPACITY,
+  UI_ENABLED_OPACITY,
+  UI_CURSOR_NOT_ALLOWED,
+  UI_CURSOR_POINTER,
+  HIGH_SCORE_RANK_PREFIX,
+  HIGH_SCORE_LIST_START_INDEX
 } from './game/constants'
 
 const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
@@ -69,7 +79,7 @@ function renderHighScores(container: HTMLElement, highlightScore?: number){
 		const date = new Date(entry.date).toLocaleDateString()
 		const highlight = highlightScore === entry.score ? 'highlight' : ''
 		return `<div class="high-score-entry ${highlight}">
-			<span class="high-score-rank">#${idx + 1}</span>
+			<span class="high-score-rank">${HIGH_SCORE_RANK_PREFIX}${idx + HIGH_SCORE_LIST_START_INDEX}</span>
 			<span class="high-score-value">${entry.score}</span>
 			<span class="high-score-date">${date}</span>
 		</div>`
@@ -92,26 +102,26 @@ function updateLivesDisplay(mode: GameMode){
 function disableGameSettings(){
 	if(gameModeSelect){
 		gameModeSelect.disabled = true
-		gameModeSelect.style.opacity = '0.5'
-		gameModeSelect.style.cursor = 'not-allowed'
+		gameModeSelect.style.opacity = UI_DISABLED_OPACITY
+		gameModeSelect.style.cursor = UI_CURSOR_NOT_ALLOWED
 	}
 	if(kanaSelect){
 		kanaSelect.disabled = true
-		kanaSelect.style.opacity = '0.5'
-		kanaSelect.style.cursor = 'not-allowed'
+		kanaSelect.style.opacity = UI_DISABLED_OPACITY
+		kanaSelect.style.cursor = UI_CURSOR_NOT_ALLOWED
 	}
 }
 
 function enableGameSettings(){
 	if(gameModeSelect){
 		gameModeSelect.disabled = false
-		gameModeSelect.style.opacity = '1'
-		gameModeSelect.style.cursor = 'pointer'
+		gameModeSelect.style.opacity = UI_ENABLED_OPACITY
+		gameModeSelect.style.cursor = UI_CURSOR_POINTER
 	}
 	if(kanaSelect){
 		kanaSelect.disabled = false
-		kanaSelect.style.opacity = '1'
-		kanaSelect.style.cursor = 'pointer'
+		kanaSelect.style.opacity = UI_ENABLED_OPACITY
+		kanaSelect.style.cursor = UI_CURSOR_POINTER
 	}
 }
 
@@ -128,14 +138,14 @@ const engine = new GameEngine({
 		audio.playSuccess()
 	},
 	onCombo: (combo) => { 
-		comboEl.textContent = `${combo}x`
+		comboEl.textContent = `${combo}${COMBO_DISPLAY_SUFFIX}`
 		if(combo > 0) {
 			comboEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
 			setTimeout(() => comboEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
 		}
 	},
 	onSpeedChange: (multiplier) => {
-		speedEl.textContent = `${multiplier.toFixed(1)}x`
+		speedEl.textContent = `${multiplier.toFixed(SPEED_DISPLAY_DECIMAL_PLACES)}${COMBO_DISPLAY_SUFFIX}`
 		speedEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
 		setTimeout(() => speedEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
 		
@@ -147,8 +157,8 @@ const engine = new GameEngine({
 		}
 		
 		// Show floating text notification
-		const width = renderer.getHeight() * 0.6 // Approximate game area width
-		renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(1)}x`, FLOAT_TYPE_SPEED)
+		const width = renderer.getHeight() * GAME_AREA_WIDTH_MULTIPLIER
+		renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(SPEED_DISPLAY_DECIMAL_PLACES)}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_SPEED)
 		
 		audio.playSpeedIncrease()
 	},
@@ -235,8 +245,8 @@ if(pauseBtn){
 	
 	// Disable pause button initially
 	pauseBtn.disabled = true
-	pauseBtn.style.opacity = '0.5'
-	pauseBtn.style.cursor = 'not-allowed'
+	pauseBtn.style.opacity = UI_DISABLED_OPACITY
+	pauseBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
 	
 	pauseBtn.addEventListener('click', ()=>{
 		if(!gameStarted) return // Don't allow pause before game starts
@@ -256,8 +266,8 @@ if(pauseBtn){
 		gameStarted = true
 		isPaused = false
 		pauseBtn.disabled = false
-		pauseBtn.style.opacity = '1'
-		pauseBtn.style.cursor = 'pointer'
+		pauseBtn.style.opacity = UI_ENABLED_OPACITY
+		pauseBtn.style.cursor = UI_CURSOR_POINTER
 		pauseBtn.innerHTML = '<span class="btn-left">⏸️</span><span class="btn-label">Pause</span><span class="btn-right"><kbd>Space</kbd></span>'
 	}
 	
@@ -266,8 +276,8 @@ if(pauseBtn){
 		gameStarted = false
 		isPaused = false
 		pauseBtn.disabled = true
-		pauseBtn.style.opacity = '0.5'
-		pauseBtn.style.cursor = 'not-allowed'
+		pauseBtn.style.opacity = UI_DISABLED_OPACITY
+		pauseBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
 		pauseBtn.innerHTML = '<span class="btn-left">⏸️</span><span class="btn-label">Pause</span><span class="btn-right"><kbd>Space</kbd></span>'
 	}
 }
@@ -275,8 +285,8 @@ if(pauseBtn){
 if(endGameBtn){
 	// Disable end game button initially
 	endGameBtn.disabled = true
-	endGameBtn.style.opacity = '0.5'
-	endGameBtn.style.cursor = 'not-allowed'
+	endGameBtn.style.opacity = UI_DISABLED_OPACITY
+	endGameBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
 	
 	endGameBtn.addEventListener('click', ()=>{
 		// Only allow ending if button is enabled (which means game is running)
@@ -290,15 +300,15 @@ if(endGameBtn){
 	// Export function to enable end game button
 	window.enableEndGameButton = () => {
 		endGameBtn.disabled = false
-		endGameBtn.style.opacity = '1'
-		endGameBtn.style.cursor = 'pointer'
+		endGameBtn.style.opacity = UI_ENABLED_OPACITY
+		endGameBtn.style.cursor = UI_CURSOR_POINTER
 	}
 	
 	// Export function to disable end game button
 	window.disableEndGameButton = () => {
 		endGameBtn.disabled = true
-		endGameBtn.style.opacity = '0.5'
-		endGameBtn.style.cursor = 'not-allowed'
+		endGameBtn.style.opacity = UI_DISABLED_OPACITY
+		endGameBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
 	}
 }
 // Render high scores on start screen
@@ -307,7 +317,7 @@ renderHighScores(highScoresStartEl)
 if(startBtn){
 	startBtn.addEventListener('click', ()=>{
 		startScreenEl.classList.add(CSS_CLASS_HIDDEN)
-		speedEl.textContent = '1.0x' // Reset speed display without effects
+		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		if(window.enablePauseButton) window.enablePauseButton()
 		if(window.enableEndGameButton) window.enableEndGameButton()
 		disableGameSettings()
@@ -318,7 +328,7 @@ if(startBtn){
 if(restartBtn){
 	restartBtn.addEventListener('click', ()=>{
 		gameOverEl.classList.add(CSS_CLASS_HIDDEN)
-		speedEl.textContent = '1.0x' // Reset speed display without effects
+		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		engine.reset()
 		if(window.enablePauseButton) window.enablePauseButton()
 		if(window.enableEndGameButton) window.enableEndGameButton()
