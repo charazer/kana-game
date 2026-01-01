@@ -304,6 +304,9 @@ export class GameEngine {
   handleCommit(value: string){
     if(!value) return
     
+    // Don't process input when game is not running (paused or not started)
+    if(!this.running) return
+    
     // Try longest romaji match first (supports chaining like "shika" -> "shi" + "ka")
     const best = longestRomajiMatch(this.tokens.map(t=>t.entry), value)
     if(best){
