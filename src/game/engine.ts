@@ -62,6 +62,15 @@ const TIME_THRESHOLD_VERY_RECENT = 5000 // ms
 const TIME_THRESHOLD_RECENT = 15000 // ms
 const TIME_THRESHOLD_MODERATE = 30000 // ms
 
+// Difficulty progression - unlock complex kana gradually
+const BASIC_KANA_IDS = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n']
+const DAKUTEN_KANA_IDS = ['ga','gi','gu','ge','go','za','ji','zu','ze','zo','da','di','du','de','do','ba','bi','bu','be','bo','pa','pi','pu','pe','po']
+const YOON_KANA_IDS = ['kya','kyu','kyo','sha','shu','sho','cha','chu','cho','nya','nyu','nyo','hya','hyu','hyo','mya','myu','myo','rya','ryu','ryo','gya','gyu','gyo','ja','ju','jo','bya','byu','byo','pya','pyu','pyo']
+
+// Unlock thresholds (based on correct answers)
+const UNLOCK_DAKUTEN_THRESHOLD = 20 // unlock after 20 correct answers
+const UNLOCK_YOON_THRESHOLD = 40 // unlock after 40 correct answers
+
 // Spawn overlap detection
 const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
 
@@ -78,6 +87,7 @@ export class GameEngine {
   input: InputManager
   running = false
   last = 0
+  correctAnswers = 0 // track for progressive difficulty
   tokens: Array<{ id: string; entry: KanaEntry; el: HTMLElement; kana: string; y: number; x:number; spawnTime: number }>
   score = 0
   lives = INITIAL_LIVES
@@ -149,6 +159,7 @@ export class GameEngine {
     this.score = 0
     this.lives = INITIAL_LIVES
     this.combo = 0
+    this.correctAnswers = 0
     this.gameTime = 0
     this.speed = this.baseSpeed
     this.lastSpeedMultiplier = 1.0
@@ -229,15 +240,39 @@ export class GameEngine {
     if(this.running) requestAnimationFrame(this.loop.bind(this))
   }
 
+  getAvailableKana(){
+    // Progressive difficulty - unlock kana based on correct answers
+    const unlockDakuten = this.correctAnswers >= UNLOCK_DAKUTEN_THRESHOLD
+    const unlockYoon = this.correctAnswers >= UNLOCK_YOON_THRESHOLD
+    
+    return this.kanaSet.filter(kana => {
+      // Always include basic kana
+      if(BASIC_KANA_IDS.includes(kana.id)) return true
+      
+      // Include dakuten if unlocked
+      if(DAKUTEN_KANA_IDS.includes(kana.id)) return unlockDakuten
+      
+      // Include yoon only if unlocked
+      if(YOON_KANA_IDS.includes(kana.id)) return unlockYoon
+      
+      // Unknown kana (shouldn't happen) - include by default
+      return true
+    })
+  }
+
   spawnToken(){
     if(this.kanaSet.length === 0) return
     if(this.tokens.length >= this.maxActiveTokens) return // don't spawn if at limit
+    
+    // Get available kana based on progression
+    const availableKana = this.getAvailableKana()
+    if(availableKana.length === 0) return
     
     // Calculate weights based on recency (last seen time)
     const now = performance.now()
     const weights: number[] = []
     
-    for(const kana of this.kanaSet){
+    for(const kana of availableKana){
       const lastSeen = this.kanaLastSeen.get(kana.id) || 0
       const timeSince = now - lastSeen
       
@@ -257,7 +292,7 @@ export class GameEngine {
       weights.push(weight)
     }
     
-    // Weighted random selection
+    // Weighted random selection with improved randomness
     const totalWeight = weights.reduce((sum, w) => sum + w, 0)
     let random = Math.random() * totalWeight
     let selectedIndex = 0
@@ -270,7 +305,7 @@ export class GameEngine {
       }
     }
     
-    const entry = this.kanaSet[selectedIndex]
+    const entry = availableKana[selectedIndex]
     this.kanaLastSeen.set(entry.id, now)
     
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
@@ -319,6 +354,9 @@ export class GameEngine {
           this.renderer.removeTokenEl(t.el)
         }, FLASH_SUCCESS_DURATION)
         this.tokens.splice(idx,1)
+        
+        // Track correct answers for progressive difficulty
+        this.correctAnswers++
         
         // Calculate score with combo multiplier
         const basePoints = BASE_POINTS
