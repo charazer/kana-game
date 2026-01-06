@@ -3,6 +3,7 @@ import { DOMRenderer } from './game/renderer_dom'
 import { InputManager } from './game/input'
 import { AudioManager } from './game/audio'
 import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage'
+import { createHighScoresList, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/templates'
 import {
   type GameMode,
   GAME_MODE_PRACTICE,
@@ -70,22 +71,17 @@ const restartBtn = document.getElementById(DOM_ID_RESTART) as HTMLButtonElement 
 
 function renderHighScores(container: HTMLElement, highlightScore?: number){
 	const scores = getHighScores()
-	if(scores.length === 0){
-		container.innerHTML = '<h3>High Scores</h3><p style="color:rgba(255,255,255,0.4);font-size:14px;padding:8px;">No scores yet!</p>'
-		return
-	}
 	
-	const entries = scores.map((entry, idx) => {
-		const date = new Date(entry.date).toLocaleDateString()
-		const highlight = highlightScore === entry.score ? 'highlight' : ''
-		return `<div class="high-score-entry ${highlight}">
-			<span class="high-score-rank">${HIGH_SCORE_RANK_PREFIX}${idx + HIGH_SCORE_LIST_START_INDEX}</span>
-			<span class="high-score-value">${entry.score}</span>
-			<span class="high-score-date">${date}</span>
-		</div>`
-	}).join('')
+	// Transform scores into HighScoreEntry format
+	const entries: HighScoreEntry[] = scores.map((entry, idx) => ({
+		score: entry.score,
+		date: entry.date,
+		rank: idx + HIGH_SCORE_LIST_START_INDEX,
+		highlight: highlightScore === entry.score
+	}))
 	
-	container.innerHTML = `<h3>High Scores</h3>${entries}`
+	// Use template utility to generate HTML
+	container.innerHTML = createHighScoresList(entries, HIGH_SCORE_RANK_PREFIX)
 }
 
 function updateLivesDisplay(mode: GameMode){
@@ -254,10 +250,10 @@ if(pauseBtn){
 		isPaused = !isPaused
 		if(isPaused){
 			engine.pause()
-			pauseBtn.innerHTML = '<span class="btn-left">▶️</span><span class="btn-label">Resume</span><span class="btn-right"><kbd>Space</kbd></span>'
+			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
 		} else {
 			engine.resume()
-			pauseBtn.innerHTML = '<span class="btn-left">⏸️</span><span class="btn-label">Pause</span><span class="btn-right"><kbd>Space</kbd></span>'
+			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 		}
 	})
 	
@@ -268,7 +264,7 @@ if(pauseBtn){
 		pauseBtn.disabled = false
 		pauseBtn.style.opacity = UI_ENABLED_OPACITY
 		pauseBtn.style.cursor = UI_CURSOR_POINTER
-		pauseBtn.innerHTML = '<span class="btn-left">⏸️</span><span class="btn-label">Pause</span><span class="btn-right"><kbd>Space</kbd></span>'
+		DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 	}
 	
 	// Export function to disable pause button when game ends
@@ -278,7 +274,7 @@ if(pauseBtn){
 		pauseBtn.disabled = true
 		pauseBtn.style.opacity = UI_DISABLED_OPACITY
 		pauseBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
-		pauseBtn.innerHTML = '<span class="btn-left">⏸️</span><span class="btn-label">Pause</span><span class="btn-right"><kbd>Space</kbd></span>'
+		DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 	}
 }
 
