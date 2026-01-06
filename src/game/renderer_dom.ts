@@ -19,6 +19,9 @@ export class DOMRenderer{
     el.className = CSS_CLASS_TOKEN
     el.dataset[DATASET_KANA_ID] = id
     el.textContent = kana
+    // Initialize position custom properties for animation continuity
+    el.style.setProperty('--tx', '0px')
+    el.style.setProperty('--ty', '0px')
     this.container.appendChild(el)
     return el
   }
@@ -28,11 +31,21 @@ export class DOMRenderer{
   }
 
   setTokenPosition(el: HTMLElement, x:number, y:number){
+    // Store position as CSS custom properties for animation continuity
+    el.style.setProperty('--tx', `${x}px`)
+    el.style.setProperty('--ty', `${y}px`)
     el.style.transform = `translate3d(${x}px, ${y}px, 0)`
   }
 
   flashToken(el: HTMLElement, success: boolean){
-    el.classList.add(success ? CSS_CLASS_TOKEN_SUCCESS : CSS_CLASS_TOKEN_MISS)
+    const className = success ? CSS_CLASS_TOKEN_SUCCESS : CSS_CLASS_TOKEN_MISS
+    el.classList.add(className)
+    
+    // Use animation end event for immediate removal
+    const animationEndHandler = () => {
+      el.remove()
+    }
+    el.addEventListener('animationend', animationEndHandler, { once: true })
   }
 
   showFloatingText(x: number, y: number, text: string, type: FloatingTextType){

@@ -525,12 +525,14 @@ main#game-area {
   margin: 0 auto;
   width: 100%;
   background: var(--bg);
+  contain: layout style paint;
 }
 #tokens {
   position: absolute;
   inset: 0;
   border-left: 1px solid var(--white-03);
   border-right: 1px solid var(--white-03);
+  contain: layout style;
 }
 #tokens::after{
   content:'';
@@ -544,22 +546,24 @@ main#game-area {
   pointer-events:none;
   opacity:0.8;
 }
-.token{position:absolute;left:0;top:0;width:var(--token-size);height:var(--token-size);display:flex;align-items:center;justify-content:center;background:var(--white-03);border-radius:var(--radius-lg);font-size:var(--font-5xl);transition:transform 100ms linear;border:var(--token-border) solid transparent}
-.token-success{background:var(--color-success-glow)!important;border-color:var(--color-success)!important;box-shadow:var(--shadow-success)!important;animation:success-glow 200ms ease-out}
-.token-miss{background:var(--color-error-glow)!important;border-color:var(--color-error)!important;box-shadow:var(--shadow-error)!important;animation:miss-glow 300ms ease-out}
+.token{position:absolute;left:0;top:0;width:var(--token-size);height:var(--token-size);display:flex;align-items:center;justify-content:center;background:var(--white-03);border-radius:var(--radius-lg);font-size:var(--font-5xl);border:var(--token-border) solid transparent;will-change:transform;backface-visibility:hidden}
+.token-success{background:var(--color-success-glow)!important;border-color:var(--color-success)!important;animation:token-success-anim 150ms ease-out forwards}
+.token-miss{background:var(--color-error-glow)!important;border-color:var(--color-error)!important;animation:token-miss-anim 200ms ease-out forwards}
+@keyframes token-success-anim{0%{transform:translate3d(var(--tx),var(--ty),0) scale(1);opacity:1}50%{transform:translate3d(var(--tx),var(--ty),0) scale(1.15);opacity:1}100%{transform:translate3d(var(--tx),var(--ty),0) scale(0.8);opacity:0}}
+@keyframes token-miss-anim{0%{transform:translate3d(var(--tx),var(--ty),0) scale(1);opacity:1}50%{transform:translate3d(var(--tx),var(--ty),0) scale(1.05);opacity:0.8}100%{transform:translate3d(var(--tx),var(--ty),0) scale(0.95);opacity:0}}
 @keyframes success-glow{0%,100%{box-shadow:var(--shadow-success)}50%{box-shadow:0 0 30px var(--color-success),0 0 40px var(--color-success-glow)}}
 @keyframes miss-glow{0%,100%{box-shadow:var(--shadow-error)}50%{box-shadow:0 0 30px var(--color-error),0 0 40px var(--color-error-glow)}}
-.floating-text{position:absolute;font-weight:var(--font-bold);font-size:var(--font-3xl);pointer-events:none;z-index:var(--z-floating);animation:float-up 1s ease-out forwards;font-family:var(--font-mono)}
+.floating-text{position:absolute;font-weight:var(--font-bold);font-size:var(--font-3xl);pointer-events:none;z-index:var(--z-floating);animation:float-up 1s ease-out forwards;font-family:var(--font-mono);will-change:transform,opacity;backface-visibility:hidden}
 .floating-points{color:var(--color-success);text-shadow:var(--shadow-success-text)}
 .floating-combo{color:var(--color-combo);text-shadow:var(--shadow-combo-text)}
 .floating-speed{color:var(--accent);text-shadow:0 0 15px var(--accent),0 0 30px var(--accent-60);font-size:var(--font-5xl);font-weight:var(--font-black)}
 .floating-life{color:var(--color-error);text-shadow:var(--shadow-error-text);font-size:var(--font-4xl)}
 @keyframes float-up{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-80px) scale(1.2);opacity:0}}
-.stat-highlight{animation:stat-pulse 300ms ease-out}
+.stat-highlight{animation:stat-pulse 300ms ease-out;will-change:transform}
 @keyframes stat-pulse{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
-.stat-shake{animation:shake 400ms ease-out}
+.stat-shake{animation:shake 400ms ease-out;will-change:transform}
 @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-5px)}20%,40%,60%,80%{transform:translateX(5px)}}
-.speed-flash{animation:speed-flash-anim 600ms ease-out}
+.speed-flash{animation:speed-flash-anim 600ms ease-out;will-change:box-shadow}
 @keyframes speed-flash-anim{0%{box-shadow:inset 0 0 0px var(--accent-08)}15%{box-shadow:inset 0 0 100px var(--accent-30)}100%{box-shadow:inset 0 0 0px var(--accent-08)}}
 
 /* Footer - Input Display */

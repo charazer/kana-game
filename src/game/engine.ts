@@ -48,10 +48,6 @@ const SPEED_INCREASE_INTERVAL = 15 // seconds
 const SPEED_INCREASE_PERCENT = 0.10 // 10% per interval
 const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
 
-// Token flash timing
-const FLASH_SUCCESS_DURATION = 200 // ms
-const FLASH_MISS_DURATION = 300 // ms
-
 // Weighted spawn system
 const WEIGHT_UNSEEN = 10000
 const WEIGHT_VERY_RECENT = 1 // < 5 seconds
@@ -200,40 +196,48 @@ export class GameEngine {
 
     // update tokens
     const failureY = this.renderer.getHeight() - DANGER_ZONE
-    for(const t of [...this.tokens]){
+    const tokensToRemove: typeof this.tokens = []
+    
+    for(let i = 0; i < this.tokens.length; i++){
+      const t = this.tokens[i]
       t.y += this.speed * dt
       this.renderer.setTokenPosition(t.el, t.x, t.y)
       if(t.y > failureY){
-        // Token missed - flash red before removing
-        this.renderer.flashToken(t.el, false)
-        setTimeout(() => {
-          this.renderer.removeTokenEl(t.el)
-        }, FLASH_MISS_DURATION)
-        this.tokens = this.tokens.filter(x=>x!==t)
+        tokensToRemove.push(t)
+      }
+    }
+    
+    // Process removed tokens after iteration
+    for(const t of tokensToRemove){
+      // Remove from tokens array efficiently
+      const idx = this.tokens.indexOf(t)
+      if(idx >= 0) this.tokens.splice(idx, 1)
+      
+      // Flash red on miss (removal happens via animationend)
+      this.renderer.flashToken(t.el, false)
+      
+      // In practice mode, don't lose lives
+      if(this.gameMode === GAME_MODE_CHALLENGE){
+        // Lose a life and reset combo
+        const previousLives = this.lives
+        this.lives--
+        this.combo = 0
+        this.onLivesChange(this.lives, previousLives)
+        if(this.onCombo) this.onCombo(this.combo)
         
-        // In practice mode, don't lose lives
-        if(this.gameMode === GAME_MODE_CHALLENGE){
-          // Lose a life and reset combo
-          const previousLives = this.lives
-          this.lives--
-          this.combo = 0
-          this.onLivesChange(this.lives, previousLives)
-          if(this.onCombo) this.onCombo(this.combo)
-          
-          // Show life lost indicator
-          this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', FLOAT_TYPE_LIFE)
-          
-          // Check for game over
-          if(this.lives <= 0){
-            this.running = false
-            this.onGameOver()
-            return
-          }
-        } else {
-          // In practice mode, just reset combo
-          this.combo = 0
-          if(this.onCombo) this.onCombo(this.combo)
+        // Show life lost indicator
+        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', FLOAT_TYPE_LIFE)
+        
+        // Check for game over
+        if(this.lives <= 0){
+          this.running = false
+          this.onGameOver()
+          return
         }
+      } else {
+        // In practice mode, just reset combo
+        this.combo = 0
+        if(this.onCombo) this.onCombo(this.combo)
       }
     }
 
@@ -348,12 +352,11 @@ export class GameEngine {
       const idx = this.tokens.findIndex(t => t.entry.id === best.entry.id)
       if(idx >= 0){
         const t = this.tokens[idx]
-        // Flash green on success
-        this.renderer.flashToken(t.el, true)
-        setTimeout(() => {
-          this.renderer.removeTokenEl(t.el)
-        }, FLASH_SUCCESS_DURATION)
+        // Remove from array immediately
         this.tokens.splice(idx,1)
+        
+        // Flash green on success (removal happens via animationend)
+        this.renderer.flashToken(t.el, true)
         
         // Track correct answers for progressive difficulty
         this.correctAnswers++
@@ -392,12 +395,11 @@ export class GameEngine {
     const matchIndex = this.tokens.findIndex(t => exactMatch(t.entry as any, value))
     if(matchIndex >= 0){
       const t = this.tokens[matchIndex]
-      // Flash green on success
-      this.renderer.flashToken(t.el, true)
-      setTimeout(() => {
-        this.renderer.removeTokenEl(t.el)
-      }, FLASH_SUCCESS_DURATION)
+      // Remove from array immediately
       this.tokens.splice(matchIndex,1)
+      
+      // Flash green on success (removal happens via animationend)
+      this.renderer.flashToken(t.el, true)
       
       // Calculate score with combo multiplier
       const basePoints = BASE_POINTS
