@@ -9,41 +9,17 @@
   <body>
     <div id="app">
       <header>
+        <button id="settings-btn" class="btn-settings">
+          <span class="btn-left">⚙️</span>
+          <span class="btn-label">Settings</span>
+        </button>
+        
         <div class="header-title">
           <h1>🎌 Kana Game</h1>
         </div>
         <div class="header-controls">
-          <!-- Settings Section -->
-          <div class="control-section settings-section">
-            <div class="section-label">Settings</div>
-            <div class="section-items">
-              <div class="setting-item">
-                <label for="game-mode">Mode</label>
-                <select id="game-mode">
-                  <option value="challenge">Challenge</option>
-                  <option value="practice">Practice</option>
-                </select>
-              </div>
-              <div class="setting-item">
-                <label for="kana-set">Kana Set</label>
-                <select id="kana-set">
-                  <option value="hiragana">Hiragana</option>
-                  <option value="katakana">Katakana</option>
-                </select>
-              </div>
-              <div class="setting-item">
-                <label for="audio-toggle">Audio</label>
-                <label class="checkbox-control" for="audio-toggle">
-                  <input type="checkbox" id="audio-toggle" />
-                  <span>🔊 Enabled</span>
-                </label>
-              </div>
-            </div>
-          </div>
-          
           <!-- Stats Section -->
           <div class="control-section stats-section">
-            <div class="section-label">Stats</div>
             <div class="section-items">
               <div class="stat-box score-box">
                 <label>Score</label>
@@ -66,7 +42,6 @@
           
           <!-- Controls Section -->
           <div class="control-section controls-section">
-            <div class="section-label">Controls</div>
             <div class="section-items">
               <button id="end-game" class="btn-end-game">
                 <span class="btn-left">🛑</span>
@@ -118,6 +93,44 @@
           <div id="input-echo">_</div>
         </div>
       </footer>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content settings-modal-content">
+        <div class="modal-header">
+          <h2>⚙️ Settings</h2>
+          <button id="settings-close" class="btn-modal-close" aria-label="Close settings">
+            <span>✕</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-group">
+            <div class="setting-item">
+              <label for="game-mode">Game Mode</label>
+              <select id="game-mode">
+                <option value="challenge">Challenge</option>
+                <option value="practice">Practice</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="kana-set">Kana Set</label>
+              <select id="kana-set">
+                <option value="hiragana">Hiragana (ひらがな)</option>
+                <option value="katakana">Katakana (カタカナ)</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="audio-toggle">Audio</label>
+              <label class="checkbox-control" for="audio-toggle">
+                <input type="checkbox" id="audio-toggle" />
+                <span class="checkbox-label">🔊 Sound Effects</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="/main.ts"></script>

@@ -69,6 +69,12 @@ const highScoresStartEl = document.getElementById(DOM_ID_HIGH_SCORES_START)!
 const highScoresEndEl = document.getElementById(DOM_ID_HIGH_SCORES_END)!
 const restartBtn = document.getElementById(DOM_ID_RESTART) as HTMLButtonElement | null
 
+// Settings modal elements
+const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement | null
+const settingsModal = document.getElementById('settings-modal')!
+const settingsCloseBtn = document.getElementById('settings-close') as HTMLButtonElement | null
+const modalOverlay = settingsModal.querySelector('.modal-overlay') as HTMLElement
+
 function renderHighScores(container: HTMLElement, highlightScore?: number){
 	const scores = getHighScores()
 	
@@ -361,3 +367,36 @@ document.addEventListener('keydown', (e) => {
 		endGameBtn.click()
 	}
 })
+
+// Settings modal functionality
+if(settingsBtn && settingsModal){
+	// Open modal
+	settingsBtn.addEventListener('click', ()=>{
+		settingsModal.classList.remove(CSS_CLASS_HIDDEN)
+	})
+	
+	// Close modal - close button
+	if(settingsCloseBtn){
+		settingsCloseBtn.addEventListener('click', ()=>{
+			settingsModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
+	
+	// Close modal - overlay click
+	if(modalOverlay){
+		modalOverlay.addEventListener('click', ()=>{
+			settingsModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
+	
+	// Close modal - escape key
+	document.addEventListener('keydown', (e)=>{
+		if(e.code === 'Escape' && !settingsModal.classList.contains(CSS_CLASS_HIDDEN)){
+			// Only close settings if game is not running or already handling escape
+			if(!engine.running){
+				e.preventDefault()
+				settingsModal.classList.add(CSS_CLASS_HIDDEN)
+			}
+		}
+	})
+}
