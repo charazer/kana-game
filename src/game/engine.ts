@@ -2,6 +2,7 @@ import kanaHiragana from '../data/kana/hiragana.json'
 import kanaKatakana from '../data/kana/katakana.json'
 import type { KanaEntry } from './types'
 import { exactMatch, longestRomajiMatch } from './matcher'
+import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from './kana-constants'
 import { 
   type GameMode, 
   type FloatingTextType,
@@ -58,10 +59,6 @@ const TIME_THRESHOLD_VERY_RECENT = 5000 // ms
 const TIME_THRESHOLD_RECENT = 15000 // ms
 const TIME_THRESHOLD_MODERATE = 30000 // ms
 
-// Difficulty progression - unlock complex kana gradually
-const BASIC_KANA_IDS = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n']
-const DAKUTEN_KANA_IDS = ['ga','gi','gu','ge','go','za','ji','zu','ze','zo','da','di','du','de','do','ba','bi','bu','be','bo','pa','pi','pu','pe','po']
-const YOON_KANA_IDS = ['kya','kyu','kyo','sha','shu','sho','cha','chu','cho','nya','nyu','nyo','hya','hyu','hyo','mya','myu','myo','rya','ryu','ryo','gya','gyu','gyo','ja','ju','jo','bya','byu','byo','pya','pyu','pyo']
 
 // Unlock thresholds (based on correct answers)
 const UNLOCK_DAKUTEN_THRESHOLD = 20 // unlock after 20 correct answers

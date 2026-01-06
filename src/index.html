@@ -182,6 +182,35 @@
                 <li><strong>が</strong> → type "ga"</li>
               </ul>
             </section>
+            
+            <section class="help-section">
+              <button id="open-kana-reference" class="btn-kana-reference">
+                <span class="btn-left">📚</span>
+                <span class="btn-label">Kana Reference</span>
+              </button>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kana Reference Modal -->
+    <div id="kana-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content kana-modal-content">
+        <div class="modal-header">
+          <h2>📚 Kana Reference</h2>
+          <button id="kana-close" class="btn-modal-close" aria-label="Close kana reference">
+            <span>✕</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="kana-tabs">
+            <button id="tab-hiragana" class="kana-tab active">Hiragana (ひらがな)</button>
+            <button id="tab-katakana" class="kana-tab">Katakana (カタカナ)</button>
+          </div>
+          <div id="kana-content" class="kana-content">
+            <!-- Content will be dynamically generated -->
           </div>
         </div>
       </div>

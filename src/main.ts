@@ -3,7 +3,10 @@ import { DOMRenderer } from './game/renderer_dom'
 import { InputManager } from './game/input'
 import { AudioManager } from './game/audio'
 import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage'
-import { createHighScoresList, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/templates'
+import { createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/templates'
+import kanaHiragana from './data/kana/hiragana.json'
+import kanaKatakana from './data/kana/katakana.json'
+import type { KanaEntry } from './game/types'
 import {
   type GameMode,
   GAME_MODE_PRACTICE,
@@ -81,6 +84,20 @@ const howToPlayLinkEnd = document.getElementById('how-to-play-link-end') as HTML
 const helpModal = document.getElementById('help-modal')!
 const helpCloseBtn = document.getElementById('help-close') as HTMLButtonElement | null
 const helpModalOverlay = helpModal.querySelector('.modal-overlay') as HTMLElement
+
+// Kana reference modal elements
+const openKanaReferenceBtn = document.getElementById('open-kana-reference') as HTMLButtonElement | null
+const kanaModal = document.getElementById('kana-modal')!
+const kanaCloseBtn = document.getElementById('kana-close') as HTMLButtonElement | null
+const kanaModalOverlay = kanaModal.querySelector('.modal-overlay') as HTMLElement
+const tabHiragana = document.getElementById('tab-hiragana') as HTMLButtonElement | null
+const tabKatakana = document.getElementById('tab-katakana') as HTMLButtonElement | null
+const kanaContent = document.getElementById('kana-content')!
+
+function renderKanaReference(type: 'hiragana' | 'katakana') {
+	const kanaData = (type === 'hiragana' ? kanaHiragana : kanaKatakana) as KanaEntry[]
+	kanaContent.innerHTML = createKanaReference(kanaData, type)
+}
 
 function renderHighScores(container: HTMLElement, highlightScore?: number){
 	const scores = getHighScores()
@@ -410,6 +427,11 @@ if(settingsBtn && settingsModal){
 			e.preventDefault()
 			helpModal.classList.add(CSS_CLASS_HIDDEN)
 		}
+		// Close kana modal on escape
+		if(e.code === 'Escape' && !kanaModal.classList.contains(CSS_CLASS_HIDDEN)){
+			e.preventDefault()
+			kanaModal.classList.add(CSS_CLASS_HIDDEN)
+		}
 	})
 
 	// Help modal handlers
@@ -439,6 +461,48 @@ if(settingsBtn && settingsModal){
 	if(helpModalOverlay){
 		helpModalOverlay.addEventListener('click', ()=>{
 			helpModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
+
+	// Kana reference modal handlers
+	if(openKanaReferenceBtn){
+		openKanaReferenceBtn.addEventListener('click', ()=>{
+			renderKanaReference('hiragana')
+			kanaModal.classList.remove(CSS_CLASS_HIDDEN)
+			// Set active tab
+			if(tabHiragana) tabHiragana.classList.add('active')
+			if(tabKatakana) tabKatakana.classList.remove('active')
+		})
+	}
+
+	// Tab switching
+	if(tabHiragana){
+		tabHiragana.addEventListener('click', ()=>{
+			renderKanaReference('hiragana')
+			tabHiragana.classList.add('active')
+			if(tabKatakana) tabKatakana.classList.remove('active')
+		})
+	}
+
+	if(tabKatakana){
+		tabKatakana.addEventListener('click', ()=>{
+			renderKanaReference('katakana')
+			tabKatakana.classList.add('active')
+			if(tabHiragana) tabHiragana.classList.remove('active')
+		})
+	}
+
+	// Close kana modal - close button
+	if(kanaCloseBtn){
+		kanaCloseBtn.addEventListener('click', ()=>{
+			kanaModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
+
+	// Close kana modal - overlay click
+	if(kanaModalOverlay){
+		kanaModalOverlay.addEventListener('click', ()=>{
+			kanaModal.classList.add(CSS_CLASS_HIDDEN)
 		})
 	}
 }

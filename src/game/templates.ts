@@ -4,6 +4,9 @@
  * scattered throughout the codebase.
  */
 
+import type { KanaEntry } from './types'
+import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from './kana-constants'
+
 /**
  * Button structure with left icon, label, and right keyboard shortcut
  */
@@ -138,4 +141,83 @@ export const ButtonTemplates = {
     label: 'Play Again',
     rightKey: 'Enter'
   }
+}
+
+/**
+ * Creates HTML for a single kana character item
+ * @param kana - Kana entry data
+ * @returns HTML string for kana item
+ */
+function createKanaItem(kana: KanaEntry): string {
+  const romajiText = kana.romaji.join(' / ')
+  return `
+    <div class="kana-item">
+      <div class="kana-char">${kana.kana}</div>
+      <div class="kana-romaji">${romajiText}</div>
+    </div>
+  `
+}
+
+/**
+ * Creates HTML for a kana section with title and items
+ * @param kanaData - Array of kana entries
+ * @param title - Section title
+ * @param columns - Column structure for organizing kana (if undefined, uses grid layout)
+ * @returns HTML string for kana section
+ */
+function createKanaSection(kanaData: KanaEntry[], title: string, columns?: string[][]): string {
+  let html = `<div class="kana-section"><h3>${title}</h3>`
+  
+  if (columns) {
+    // Render as vertical columns (traditional table layout)
+    html += `<div class="kana-table">`
+    columns.forEach(column => {
+      html += `<div class="kana-column">`
+      column.forEach(id => {
+        const kana = kanaData.find(k => k.id === id)
+        if (kana) {
+          html += createKanaItem(kana)
+        }
+      })
+      html += `</div>`
+    })
+    html += `</div>`
+  } else {
+    // Render as grid (fallback for uncategorized kana)
+    html += `<div class="kana-grid">`
+    kanaData.forEach(kana => {
+      html += createKanaItem(kana)
+    })
+    html += `</div>`
+  }
+  
+  html += `</div>`
+  return html
+}
+
+/**
+ * Creates complete kana reference HTML for a specific type
+ * @param kanaData - Full array of kana entries (hiragana or katakana)
+ * @param type - Type of kana ('hiragana' or 'katakana')
+ * @returns HTML string for complete kana reference
+ */
+export function createKanaReference(kanaData: KanaEntry[], type: 'hiragana' | 'katakana'): string {
+  // Categorize kana
+  const basicKana = kanaData.filter(k => BASIC_KANA_IDS.includes(k.id))
+  const dakutenKana = kanaData.filter(k => DAKUTEN_KANA_IDS.includes(k.id))
+  const yoonKana = kanaData.filter(k => YOON_KANA_IDS.includes(k.id))
+  
+  // Build HTML
+  let html = ''
+  if (basicKana.length > 0) {
+    html += createKanaSection(basicKana, '基本 (Basic Kana)', GOJUON_COLUMNS)
+  }
+  if (dakutenKana.length > 0) {
+    html += createKanaSection(dakutenKana, '濁音・半濁音 (Dakuten & Handakuten)', DAKUTEN_COLUMNS)
+  }
+  if (yoonKana.length > 0) {
+    html += createKanaSection(yoonKana, '拗音 (Yoon)', YOON_COLUMNS)
+  }
+  
+  return html
 }
