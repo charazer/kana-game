@@ -75,6 +75,13 @@ const settingsModal = document.getElementById('settings-modal')!
 const settingsCloseBtn = document.getElementById('settings-close') as HTMLButtonElement | null
 const modalOverlay = settingsModal.querySelector('.modal-overlay') as HTMLElement
 
+// Help modal elements
+const howToPlayLink = document.getElementById('how-to-play-link') as HTMLAnchorElement | null
+const howToPlayLinkEnd = document.getElementById('how-to-play-link-end') as HTMLAnchorElement | null
+const helpModal = document.getElementById('help-modal')!
+const helpCloseBtn = document.getElementById('help-close') as HTMLButtonElement | null
+const helpModalOverlay = helpModal.querySelector('.modal-overlay') as HTMLElement
+
 function renderHighScores(container: HTMLElement, highlightScore?: number){
 	const scores = getHighScores()
 	
@@ -398,5 +405,40 @@ if(settingsBtn && settingsModal){
 				settingsModal.classList.add(CSS_CLASS_HIDDEN)
 			}
 		}
+		// Close help modal on escape
+		if(e.code === 'Escape' && !helpModal.classList.contains(CSS_CLASS_HIDDEN)){
+			e.preventDefault()
+			helpModal.classList.add(CSS_CLASS_HIDDEN)
+		}
 	})
+
+	// Help modal handlers
+	if(howToPlayLink){
+		howToPlayLink.addEventListener('click', (e)=>{
+			e.preventDefault()
+			helpModal.classList.remove(CSS_CLASS_HIDDEN)
+		})
+	}
+	
+	// Help modal handler for game over screen
+	if(howToPlayLinkEnd){
+		howToPlayLinkEnd.addEventListener('click', (e)=>{
+			e.preventDefault()
+			helpModal.classList.remove(CSS_CLASS_HIDDEN)
+		})
+	}
+	
+	// Close help modal - close button
+	if(helpCloseBtn){
+		helpCloseBtn.addEventListener('click', ()=>{
+			helpModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
+	
+	// Close help modal - overlay click
+	if(helpModalOverlay){
+		helpModalOverlay.addEventListener('click', ()=>{
+			helpModal.classList.add(CSS_CLASS_HIDDEN)
+		})
+	}
 }

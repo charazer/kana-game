@@ -770,6 +770,85 @@ main#game-area {
   color: var(--fg);
 }
 
+/* How to play Link */
+.how-to-play-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: var(--font-2xl);
+  font-weight: var(--font-semibold);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.how-to-play-link:hover {
+  color: var(--accent-light);
+  background: var(--accent-10);
+  transform: translateY(-1px);
+}
+
+/* Help Modal */
+.help-modal-content {
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.help-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.help-section h3 {
+  margin: 0;
+  font-size: var(--font-xl);
+  font-weight: var(--font-bold);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.help-section p {
+  margin: 0;
+  font-size: var(--font-md);
+  line-height: 1.6;
+  color: var(--white-80);
+}
+
+.help-section ul {
+  margin: 0;
+  padding-left: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.help-section li {
+  font-size: var(--font-md);
+  line-height: 1.6;
+  color: var(--white-80);
+}
+
+.help-section li strong {
+  color: var(--accent-light);
+  font-weight: var(--font-semibold);
+}
+
+.help-section kbd {
+  margin-left: 0;
+}
+
 /* Footer - Input Display */
 footer {
   flex-shrink: 0;
