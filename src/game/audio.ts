@@ -116,4 +116,76 @@ export class AudioManager {
       osc.stop(startTime + 0.15)
     })
   }
+
+  playGameStart() {
+    if (!this.enabled || !this.audioContext) return
+    
+    // Rising chord - energetic start
+    const now = this.audioContext.currentTime
+
+    const notes = [261.63, 329.63, 392] // C4, E4, G4
+    notes.forEach((freq, i) => {
+      const osc = this.audioContext!.createOscillator()
+      const gain = this.audioContext!.createGain()
+
+      osc.connect(gain)
+      gain.connect(this.audioContext!.destination)
+
+      osc.frequency.value = freq
+      osc.type = 'sine'
+
+      const startTime = now + (i * 0.05)
+      gain.gain.setValueAtTime(0.15, startTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.2)
+
+      osc.start(startTime)
+      osc.stop(startTime + 0.2)
+    })
+  }
+
+  playPause() {
+    if (!this.enabled || !this.audioContext) return
+    
+    // Short descending tone
+    const now = this.audioContext.currentTime
+
+    const osc = this.audioContext.createOscillator()
+    const gain = this.audioContext.createGain()
+
+    osc.connect(gain)
+    gain.connect(this.audioContext.destination)
+
+    osc.frequency.setValueAtTime(523.25, now) // C5
+    osc.frequency.exponentialRampToValueAtTime(392, now + 0.1) // G4
+    osc.type = 'sine'
+
+    gain.gain.setValueAtTime(0.12, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
+
+    osc.start(now)
+    osc.stop(now + 0.15)
+  }
+
+  playResume() {
+    if (!this.enabled || !this.audioContext) return
+    
+    // Short ascending tone
+    const now = this.audioContext.currentTime
+
+    const osc = this.audioContext.createOscillator()
+    const gain = this.audioContext.createGain()
+
+    osc.connect(gain)
+    gain.connect(this.audioContext.destination)
+
+    osc.frequency.setValueAtTime(392, now) // G4
+    osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.1) // C5
+    osc.type = 'sine'
+
+    gain.gain.setValueAtTime(0.12, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
+
+    osc.start(now)
+    osc.stop(now + 0.15)
+  }
 }

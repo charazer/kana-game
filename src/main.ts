@@ -345,9 +345,11 @@ if(pauseBtn){
 		isPaused = !isPaused
 		if(isPaused){
 			engine.pause()
+			audio.playPause()
 			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
 		} else {
 			engine.resume()
+			audio.playResume()
 			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 		}
 	})
@@ -412,6 +414,7 @@ if(startBtn){
 		if(window.enablePauseButton) window.enablePauseButton()
 		if(window.enableEndGameButton) window.enableEndGameButton()
 		disableGameSettings()
+		audio.playGameStart()
 		engine.start()
 	})
 }
@@ -424,6 +427,7 @@ if(restartBtn){
 		if(window.enablePauseButton) window.enablePauseButton()
 		if(window.enableEndGameButton) window.enableEndGameButton()
 		disableGameSettings()
+		audio.playGameStart()
 		engine.start()
 	})
 }
