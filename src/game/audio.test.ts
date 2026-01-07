@@ -316,5 +316,123 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).toHaveBeenCalled()
       })
     })
+
+    describe('music', () => {
+      let mockAudio: any
+      let audioInstance: any
+
+      beforeEach(() => {
+        mockAudio = {
+          play: vi.fn().mockResolvedValue(undefined),
+          pause: vi.fn(),
+          load: vi.fn(),
+          loop: false,
+          volume: 1,
+          currentTime: 0
+        }
+        
+        // Mock window.Audio constructor properly
+        globalThis.window = globalThis.window || {} as any
+        globalThis.window.Audio = class MockAudio {
+          play: any
+          pause: any
+          load: any
+          loop: boolean
+          volume: number
+          currentTime: number
+          
+          constructor() {
+            // Create a new instance with references to mocked functions
+            this.play = mockAudio.play
+            this.pause = mockAudio.pause
+            this.load = mockAudio.load
+            this.loop = mockAudio.loop
+            this.volume = mockAudio.volume
+            this.currentTime = mockAudio.currentTime
+            
+            // Store reference to the instance for tests
+            audioInstance = this
+          }
+        } as any
+      })
+
+      it('should initialize music with correct settings', async () => {
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        
+        expect(audioInstance.loop).toBe(true)
+        expect(audioInstance.volume).toBe(0.3)
+        expect(mockAudio.load).toHaveBeenCalled()
+      })
+
+      it('should handle music load errors gracefully', async () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mockAudio.load = vi.fn().mockRejectedValue(new Error('Load failed'))
+        
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Failed to load background music', expect.any(Error))
+        consoleWarnSpy.mockRestore()
+      })
+
+      it('should play music when enabled', async () => {
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        
+        manager.setMusicEnabled(true)
+        expect(mockAudio.play).toHaveBeenCalled()
+      })
+
+      it('should pause music when disabled', async () => {
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        
+        manager.setMusicEnabled(true)
+        manager.setMusicEnabled(false)
+        
+        expect(mockAudio.pause).toHaveBeenCalled()
+      })
+
+      it('should handle play errors gracefully', async () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mockAudio.play = vi.fn().mockRejectedValue(new Error('Play failed'))
+        
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        manager.setMusicEnabled(true)
+        
+        // Wait for promise to reject
+        await new Promise(resolve => setTimeout(resolve, 0))
+        
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Failed to play background music', expect.any(Error))
+        consoleWarnSpy.mockRestore()
+      })
+
+      it('should stop music and reset playback position', async () => {
+        const manager = new AudioManager()
+        await manager.initMusic('test.mp3')
+        audioInstance.currentTime = 10
+        
+        manager.stopMusic()
+        
+        expect(mockAudio.pause).toHaveBeenCalled()
+        expect(audioInstance.currentTime).toBe(0)
+      })
+
+      it('should handle setMusicEnabled when music not initialized', () => {
+        const manager = new AudioManager()
+        
+        // Should not throw
+        expect(() => manager.setMusicEnabled(true)).not.toThrow()
+      })
+
+      it('should handle stopMusic when music not initialized', () => {
+        const manager = new AudioManager()
+        
+        // Should not throw
+        expect(() => manager.stopMusic()).not.toThrow()
+      })
+    })
   })
 })
