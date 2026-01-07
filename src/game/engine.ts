@@ -17,7 +17,8 @@ import {
   FLOATING_TEXT_OFFSET_X,
   FLOATING_TEXT_OFFSET_Y,
   FLOATING_TEXT_COMBO_OFFSET_Y,
-  COMBO_DISPLAY_SUFFIX
+  COMBO_DISPLAY_SUFFIX,
+  INITIAL_LIVES
 } from './constants'
 
 export type Renderer = {
@@ -33,7 +34,6 @@ export type Renderer = {
 import type { InputManager } from './input'
 
 // Game constants
-const INITIAL_LIVES = 3
 const BASE_POINTS = 10
 const MAX_TIME_BONUS = 10
 const COMBO_MULTIPLIER = 0.05

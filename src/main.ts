@@ -13,6 +13,7 @@ import {
   GAME_MODE_CHALLENGE,
   KANA_SET_HIRAGANA,
   FLOAT_TYPE_SPEED,
+  INITIAL_LIVES,
   DOM_ID_TOKENS,
   DOM_ID_SCORE,
   DOM_ID_COMBO,
@@ -191,6 +192,8 @@ const engine = new GameEngine({
 	onLivesChange: (lives, previousLives) => {
 		// Clear and rebuild hearts with images
 		livesEl.innerHTML = ''
+		
+		// Show filled hearts for current lives
 		for (let i = 0; i < lives; i++) {
 			const heart = document.createElement('img')
 			heart.src = '/assets/img/heart.png'
@@ -198,6 +201,16 @@ const engine = new GameEngine({
 			heart.className = 'heart-icon'
 			livesEl.appendChild(heart)
 		}
+		
+		// Show empty hearts for lost lives
+		for (let i = lives; i < INITIAL_LIVES; i++) {
+			const heart = document.createElement('img')
+			heart.src = '/assets/img/heart_empty.png'
+			heart.alt = '♡'
+			heart.className = 'heart-icon'
+			livesEl.appendChild(heart)
+		}
+		
 		// Only play sound and animate if lives actually decreased
 		if(previousLives !== undefined && lives < previousLives) {
 			livesEl.parentElement?.classList.add(CSS_CLASS_STAT_SHAKE)

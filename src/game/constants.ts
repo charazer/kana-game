@@ -50,6 +50,9 @@ export const DOM_ID_GAME_AREA = 'game-area'
 // Dataset keys
 export const DATASET_KANA_ID = 'kanaId'
 
+// Game configuration
+export const INITIAL_LIVES = 3
+
 // Animation durations (ms)
 export const ANIM_DURATION_STAT_HIGHLIGHT = 300
 export const ANIM_DURATION_STAT_SHAKE = 400
