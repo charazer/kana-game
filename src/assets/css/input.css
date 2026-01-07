@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Input Display (Footer)
+   ========================================================================== */
+
+footer {
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--bg);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+#input-display {
+  max-width: var(--game-max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, var(--accent-10), var(--combo-08));
+  border: var(--token-border) solid var(--accent);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+  box-sizing: border-box;
+  backdrop-filter: blur(4px);
+}
+
+#input-display label {
+  font-size: var(--font-xs);
+  font-weight: var(--font-semibold);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#input-echo {
+  font-size: var(--font-lg);
+  font-weight: var(--font-semibold);
+  min-height: 24px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--black-30);
+  border-radius: var(--radius-md);
+  min-width: 200px;
+  text-align: center;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  letter-spacing: var(--space-1);
+}
+
+/* Responsive */
+@media (min-width: 421px) {
+  #input-display {
+    padding: var(--space-4) var(--space-6);
+    gap: var(--space-3);
+  }
+
+  #input-display label {
+    font-size: var(--font-sm);
+  }
+
+  #input-echo {
+    font-size: var(--font-2xl);
+    padding: var(--space-3) var(--space-6);
+    min-height: 32px;
+  }
+}
+
+@media (min-width: 601px) {
+  #input-display {
+    padding: var(--space-5) var(--space-7);
+    gap: var(--space-4);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  }
+
+  #input-echo {
+    font-size: var(--font-3xl);
+    padding: var(--space-4) var(--space-8);
+    min-height: 40px;
+  }
+}
+
+@media (min-width: 901px) {
+  #input-display {
+    padding: var(--space-7) var(--space-9);
+  }
+
+  #input-display label {
+    font-size: var(--font-md);
+  }
+
+  #input-echo {
+    font-size: var(--font-4xl);
+    padding: var(--space-4) var(--space-9);
+    min-height: var(--space-11);
+  }
+}

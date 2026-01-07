@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Game Area
+   ========================================================================== */
+
+main#game-area {
+  position: relative;
+  flex: 1;
+  max-height: calc(100vh - 110px);
+  overflow: hidden;
+  max-width: var(--game-max-width);
+  margin: 0 auto;
+  width: 100%;
+  background: var(--bg);
+  contain: layout style paint;
+}
+
+#tokens {
+  position: absolute;
+  inset: 0;
+  border-left: 1px solid var(--white-03);
+  border-right: 1px solid var(--white-03);
+  contain: layout style;
+}
+
+#tokens::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--danger-zone-height);
+  background: linear-gradient(to top, var(--color-error-bg), transparent);
+  border-top: var(--token-border) dashed var(--color-error-border);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.token {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--token-size);
+  height: var(--token-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white-03);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-3xl);
+  border: var(--token-border) solid transparent;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.token-success {
+  background: var(--color-success-glow) !important;
+  border-color: var(--color-success) !important;
+  animation: token-success-anim 150ms ease-out forwards;
+}
+
+.token-miss {
+  background: var(--color-error-glow) !important;
+  border-color: var(--color-error) !important;
+  animation: token-miss-anim 200ms ease-out forwards;
+}
+
+.floating-text {
+  position: absolute;
+  font-weight: var(--font-bold);
+  font-size: var(--font-3xl);
+  pointer-events: none;
+  z-index: var(--z-floating);
+  animation: float-up 1s ease-out forwards;
+  font-family: var(--font-mono);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.floating-points {
+  color: var(--color-success);
+  text-shadow: var(--shadow-success-text);
+}
+
+.floating-combo {
+  color: var(--color-combo);
+  text-shadow: var(--shadow-combo-text);
+}
+
+.floating-speed {
+  color: var(--accent);
+  text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-60);
+  font-size: var(--font-5xl);
+  font-weight: var(--font-black);
+}
+
+.floating-life {
+  color: var(--color-error);
+  text-shadow: var(--shadow-error-text);
+  font-size: var(--font-4xl);
+}
+
+/* Animations */
+@keyframes token-success-anim {
+  0% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes token-miss-anim {
+  0% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes success-glow {
+  0%, 100% {
+    box-shadow: var(--shadow-success);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--color-success), 0 0 40px var(--color-success-glow);
+  }
+}
+
+@keyframes miss-glow {
+  0%, 100% {
+    box-shadow: var(--shadow-error);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--color-error), 0 0 40px var(--color-error-glow);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (min-width: 421px) {
+  main#game-area {
+    max-height: calc(100vh - 150px);
+  }
+}
+
+@media (min-width: 601px) {
+  main#game-area {
+    max-height: calc(100vh - 140px);
+  }
+}
+
+@media (min-width: 901px) {
+  main#game-area {
+    max-height: calc(100vh - 170px);
+  }
+}
+
+@media (min-width: 1061px) {
+  main#game-area {
+    max-height: calc(100vh - 280px);
+  }
+}

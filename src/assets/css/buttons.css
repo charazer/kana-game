@@ -1,0 +1,315 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+/* Control Buttons (Pause, End) */
+.controls-section .section-items button {
+  border: none;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  width: auto;
+  max-width: 48%;
+  min-width: 140px;
+  box-sizing: border-box;
+  font-size: var(--font-xs);
+}
+
+/* Button internal structure */
+.controls-section .section-items button .btn-left {
+  width: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-md);
+  flex-shrink: 0;
+}
+
+.controls-section .section-items button .btn-label {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  min-width: 0;
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+  font-size: var(--font-xs);
+}
+
+.controls-section .section-items button .btn-right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.controls-section .section-items button .btn-right kbd {
+  padding: 2px 3px !important;
+  font-size: var(--font-xs) !important;
+  margin-left: 0 !important;
+}
+
+.btn-end-game,
+.btn-pause {
+  border-radius: var(--radius-lg);
+}
+
+.btn-end-game {
+  background: linear-gradient(135deg, var(--color-error), var(--color-error-hover));
+  color: var(--white);
+  box-shadow: var(--shadow-md), 0 2px 4px var(--plum-shadow);
+  border: 1px solid var(--white-15);
+}
+
+.btn-end-game:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-error-hover), var(--color-error));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--color-error-glow), 0 4px 8px var(--plum-shadow-deep);
+}
+
+.btn-end-game:active {
+  transform: translateY(0);
+}
+
+.btn-end-game:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-pause {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  color: var(--bg);
+  box-shadow: var(--shadow-md), 0 2px 4px var(--plum-shadow);
+  border: 1px solid var(--white-20);
+}
+
+.btn-pause:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-40), 0 4px 8px var(--plum-shadow-deep);
+}
+
+.btn-pause:active {
+  transform: translateY(0);
+}
+
+.btn-pause:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Start/Restart Buttons */
+.btn-start,
+.btn-restart {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  color: var(--bg);
+  border: 1px solid var(--white-20);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--font-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px var(--accent-40), 0 2px 4px var(--plum-shadow);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-start .btn-left,
+.btn-restart .btn-left {
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xl);
+  flex-shrink: 0;
+}
+
+.btn-start .btn-label,
+.btn-restart .btn-label {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  min-width: 0;
+  text-align: center;
+  font-size: var(--font-sm);
+}
+
+.btn-start .btn-right,
+.btn-restart .btn-right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.btn-start:hover,
+.btn-restart:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--accent-60), 0 4px 8px var(--plum-shadow-deep);
+}
+
+.btn-start:active,
+.btn-restart:active {
+  transform: translateY(0);
+}
+
+/* Keyboard Shortcut Badge */
+kbd {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-xs);
+  font-weight: var(--font-semibold);
+  line-height: 1;
+  color: var(--white-90);
+  background: var(--black-30);
+  border: 1px solid var(--white-20);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 -1px 0 var(--black-25);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  margin-left: var(--space-2);
+}
+
+/* Responsive */
+@media (min-width: 421px) {
+  .controls-section .section-items button {
+    padding: var(--space-3);
+    font-size: var(--font-md);
+    gap: var(--space-2);
+    border-radius: var(--radius-xl);
+  }
+
+  .controls-section .section-items button .btn-left {
+    font-size: var(--font-xl);
+    width: 28px;
+  }
+
+  .controls-section .section-items button .btn-label {
+    font-size: var(--font-md);
+    padding: 0 var(--space-3);
+  }
+
+  .controls-section .section-items button .btn-right kbd {
+    font-size: var(--font-sm) !important;
+    padding: 3px 6px !important;
+  }
+
+  .btn-start,
+  .btn-restart {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-md);
+    gap: var(--space-2);
+  }
+
+  .btn-start .btn-label,
+  .btn-restart .btn-label {
+    padding: 0 var(--space-3);
+  }
+
+  .btn-start .btn-left,
+  .btn-restart .btn-left {
+    width: 28px;
+  }
+
+  kbd {
+    padding: var(--space-1) var(--space-3);
+  }
+}
+
+@media (min-width: 601px) {
+  .controls-section .section-items button {
+    width: auto;
+    max-width: 48%;
+    min-width: 150px;
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-3);
+  }
+
+  .controls-section .section-items button .btn-label {
+    min-width: 0;
+    padding: 0 var(--space-3);
+    flex: 1;
+    text-align: center;
+  }
+
+  .btn-start,
+  .btn-restart {
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--font-lg);
+    gap: var(--space-3);
+  }
+
+  .btn-start .btn-label,
+  .btn-restart .btn-label {
+    padding: 0 var(--space-6);
+    min-width: 90px;
+  }
+}
+
+@media (min-width: 901px) {
+  .controls-section .section-items button {
+    display: flex;
+    padding: var(--space-4) var(--space-6);
+    gap: var(--space-6);
+  }
+
+  .controls-section .section-items button .btn-left {
+    width: 36px;
+    font-size: var(--font-xl);
+  }
+
+  .controls-section .section-items button .btn-label {
+    padding: 0;
+    text-align: left;
+    font-size: var(--font-sm);
+  }
+
+  .controls-section .section-items button .btn-right {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-start,
+  .btn-restart {
+    padding: var(--space-5) var(--space-8);
+    border-radius: var(--radius-2xl);
+  }
+
+  .btn-start .btn-left,
+  .btn-restart .btn-left {
+    width: 40px;
+    font-size: var(--font-3xl);
+  }
+
+  .btn-start .btn-label,
+  .btn-restart .btn-label {
+    min-width: 140px;
+  }
+
+  .btn-start .btn-right,
+  .btn-restart .btn-right {
+    min-width: 56px;
+  }
+}
+
+@media (min-width: 1061px) {
+  .controls-section .section-items button {
+    width: 100%;
+    max-width: 200px;
+  }
+}

@@ -1,0 +1,175 @@
+/* ==========================================================================
+   CSS Custom Properties / Design Tokens
+   ========================================================================== */
+
+:root {
+  /* Sakura Theme - Traditional Japanese Spring Colors */
+  --bg: #2d1b2e;  /* Deep plum/purple background */
+  --bg-light: #3d2b3e;
+  --fg: #f5e6d3;  /* Warm cream text */
+  --accent: #ffb7c5;  /* Soft sakura pink */
+  --accent-hover: #ff8fab;  /* Deeper sakura pink */
+  --accent-light: #ffd4dc;  /* Lighter sakura pink */
+  
+  /* Semantic colors - Spring palette */
+  --color-success: #88c0d0;  /* Soft spring blue */
+  --color-success-light: rgba(136,192,208,0.9);
+  --color-success-bg: rgba(136,192,208,0.15);
+  --color-success-border: rgba(136,192,208,0.35);
+  --color-success-glow: rgba(136,192,208,0.5);
+  
+  --color-error: #d08770;  /* Warm autumn orange */
+  --color-error-light: rgba(208,135,112,0.9);
+  --color-error-bg: rgba(208,135,112,0.15);
+  --color-error-border: rgba(208,135,112,0.35);
+  --color-error-hover: #bf616a;
+  --color-error-glow: rgba(208,135,112,0.5);
+  
+  --color-combo: #c9a0dc;  /* Wisteria purple */
+  --color-combo-light: rgba(201,160,220,0.9);
+  --color-combo-bg: rgba(201,160,220,0.15);
+  --color-combo-border: rgba(201,160,220,0.35);
+  
+  /* Neutral tones - Warm sakura palette */
+  --white: #ffffff;
+  --white-03: rgba(255,255,255,0.03);
+  --white-5: rgba(255,255,255,0.05);
+  --white-10: rgba(255,255,255,0.1);
+  --white-15: rgba(255,255,255,0.15);
+  --white-20: rgba(255,255,255,0.2);
+  --white-30: rgba(255,255,255,0.3);
+  --white-40: rgba(255,255,255,0.4);
+  --white-50: rgba(255,255,255,0.5);
+  --white-60: rgba(255,255,255,0.6);
+  --white-80: rgba(255,255,255,0.8);
+  --white-90: rgba(255,255,255,0.9);
+  --black-25: rgba(0,0,0,0.25);
+  --black-30: rgba(45,27,46,0.4);  /* Plum tinted */
+  --black-50: rgba(45,27,46,0.6);
+  --black-85: rgba(45,27,46,0.92);
+  
+  /* Accent colors with alpha - Sakura pink */
+  --accent-035: rgba(255,183,197,0.035);
+  --accent-04: rgba(255,183,197,0.04);
+  --accent-06: rgba(255,183,197,0.06);
+  --accent-08: rgba(255,183,197,0.08);
+  --accent-10: rgba(255,183,197,0.1);
+  --accent-12: rgba(255,183,197,0.12);
+  --accent-15: rgba(255,183,197,0.15);
+  --accent-18: rgba(255,183,197,0.18);
+  --accent-20: rgba(255,183,197,0.2);
+  --accent-25: rgba(255,183,197,0.25);
+  --accent-30: rgba(255,183,197,0.3);
+  --accent-40: rgba(255,183,197,0.4);
+  --accent-50: rgba(255,183,197,0.5);
+  --accent-60: rgba(255,183,197,0.6);
+  --accent-80: rgba(255,183,197,0.8);
+  
+  /* Combo colors with alpha - Wisteria purple */
+  --combo-03: rgba(201,160,220,0.03);
+  --combo-06: rgba(201,160,220,0.06);
+  --combo-08: rgba(201,160,220,0.08);
+  --combo-10: rgba(201,160,220,0.1);
+  --combo-12: rgba(201,160,220,0.12);
+  --combo-18: rgba(201,160,220,0.18);
+  
+  /* Success colors with alpha - Spring blue */
+  --success-025: rgba(136,192,208,0.025);
+  --success-035: rgba(136,192,208,0.035);
+  --success-04: rgba(136,192,208,0.04);
+  
+  /* Shadow colors */
+  --plum-shadow: rgba(45,27,46,0.3);
+  --plum-shadow-deep: rgba(45,27,46,0.4);
+  
+  /* Layout */
+  --game-max-width: 1200px;
+  
+  /* Spacing scale - consistent 2px or 4px intervals */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 16px;
+  --space-8: 20px;
+  --space-9: 24px;
+  --space-10: 32px;
+  --space-11: 48px;
+  
+  /* Border radius scale */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
+  
+  /* Typography scale - consistent intervals */
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-md: 14px;
+  --font-lg: 16px;
+  --font-xl: 20px;
+  --font-2xl: 24px;
+  --font-3xl: 32px;
+  --font-4xl: 40px;
+  --font-5xl: 48px;
+  --font-6xl: 64px;
+  --font-7xl: 80px;
+  
+  /* Font weights */
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-black: 900;
+  
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 600ms;
+  
+  /* Shadows - Sakura glow effects */
+  --shadow-sm: 0 2px 4px rgba(45,27,46,0.4);
+  --shadow-md: 0 2px 8px rgba(208,135,112,0.3);
+  --shadow-lg: 0 4px 12px rgba(208,135,112,0.4);
+  --shadow-success: 0 0 20px rgba(136,192,208,0.6);
+  --shadow-success-text: 0 0 10px rgba(136,192,208,0.9), 0 0 20px rgba(136,192,208,0.5);
+  --shadow-error: 0 0 20px rgba(208,135,112,0.6);
+  --shadow-error-text: 0 0 10px rgba(208,135,112,0.9), 0 0 20px rgba(208,135,112,0.5);
+  --shadow-combo-text: 0 0 10px rgba(201,160,220,0.9), 0 0 20px rgba(201,160,220,0.5);
+  --shadow-sakura: 0 4px 12px rgba(255,183,197,0.3), 0 0 20px rgba(255,183,197,0.2);
+  
+  /* Token sizing */
+  --token-size: 72px;
+  --token-border: 2px;
+  --danger-zone-height: 80px;
+  
+  /* Stat box sizing */
+  --stat-min-width: 65px;
+  --stat-label-size: var(--font-xs);
+  --stat-value-size: var(--font-xl);
+  
+  /* Button sizing */
+  --btn-padding-x: 20px;
+  --btn-padding-y: 10px;
+  --btn-min-width: 100px;
+  --btn-icon-width: 36px;
+  --btn-label-min-width: 90px;
+  --btn-kbd-min-width: 56px;
+  
+  /* Z-index scale */
+  --z-floating: 50;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  
+  /* Backdrop */
+  --backdrop-blur: 8px;
+  --backdrop-blur-sm: 4px;
+  --backdrop-blur-md: 12px;
+  
+  /* Font families */
+  --font-mono: 'Courier New', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+}
