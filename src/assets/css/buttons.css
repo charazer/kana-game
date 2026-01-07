@@ -182,7 +182,7 @@
 
 /* Keyboard Shortcut Badge */
 kbd {
-  display: inline-block;
+  display: none; /* Hidden on mobile/tablet by default */
   padding: var(--space-1) var(--space-2);
   font-size: var(--font-xs);
   font-weight: var(--font-semibold);
@@ -250,6 +250,7 @@ kbd {
   }
 
   kbd {
+    display: inline-block; /* Show on larger screens with keyboards */
     padding: var(--space-1) var(--space-3);
   }
 }
