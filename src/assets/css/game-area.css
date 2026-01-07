@@ -17,8 +17,8 @@ main#game-area {
 #tokens {
   position: absolute;
   inset: 0;
-  border-left: 1px solid var(--white-03);
-  border-right: 1px solid var(--white-03);
+  border-left: 1px solid var(--white-5);
+  border-right: 1px solid var(--white-5);
   contain: layout style;
 }
 
@@ -44,7 +44,7 @@ main#game-area {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--white-03);
+  background: var(--white-5);
   border-radius: var(--radius-lg);
   font-size: var(--font-3xl);
   border: var(--token-border) solid transparent;

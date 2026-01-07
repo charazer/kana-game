@@ -70,7 +70,7 @@
   justify-content: space-between;
   padding: var(--space-2) var(--space-3);
   margin: var(--space-1) 0;
-  background: var(--white-03);
+  background: var(--white-5);
   border-radius: var(--radius-sm);
   font-size: var(--font-xs);
 }
@@ -136,7 +136,7 @@
   .game-over-content {
     padding: var(--space-9);
     max-width: 340px;
-    border-radius: var(--radius-3xl);
+    border-radius: var(--radius-2xl);
   }
 
   .start-screen-content h2,
