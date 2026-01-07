@@ -127,6 +127,7 @@
               <select id="kana-set">
                 <option value="hiragana">Hiragana (ひらがな)</option>
                 <option value="katakana">Katakana (カタカナ)</option>
+                <option value="mixed">Mixed (Both)</option>
               </select>
             </div>
             <div class="setting-item">
@@ -198,15 +199,18 @@
               <h3>⚙️ Difficulty Settings</h3>
               <p>In the settings menu, you can customize which character types appear in the game:</p>
               <ul>
+                <li><strong>Kana Set:</strong> Choose Hiragana, Katakana, or Mixed (both scripts)</li>
                 <li><strong>Dakuten/Handakuten:</strong> Characters with marks like が, ざ, だ, ば, ぱ</li>
                 <li><strong>Yōon:</strong> Combined characters like きゃ, しゃ, ちゃ, にゃ, りゃ</li>
               </ul>
-              <p><strong>Score Multipliers:</strong> Disabling character types reduces your score potential:</p>
+              <p><strong>Score Multipliers:</strong> Your score is affected by the difficulty you choose:</p>
               <ul>
-                <li>Both enabled: <strong>100%</strong> score (full difficulty)</li>
-                <li>One enabled: <strong>75%</strong> score</li>
-                <li>Both disabled: <strong>50%</strong> score</li>
+                <li><strong>Mixed kana set:</strong> +25% bonus multiplier</li>
+                <li>Both dakuten/yōon enabled: <strong>100%</strong> base score</li>
+                <li>One enabled: <strong>75%</strong> base score</li>
+                <li>Both disabled: <strong>50%</strong> base score</li>
               </ul>
+              <p><em>Example: Mixed kana set with all character types enabled = 125% score (1.0 × 1.25)</em></p>
             </section>
             
             <section class="help-section">

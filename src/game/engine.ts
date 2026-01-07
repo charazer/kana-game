@@ -11,6 +11,7 @@ import {
   GAME_MODE_CHALLENGE,
   KANA_SET_HIRAGANA,
   KANA_SET_KATAKANA,
+  KANA_SET_MIXED,
   FLOAT_TYPE_LIFE,
   FLOAT_TYPE_POINTS,
   FLOAT_TYPE_COMBO,
@@ -102,6 +103,7 @@ export class GameEngine {
   maxActiveTokens = CHALLENGE_MAX_TOKENS
   includeDakuten = true // user setting for including dakuten/handakuten
   includeYoon = true // user setting for including yoon
+  currentKanaSet: KanaSet = KANA_SET_HIRAGANA // track current kana set for scoring
 
   constructor(opts: { renderer: Renderer; input: InputManager; onScore?: (s: number) => void; onLivesChange?: (lives: number, previousLives?: number) => void; onGameOver?: () => void; onCombo?: (combo: number) => void; onSpeedChange?: (multiplier: number) => void }){
     this.renderer = opts.renderer
@@ -264,13 +266,21 @@ export class GameEngine {
   }
 
   getDifficultyMultiplier(): number {
-    // Adjust score based on which kana types are enabled
+    // Base multiplier based on character types enabled
     // Both enabled: 100% score (1.0x)
     // One enabled: 75% score (0.75x)
     // Both disabled: 50% score (0.5x)
-    if(this.includeDakuten && this.includeYoon) return 1.0
-    if(this.includeDakuten || this.includeYoon) return 0.75
-    return 0.5
+    let baseMultiplier = 0.5
+    if(this.includeDakuten && this.includeYoon) {
+      baseMultiplier = 1.0
+    } else if(this.includeDakuten || this.includeYoon) {
+      baseMultiplier = 0.75
+    }
+    
+    // Kana set multiplier - mixed gives 25% bonus
+    const kanaSetMultiplier = this.currentKanaSet === KANA_SET_MIXED ? 1.25 : 1.0
+    
+    return baseMultiplier * kanaSetMultiplier
   }
 
   calculateScore(token: { spawnTime: number }): number {
@@ -436,8 +446,12 @@ export class GameEngine {
   }
 
   async loadKana(setName: KanaSet){
+    this.currentKanaSet = setName
     if(setName === KANA_SET_KATAKANA){
       this.kanaSet = kanaKatakana as any
+    } else if(setName === KANA_SET_MIXED){
+      // Combine both hiragana and katakana
+      this.kanaSet = [...(kanaHiragana as any), ...(kanaKatakana as any)]
     } else {
       // default to hiragana
       this.kanaSet = kanaHiragana as any

@@ -6,7 +6,8 @@ export type GameMode = typeof GAME_MODE_PRACTICE | typeof GAME_MODE_CHALLENGE
 // Kana set constants
 export const KANA_SET_HIRAGANA = 'hiragana' as const
 export const KANA_SET_KATAKANA = 'katakana' as const
-export type KanaSet = typeof KANA_SET_HIRAGANA | typeof KANA_SET_KATAKANA
+export const KANA_SET_MIXED = 'mixed' as const
+export type KanaSet = typeof KANA_SET_HIRAGANA | typeof KANA_SET_KATAKANA | typeof KANA_SET_MIXED
 
 // Floating text types
 export const FLOAT_TYPE_POINTS = 'points' as const
