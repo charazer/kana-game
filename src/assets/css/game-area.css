@@ -14,6 +14,52 @@ main#game-area {
   contain: layout style paint;
 }
 
+/* Paused indicator overlay */
+.paused-indicator {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black-85);
+  backdrop-filter: blur(8px);
+  z-index: 150; /* Above game content (z-overlay: 100) but below modals (z-modal: 1000) */
+  pointer-events: none;
+}
+
+.paused-indicator.hidden {
+  display: none;
+}
+
+.paused-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--font-4xl);
+  font-weight: var(--font-bold);
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-50), 0 0 40px var(--accent-30);
+  animation: pulse-glow 2s ease-in-out infinite;
+  user-select: none;
+}
+
+.paused-icon {
+  width: 3rem;
+  height: 3rem;
+  filter: drop-shadow(0 0 20px var(--accent-50)) drop-shadow(0 0 40px var(--accent-30));
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
 #tokens {
   position: absolute;
   inset: 0;
@@ -145,6 +191,29 @@ main#game-area {
   }
   50% {
     box-shadow: 0 0 30px var(--color-error), 0 0 40px var(--color-error-glow);
+  }
+}
+
+/* Responsive paused text sizing */
+@media (min-width: 421px) {
+  .paused-text {
+    font-size: var(--font-5xl);
+  }
+  
+  .paused-icon {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+@media (min-width: 601px) {
+  .paused-text {
+    font-size: 4rem;
+  }
+  
+  .paused-icon {
+    width: 5rem;
+    height: 5rem;
   }
 }
 

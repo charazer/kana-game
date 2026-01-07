@@ -64,6 +64,7 @@ import {
 } from './game/constants'
 
 const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
+const pausedIndicator = document.getElementById('paused-indicator')!
 const scoreEl = document.getElementById(DOM_ID_SCORE)!
 const comboEl = document.getElementById(DOM_ID_COMBO)!
 const speedEl = document.getElementById(DOM_ID_SPEED)!
@@ -408,10 +409,12 @@ if(pauseBtn){
 		if(isPaused){
 			engine.pause()
 			audio.playPause()
+			pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
 			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
 		} else {
 			engine.resume()
 			audio.playResume()
+			pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
 			DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 		}
 	})
@@ -420,6 +423,7 @@ if(pauseBtn){
 	window.enablePauseButton = () => {
 		gameStarted = true
 		isPaused = false
+		pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
 		pauseBtn.disabled = false
 		pauseBtn.style.opacity = UI_ENABLED_OPACITY
 		pauseBtn.style.cursor = UI_CURSOR_POINTER
@@ -446,6 +450,10 @@ if(endGameBtn){
 	endGameBtn.addEventListener('click', ()=>{
 		// Only allow ending if button is enabled (which means game is running)
 		if(endGameBtn.disabled) return
+		
+		// Hide paused indicator and resume if paused
+		pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
+		engine.resume()
 		
 		// Stop the game and trigger game over
 		engine.running = false
@@ -546,6 +554,7 @@ if(settingsBtn && settingsModal){
 				// Auto-pause the game
 				engine.pause()
 				audio.playPause()
+				pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
 				autoPausedGame = true
 				// Update pause button to show resume state
 				if(pauseBtn){
@@ -566,6 +575,7 @@ if(settingsBtn && settingsModal){
 			if(autoPausedGame){
 				engine.resume()
 				audio.playResume()
+				pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
 				autoPausedGame = false
 				// Update pause button to show pause state
 				if(pauseBtn){
@@ -583,6 +593,7 @@ if(settingsBtn && settingsModal){
 			if(autoPausedGame){
 				engine.resume()
 				audio.playResume()
+				pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
 				autoPausedGame = false
 				// Update pause button to show pause state
 				if(pauseBtn){
