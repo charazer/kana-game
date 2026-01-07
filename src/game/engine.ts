@@ -47,7 +47,7 @@ const MAX_SPAWN_ATTEMPTS = 10
 
 // Speed progression constants (challenge mode)
 const SPEED_INCREASE_INTERVAL = 15 // seconds
-const SPEED_INCREASE_PERCENT = 0.10 // 10% per interval
+const SPEED_BASE_EXPONENT = 1.08 // exponential base (8% growth per interval)
 const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
 
 // Weighted spawn system
@@ -178,8 +178,9 @@ export class GameEngine {
     // Track game time and increase speed gradually (only in challenge mode)
     this.gameTime += dt
     if(this.gameMode === GAME_MODE_CHALLENGE){
-      // Speed increases by SPEED_INCREASE_PERCENT every SPEED_INCREASE_INTERVAL seconds (no cap)
-      const speedMultiplier = 1 + (Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL) * SPEED_INCREASE_PERCENT)
+      // Speed increases exponentially: multiplier = BASE^intervals
+      const intervals = Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL)
+      const speedMultiplier = Math.pow(SPEED_BASE_EXPONENT, intervals)
       // Notify only when multiplier increases AND game has been running for at least SPEED_CHANGE_DELAY
       // (prevents triggering on game start)
       if(speedMultiplier > this.lastSpeedMultiplier && this.gameTime > SPEED_CHANGE_DELAY && this.onSpeedChange){
