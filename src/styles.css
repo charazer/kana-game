@@ -101,18 +101,18 @@
   --radius-2xl: 12px;
   --radius-3xl: 16px;
   
-  /* Typography scale */
-  --font-xs: 9px;
-  --font-sm: 10px;
-  --font-md: 13px;
-  --font-lg: 14px;
-  --font-xl: 16px;
-  --font-2xl: 18px;
-  --font-3xl: 24px;
-  --font-4xl: 26px;
-  --font-5xl: 32px;
-  --font-6xl: 36px;
-  --font-7xl: 48px;
+  /* Typography scale - consistent intervals */
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-md: 14px;
+  --font-lg: 16px;
+  --font-xl: 20px;
+  --font-2xl: 24px;
+  --font-3xl: 32px;
+  --font-4xl: 40px;
+  --font-5xl: 48px;
+  --font-6xl: 64px;
+  --font-7xl: 80px;
   
   /* Font weights */
   --font-medium: 500;
