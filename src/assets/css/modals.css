@@ -54,6 +54,16 @@
   font-size: var(--font-2xl);
   font-weight: var(--font-bold);
   color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.modal-header-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .btn-modal-close {
@@ -343,6 +353,11 @@
 @media (min-width: 601px) {
   .modal-header h2 {
     font-size: var(--font-3xl);
+  }
+
+  .modal-header-icon {
+    width: 28px;
+    height: 28px;
   }
 }
 
