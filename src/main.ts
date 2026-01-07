@@ -101,6 +101,22 @@ const kanaContent = document.getElementById('kana-content')!
 function renderKanaReference(type: 'hiragana' | 'katakana') {
 	const kanaData = (type === 'hiragana' ? kanaHiragana : kanaKatakana) as KanaEntry[]
 	kanaContent.innerHTML = createKanaReference(kanaData)
+	
+	// Check for overflow and add scroll indicators
+	requestAnimationFrame(() => {
+		const sections = kanaContent.querySelectorAll('.kana-section')
+		sections.forEach(section => {
+			const table = section.querySelector('.kana-table')
+			if (table) {
+				const hasOverflow = table.scrollWidth > table.clientWidth
+				if (hasOverflow) {
+					section.classList.add('has-scroll')
+				} else {
+					section.classList.remove('has-scroll')
+				}
+			}
+		})
+	})
 }
 
 function renderHighScores(container: HTMLElement, highlightScore?: number){
@@ -601,6 +617,28 @@ if(settingsBtn && settingsModal){
 			if(tabHiragana) tabHiragana.classList.remove('active')
 		})
 	}
+
+	// Update scroll hints on window resize
+	let resizeTimeout: number
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimeout)
+		resizeTimeout = setTimeout(() => {
+			if (!kanaModal.classList.contains(CSS_CLASS_HIDDEN)) {
+				const sections = kanaContent.querySelectorAll('.kana-section')
+				sections.forEach(section => {
+					const table = section.querySelector('.kana-table')
+					if (table) {
+						const hasOverflow = table.scrollWidth > table.clientWidth
+						if (hasOverflow) {
+							section.classList.add('has-scroll')
+						} else {
+							section.classList.remove('has-scroll')
+						}
+					}
+				})
+			}
+		}, 150)
+	})
 
 	// Close kana modal - close button
 	if(kanaCloseBtn){

@@ -126,7 +126,14 @@ function createKanaItem(kana: KanaEntry): string {
  * @returns HTML string for kana section
  */
 function createKanaSection(kanaData: KanaEntry[], title: string, columns?: string[][]): string {
-  let html = `<div class="kana-section"><h3>${title}</h3>`
+  let html = `<div class="kana-section"><h3>${title}`
+  
+  // Add scroll hint for columnar layout
+  if (columns) {
+    html += ` <span class="kana-scroll-hint">(scroll →)</span>`
+  }
+  
+  html += `</h3>`
   
   if (columns) {
     // Render as vertical columns (traditional table layout)

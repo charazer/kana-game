@@ -271,6 +271,24 @@
 
 .kana-section {
   margin-bottom: var(--space-8);
+  position: relative;
+}
+
+.kana-section::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 48px;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(to left, var(--bg-primary), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.kana-section:has(.kana-table)::after {
+  opacity: 1;
 }
 
 .kana-section:last-child {
@@ -294,18 +312,43 @@
   display: flex;
   flex-direction: row;
   gap: var(--space-3);
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.kana-section {
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+/* Scroll hint text */
+.kana-section h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.kana-scroll-hint {
+  display: none;
+  font-size: var(--font-xs);
+  color: var(--white-40);
+  font-weight: var(--font-normal);
+  font-style: italic;
+}
+
+.kana-section.has-scroll .kana-scroll-hint {
+  display: inline;
 }
 
 .kana-column {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  flex-shrink: 0;
 }
 
 .kana-column .kana-item {
-  flex: 0 0 auto;
   width: 80px;
 }
 
@@ -416,6 +459,14 @@
   .kana-column .kana-item {
     width: 70px;
   }
+
+  .kana-table {
+    gap: var(--space-2);
+  }
+
+  .kana-section h3 {
+    font-size: var(--font-xl);
+  }
 }
 
 @media (max-width: 420px) {
@@ -452,11 +503,12 @@
   }
 
   .kana-item {
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-1);
   }
 
   .kana-char {
     font-size: var(--font-2xl);
+    margin-bottom: var(--space-1);
   }
 
   .kana-romaji {
@@ -473,6 +525,15 @@
 
   .kana-table {
     gap: var(--space-1);
+  }
+
+  .kana-section h3 {
+    font-size: var(--font-lg);
+    margin-bottom: var(--space-2);
+  }
+
+  .kana-section {
+    margin-bottom: var(--space-4);
   }
 }
 
@@ -500,7 +561,7 @@
   }
 
   .kana-char {
-    font-size: var(--font-3xl);
+    font-size: var(--font-2xl);
   }
 
   .kana-column .kana-item {
@@ -509,5 +570,13 @@
 
   .kana-table {
     gap: var(--space-2);
+  }
+
+  .kana-section h3 {
+    font-size: var(--font-lg);
+  }
+
+  .kana-content {
+    max-height: calc(85vh - 120px);
   }
 }
