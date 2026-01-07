@@ -115,8 +115,8 @@ header::before {
 }
 
 .btn-settings .btn-left .btn-icon {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
@@ -195,11 +195,6 @@ header::before {
     font-size: var(--font-sm);
   }
 
-  .btn-settings .btn-left .btn-icon {
-    width: 20px;
-    height: 20px;
-  }
-
   .btn-settings .btn-left {
     font-size: var(--font-xl);
   }
@@ -245,8 +240,8 @@ header::before {
   }
 
   .btn-settings .btn-left .btn-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
   }
 
   .btn-settings .btn-left {
@@ -277,8 +272,8 @@ header::before {
   }
 
   .btn-settings .btn-left .btn-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 }
 
