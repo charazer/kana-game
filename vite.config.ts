@@ -19,6 +19,7 @@ export default defineConfig({
         'src/main.ts', // Main entry point with DOM manipulation
         'src/globals.d.ts',
         'src/test-setup.ts', // Test setup file
+        'src/data/kana/**', // Kana data files
         '**/*.config.ts',
         '**/types.ts',
         'dist/',
