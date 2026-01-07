@@ -494,7 +494,7 @@ header::before {
 .btn-end-game .btn-left, .btn-pause .btn-left { width:18px; display:inline-flex; align-items:center; justify-content:center; font-size:var(--font-md); flex-shrink: 0 }
 .btn-end-game .btn-label, .btn-pause .btn-label { display:inline-block; padding:0; min-width:auto; text-align:left; font-size:var(--font-sm); flex-shrink: 1 }
 .btn-end-game .btn-right, .btn-pause .btn-right { display:inline-flex; align-items:center; justify-content:flex-end; min-width:auto; flex-shrink: 0 }
-.btn-end-game .btn-right kbd, .btn-pause .btn-right kbd { padding: 2px 3px !important; font-size: 9px !important; margin-left: 0 !important }
+.btn-end-game .btn-right kbd, .btn-pause .btn-right kbd { padding: 2px 3px !important; font-size: var(--font-xs) !important; margin-left: 0 !important }
 
 .btn-end-game {
   background:linear-gradient(135deg, var(--color-error), var(--color-error-hover));
@@ -1098,7 +1098,7 @@ footer {
   gap:12px;
   padding:8px 12px;
 }
-.controls-section .section-items button .btn-left{ width:36px; font-size:20px }
+.controls-section .section-items button .btn-left{ width:36px; font-size:var(--font-xl) }
 .controls-section .section-items button .btn-label{ padding:0; text-align:left }
 .controls-section .section-items button .btn-right{ text-align:right; display:flex; justify-content:flex-end }
 
@@ -1131,11 +1131,11 @@ footer {
 /* Responsive layout adjustments */
 @media (min-width: 421px) and (max-width: 600px) {
   header { padding: 6px 8px; padding-top: 32px }
-  .btn-settings { top: 4px; right: 6px; padding: 2px 4px; font-size: 10px; gap: 2px }
-  .btn-settings .btn-left { font-size: 14px }
+  .btn-settings { top: 4px; right: 6px; padding: 2px 4px; font-size: var(--font-sm); gap: 2px }
+  .btn-settings .btn-left { font-size: var(--font-lg) }
   .header-title { padding-bottom: 3px; margin-bottom: 4px }
   .header-title h1 { font-size: var(--font-lg) }
-  .section-label { font-size: 7px; padding-bottom: 1px }
+  .section-label { font-size: var(--font-xs); padding-bottom: 1px }
   .control-section { gap: 2px; overflow: hidden }
   .section-items { gap: 3px; justify-content: center; max-width: 100%; box-sizing: border-box }
   .stats-section .section-items { justify-content: center }
@@ -1147,15 +1147,15 @@ footer {
   .controls-section .section-items button .btn-right { min-width: 0; width: auto; flex-shrink: 0 }
   .controls-section .section-items button .btn-right kbd { font-size: var(--font-sm); padding: 3px 6px }
   .stat-box { padding: 3px 5px; min-width: 50px; gap: 1px; border-width: 1px }
-  .stat-box .stat-label { font-size: 7px }
-  .stat-box > div { font-size: 16px }
-  .btn-start, .btn-restart { min-width: 0; width: 100%; justify-content: center; padding: 6px 10px; font-size: 13px; gap: 8px }
+  .stat-box .stat-label { font-size: var(--font-xs) }
+  .stat-box > div { font-size: var(--font-xl) }
+  .btn-start, .btn-restart { min-width: 0; width: 100%; justify-content: center; padding: 6px 10px; font-size: var(--font-md); gap: 8px }
   .btn-start .btn-label, .btn-restart .btn-label { min-width: 0; padding: 0 6px }
-  .btn-start .btn-left, .btn-restart .btn-left { width: 28px; font-size: 20px }
+  .btn-start .btn-left, .btn-restart .btn-left { width: 28px; font-size: var(--font-xl) }
   main#game-area { max-height: calc(100vh - 140px) }
   #input-display { padding: 6px 10px }
-  #input-echo { font-size: 24px; padding: 6px 16px; min-height: 40px }
-  kbd { font-size: 9px; padding: 1px 4px }
+  #input-echo { font-size: var(--font-3xl); padding: 6px 16px; min-height: 40px }
+  kbd { font-size: var(--font-xs); padding: 1px 4px }
 }
 
 /* Responsive layout adjustments */
@@ -1196,9 +1196,9 @@ footer {
   .btn-settings .btn-label { display: none }
   .control-section { gap: 4px }
   .section-items { gap: 4px }
-  .section-label { font-size: 8px; padding-bottom: 2px }
+  .section-label { font-size: var(--font-xs); padding-bottom: 2px }
   .stat-box { padding: var(--space-4) var(--space-5); min-width: 75px; gap: 2px; border-width: 1px }
-  .stat-box .stat-label { font-size: 9px }
+  .stat-box .stat-label { font-size: var(--font-xs) }
   .stat-box > div { font-size: var(--font-2xl) }
   .start-screen-content, .game-over-content { padding: 24px; max-width: 340px }
   #input-display { padding: 10px 12px }
@@ -1206,10 +1206,10 @@ footer {
 }
 
 @media (max-width: 420px) {
-  body { font-size: 12px }
+  body { font-size: var(--font-sm) }
   header { padding: 4px 6px; padding-top: 28px }
-  .btn-settings { top: 3px; right: 4px; padding: 2px 3px; font-size: 9px }
-  .btn-settings .btn-left { font-size: 12px }
+  .btn-settings { top: 3px; right: 4px; padding: 2px 3px; font-size: var(--font-xs) }
+  .btn-settings .btn-left { font-size: var(--font-sm) }
   .header-title { padding-bottom: 2px; margin-bottom: 3px }
   .header-title h1 { font-size: var(--font-md) }
   .section-label { display: none } /* Hide section labels to save space */
@@ -1223,8 +1223,8 @@ footer {
   .controls-section .section-items button .btn-label { font-size: var(--font-md); padding: 0 var(--space-3) }
   .controls-section .section-items button .btn-right kbd { font-size: var(--font-sm); padding: 3px 6px }
   .stat-box { padding: 2px 4px; min-width: 46px; gap: 1px; border-radius: 4px; border-width: 1px }
-  .stat-box .stat-label { font-size: 6px }
-  .stat-box > div { font-size: 14px }
+  .stat-box .stat-label { font-size: var(--font-xs) }
+  .stat-box > div { font-size: var(--font-lg) }
   .lives-box #lives { letter-spacing: 1px }
   /* Stack button internals horizontally but very compact */
   .controls-section .section-items button, .btn-start, .btn-restart {
@@ -1232,23 +1232,23 @@ footer {
     align-items: center;
     gap: 2px;
     padding: 3px 4px;
-    font-size: 9px;
+    font-size: var(--font-xs);
     border-radius: 4px;
   }
-  .controls-section .section-items button .btn-left { font-size: 13px; width: 16px; flex-shrink: 0 }
-  .btn-start .btn-left, .btn-restart .btn-left { font-size: 16px; width: 20px; flex-shrink: 0 }
-  .controls-section .section-items button .btn-label { min-width: 0; padding: 0 4px; font-size: 9px; flex: 1; white-space: nowrap; text-align: center }
-  .btn-start .btn-label, .btn-restart .btn-label { text-align:center; min-width:0; padding: 0 4px; font-size: 10px }
+  .controls-section .section-items button .btn-left { font-size: var(--font-md); width: 16px; flex-shrink: 0 }
+  .btn-start .btn-left, .btn-restart .btn-left { font-size: var(--font-xl); width: 20px; flex-shrink: 0 }
+  .controls-section .section-items button .btn-label { min-width: 0; padding: 0 4px; font-size: var(--font-xs); flex: 1; white-space: nowrap; text-align: center }
+  .btn-start .btn-label, .btn-restart .btn-label { text-align:center; min-width:0; padding: 0 4px; font-size: var(--font-sm) }
   .controls-section .section-items button .btn-right { min-width: 0; justify-content: flex-end; width: auto; flex-shrink: 0 }
   .btn-start .btn-right, .btn-restart .btn-right { justify-content:center; min-width: 0; width: auto; flex-shrink: 0 }
-  #input-echo { font-size: 18px; padding: 4px 12px; min-height: 32px }
+  #input-echo { font-size: var(--font-2xl); padding: 4px 12px; min-height: 32px }
   #input-display { padding: 5px 8px }
-  #input-display label { font-size: 10px }
+  #input-display label { font-size: var(--font-sm) }
   main#game-area { max-height: calc(100vh - 110px) }
-  kbd { font-size: 8px; padding: 1px 3px }
+  kbd { font-size: var(--font-xs); padding: 1px 3px }
   .start-screen-content, .game-over-content { padding: 16px; max-width: 280px }
-  .start-screen-content h2, .game-over-content h2 { font-size: 28px; margin-bottom: 16px }
-  .start-screen-content p { font-size: 13px; margin: 12px 0 20px 0 }
+  .start-screen-content h2, .game-over-content h2 { font-size: var(--font-4xl); margin-bottom: 16px }
+  .start-screen-content p { font-size: var(--font-md); margin: 12px 0 20px 0 }
 }
 
 /* Modal responsive styles */
@@ -1303,21 +1303,21 @@ footer {
   .header-controls { gap: 3px; grid-template-columns: 1fr auto } /* Stats and controls side by side */
   .section-items { gap: 2px }
   .section-label { display: none }
-  .btn-settings { top: 2px; right: 4px; font-size: 9px; padding: 1px 3px; gap: 2px }
-  .btn-settings .btn-left { font-size: 11px }
+  .btn-settings { top: 2px; right: 4px; font-size: var(--font-xs); padding: 1px 3px; gap: 2px }
+  .btn-settings .btn-left { font-size: var(--font-sm) }
   .stat-box { padding: 2px 3px; min-width: 40px; gap: 0; border-radius: 3px; border-width: 1px }
-  .stat-box .stat-label { font-size: 6px }
-  .stat-box > div { font-size: 11px; line-height: 1.1 }
-  .lives-box #lives { letter-spacing: 0px; font-size: 9px }
+  .stat-box .stat-label { font-size: var(--font-xs) }
+  .stat-box > div { font-size: var(--font-sm); line-height: 1.1 }
+  .lives-box #lives { letter-spacing: 0px; font-size: var(--font-xs) }
   .controls-section .section-items { justify-content: center }
-  .controls-section .section-items button { padding: 2px 3px; font-size: 8px; gap: 2px; min-width: 0 }
-  .controls-section .section-items button .btn-left { font-size: 11px; width: 14px }
-  .controls-section .section-items button .btn-label { min-width: 30px; padding: 0 2px; font-size: 8px }
+  .controls-section .section-items button { padding: 2px 3px; font-size: var(--font-xs); gap: 2px; min-width: 0 }
+  .controls-section .section-items button .btn-left { font-size: var(--font-sm); width: 14px }
+  .controls-section .section-items button .btn-label { min-width: 30px; padding: 0 2px; font-size: var(--font-xs) }
   .controls-section .section-items button .btn-right { min-width: 24px }
-  kbd { font-size: 6px; padding: 0px 2px }
+  kbd { font-size: var(--font-xs); padding: 0px 2px }
   #input-display { padding: 3px 6px }
-  #input-display label { font-size: 8px }
-  #input-echo { font-size: 14px; padding: 2px 8px; min-height: 24px }
+  #input-display label { font-size: var(--font-xs) }
+  #input-echo { font-size: var(--font-lg); padding: 2px 8px; min-height: 24px }
   main#game-area { max-height: calc(100vh - 70px) }
   .modal-content { max-width: 90%; margin: 10px auto }
   .modal-header { padding: var(--space-2) var(--space-3) }
