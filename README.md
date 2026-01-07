@@ -71,12 +71,11 @@ npm run lint          # ESLint check
 
 ## Tech Stack
 
-- TypeScript, Vite
+- TypeScript, Vite, Vitest
 - Vanilla JS/DOM (no framework dependencies)
 - Web Audio API
 - CSS Transforms (GPU-accelerated)
 - LocalStorage (settings/scores persistence)
-- Vitest (98.78% test coverage)
 - ESLint (TypeScript/HTML/CSS)
 
 ---
