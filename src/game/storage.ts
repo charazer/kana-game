@@ -7,6 +7,7 @@ export type Settings = {
   gameMode?: GameMode
   audioEnabled?: boolean
   musicEnabled?: boolean
+  musicVolume?: number
   includeDakuten?: boolean
   includeYoon?: boolean
   highScores?: Array<{score:number,date:string}>

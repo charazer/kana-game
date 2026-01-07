@@ -16,15 +16,18 @@ export class AudioManager {
     this.enabled = enabled
   }
 
-  async initMusic(musicUrl: string) {
+  initMusic(musicUrl: string, volume = 0.3) {
     this.musicElement = new window.Audio(musicUrl)
     this.musicElement.loop = true
-    this.musicElement.volume = 0.3
+    this.musicElement.volume = volume
     // Preload the audio
-    try {
-      await this.musicElement.load()
-    } catch (e) {
-      console.warn('Failed to load background music', e)
+    this.musicElement.preload = 'auto'
+    this.musicElement.load()
+  }
+
+  setMusicVolume(volume: number) {
+    if (this.musicElement) {
+      this.musicElement.volume = Math.max(0, Math.min(1, volume))
     }
   }
 

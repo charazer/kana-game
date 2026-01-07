@@ -31,6 +31,7 @@ import {
   DOM_ID_KANA_SET,
   DOM_ID_AUDIO_TOGGLE,
   DOM_ID_MUSIC_TOGGLE,
+  DOM_ID_MUSIC_VOLUME,
   DOM_ID_INPUT_ECHO,
   DOM_ID_END_GAME,
   DOM_ID_PAUSE,
@@ -70,6 +71,8 @@ const livesEl = document.getElementById(DOM_ID_LIVES)!
 const gameModeSelect = document.getElementById(DOM_ID_GAME_MODE) as HTMLSelectElement | null
 const kanaSelect = document.getElementById(DOM_ID_KANA_SET) as HTMLSelectElement | null
 const musicToggle = document.getElementById(DOM_ID_MUSIC_TOGGLE) as HTMLInputElement | null
+const musicVolumeSlider = document.getElementById(DOM_ID_MUSIC_VOLUME) as HTMLInputElement | null
+const musicVolumeValue = document.getElementById('music-volume-value') as HTMLSpanElement | null
 const audioToggle = document.getElementById(DOM_ID_AUDIO_TOGGLE) as HTMLInputElement | null
 const includeDakutenToggle = document.getElementById('include-dakuten') as HTMLInputElement | null
 const includeYoonToggle = document.getElementById('include-yoon') as HTMLInputElement | null
@@ -300,8 +303,9 @@ input.onKey = (buffer) => {
 // load saved settings
 const saved = loadSettings()
 
-// Initialize music
-audio.initMusic(backgroundMusic)
+// Initialize music with saved volume or default to 30%
+const initialMusicVolume = saved.musicVolume ?? 0.3
+audio.initMusic(backgroundMusic, initialMusicVolume)
 
 if(audioToggle){
 	audioToggle.checked = saved.audioEnabled !== false // default to true
@@ -321,6 +325,22 @@ if(musicToggle){
 		audio.setMusicEnabled(musicToggle.checked)
 		const s = loadSettings()
 		s.musicEnabled = musicToggle.checked
+		saveSettings(s)
+	})
+}
+
+if(musicVolumeSlider && musicVolumeValue){
+	const volumePercent = Math.round(initialMusicVolume * 100)
+	musicVolumeSlider.value = volumePercent.toString()
+	musicVolumeValue.textContent = `${volumePercent}%`
+	
+	musicVolumeSlider.addEventListener('input', ()=>{
+		const volume = parseInt(musicVolumeSlider.value) / 100
+		audio.setMusicVolume(volume)
+		musicVolumeValue.textContent = `${musicVolumeSlider.value}%`
+		
+		const s = loadSettings()
+		s.musicVolume = volume
 		saveSettings(s)
 	})
 }
@@ -457,6 +477,10 @@ if(startBtn){
 		if(window.enableEndGameButton) window.enableEndGameButton()
 		disableGameSettings()
 		audio.playGameStart()
+		// Start music if enabled (requires user interaction for autoplay policy)
+		if(musicToggle?.checked) {
+			audio.setMusicEnabled(true)
+		}
 		engine.start()
 	})
 }
@@ -470,6 +494,10 @@ if(restartBtn){
 		if(window.enableEndGameButton) window.enableEndGameButton()
 		disableGameSettings()
 		audio.playGameStart()
+		// Resume music if enabled
+		if(musicToggle?.checked) {
+			audio.setMusicEnabled(true)
+		}
 		engine.start()
 	})
 }
