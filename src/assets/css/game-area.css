@@ -10,7 +10,7 @@ main#game-area {
   max-width: var(--game-max-width);
   margin: 0 auto;
   width: 100%;
-  background: transparent;
+  background: var(--bg);
   contain: layout style paint;
 }
 
