@@ -9,7 +9,8 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
+    setupFiles: ['./src/test-setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -17,6 +18,7 @@ export default defineConfig({
         'node_modules/',
         'src/main.ts', // Main entry point with DOM manipulation
         'src/globals.d.ts',
+        'src/test-setup.ts', // Test setup file
         '**/*.config.ts',
         '**/types.ts',
         'dist/',
