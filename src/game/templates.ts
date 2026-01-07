@@ -7,6 +7,11 @@
 import type { KanaEntry } from './types'
 import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from './kana-constants'
 
+// Helper function to get asset path with proper base URL
+function getAssetPath(path: string): string {
+  return import.meta.env.BASE_URL + path.replace(/^\//, '')
+}
+
 /**
  * Button structure with left icon, label, and right keyboard shortcut
  */
@@ -92,12 +97,12 @@ export const DOMBuilder = {
  */
 export const ButtonTemplates = {
   pause: {
-    leftIcon: '<img src="/assets/img/button_pause.png" alt="Pause" class="btn-icon">',
+    leftIcon: `<img src="${getAssetPath('/assets/img/button_pause.png')}" alt="Pause" class="btn-icon">`,
     label: 'Pause',
     rightKey: 'Space'
   },
   resume: {
-    leftIcon: '<img src="/assets/img/button_play.png" alt="Resume" class="btn-icon">',
+    leftIcon: `<img src="${getAssetPath('/assets/img/button_play.png')}" alt="Resume" class="btn-icon">`,
     label: 'Resume',
     rightKey: 'Space'
   }

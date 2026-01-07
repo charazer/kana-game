@@ -53,6 +53,11 @@ import {
   HIGH_SCORE_LIST_START_INDEX
 } from './game/constants'
 
+// Helper function to get asset path with proper base URL
+function getAssetPath(path: string): string {
+  return import.meta.env.BASE_URL + path.replace(/^\//, '')
+}
+
 const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
 const scoreEl = document.getElementById(DOM_ID_SCORE)!
 const comboEl = document.getElementById(DOM_ID_COMBO)!
@@ -235,7 +240,7 @@ const engine = new GameEngine({
 		// Show filled hearts for current lives
 		for (let i = 0; i < lives; i++) {
 			const heart = document.createElement('img')
-			heart.src = '/assets/img/heart.png'
+			heart.src = getAssetPath('/assets/img/heart.png')
 			heart.alt = '❤️'
 			heart.className = 'heart-icon'
 			livesEl.appendChild(heart)
@@ -244,7 +249,7 @@ const engine = new GameEngine({
 		// Show empty hearts for lost lives
 		for (let i = lives; i < INITIAL_LIVES; i++) {
 			const heart = document.createElement('img')
-			heart.src = '/assets/img/heart_empty.png'
+			heart.src = getAssetPath('/assets/img/heart_empty.png')
 			heart.alt = '♡'
 			heart.className = 'heart-icon'
 			livesEl.appendChild(heart)
