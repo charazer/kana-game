@@ -273,6 +273,16 @@ export class GameEngine {
     return 0.5
   }
 
+  calculateScore(token: { spawnTime: number }): number {
+    const basePoints = BASE_POINTS
+    const elapsed = (performance.now() - token.spawnTime) / 1000
+    const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed
+    const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
+    const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
+    const difficultyMultiplier = this.getDifficultyMultiplier()
+    return Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
+  }
+
   spawnToken(){
     if(this.kanaSet.length === 0) return
     if(this.tokens.length >= this.maxActiveTokens) return // don't spawn if at limit
@@ -371,13 +381,7 @@ export class GameEngine {
         this.correctAnswers++
         
         // Calculate score with combo multiplier
-        const basePoints = BASE_POINTS
-        const elapsed = (performance.now() - t.spawnTime) / 1000
-        const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
-        const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
-        const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
-        const difficultyMultiplier = this.getDifficultyMultiplier()
-        const points = Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
+        const points = this.calculateScore(t)
         
         this.combo++
         this.score += points
@@ -412,13 +416,7 @@ export class GameEngine {
       this.renderer.flashToken(t.el, true)
       
       // Calculate score with combo multiplier
-      const basePoints = BASE_POINTS
-      const elapsed = (performance.now() - t.spawnTime) / 1000
-      const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
-      const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
-      const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
-      const difficultyMultiplier = this.getDifficultyMultiplier()
-      const points = Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
+      const points = this.calculateScore(t)
       
       this.combo++
       this.score += points
