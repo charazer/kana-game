@@ -31,6 +31,12 @@
   flex-shrink: 0;
 }
 
+.controls-section .section-items button .btn-left .btn-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .controls-section .section-items button .btn-label {
   display: inline-block;
   padding: 0 var(--space-2);
@@ -136,6 +142,13 @@
   flex-shrink: 0;
 }
 
+.btn-start .btn-left .btn-icon,
+.btn-restart .btn-left .btn-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .btn-start .btn-label,
 .btn-restart .btn-label {
   display: inline-block;
@@ -198,6 +211,11 @@ kbd {
     width: 28px;
   }
 
+  .controls-section .section-items button .btn-left .btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .controls-section .section-items button .btn-label {
     font-size: var(--font-md);
     padding: 0 var(--space-3);
@@ -225,6 +243,12 @@ kbd {
     width: 28px;
   }
 
+  .btn-start .btn-left .btn-icon,
+  .btn-restart .btn-left .btn-icon {
+    width: 24px;
+    height: 24px;
+  }
+
   kbd {
     padding: var(--space-1) var(--space-3);
   }
@@ -237,6 +261,11 @@ kbd {
     min-width: 150px;
     padding: var(--space-4) var(--space-5);
     gap: var(--space-3);
+  }
+
+  .controls-section .section-items button .btn-left .btn-icon {
+    width: 24px;
+    height: 24px;
   }
 
   .controls-section .section-items button .btn-label {
@@ -258,6 +287,12 @@ kbd {
     padding: 0 var(--space-6);
     min-width: 90px;
   }
+
+  .btn-start .btn-left .btn-icon,
+  .btn-restart .btn-left .btn-icon {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 @media (min-width: 901px) {
@@ -270,6 +305,11 @@ kbd {
   .controls-section .section-items button .btn-left {
     width: 36px;
     font-size: var(--font-xl);
+  }
+
+  .controls-section .section-items button .btn-left .btn-icon {
+    width: 28px;
+    height: 28px;
   }
 
   .controls-section .section-items button .btn-label {
@@ -294,6 +334,12 @@ kbd {
   .btn-restart .btn-left {
     width: 40px;
     font-size: var(--font-3xl);
+  }
+
+  .btn-start .btn-left .btn-icon,
+  .btn-restart .btn-left .btn-icon {
+    width: 32px;
+    height: 32px;
   }
 
   .btn-start .btn-label,
