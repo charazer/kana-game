@@ -6,6 +6,8 @@ export type Settings = {
   kanaSet?: KanaSet
   gameMode?: GameMode
   audioEnabled?: boolean
+  includeDakuten?: boolean
+  includeYoon?: boolean
   highScores?: Array<{score:number,date:string}>
 }
 

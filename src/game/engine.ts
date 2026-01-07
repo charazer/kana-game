@@ -61,8 +61,8 @@ const TIME_THRESHOLD_MODERATE = 30000 // ms
 
 
 // Unlock thresholds (based on correct answers)
-const UNLOCK_DAKUTEN_THRESHOLD = 20 // unlock after 20 correct answers
-const UNLOCK_YOON_THRESHOLD = 40 // unlock after 40 correct answers
+const UNLOCK_DAKUTEN_THRESHOLD = 10 // unlock after 10 correct answers
+const UNLOCK_YOON_THRESHOLD = 20 // unlock after 20 correct answers
 
 // Spawn overlap detection
 const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
@@ -100,6 +100,8 @@ export class GameEngine {
   speed = CHALLENGE_BASE_SPEED
   lastSpeedMultiplier = 1.0 // track last speed multiplier to detect changes
   maxActiveTokens = CHALLENGE_MAX_TOKENS
+  includeDakuten = true // user setting for including dakuten/handakuten
+  includeYoon = true // user setting for including yoon
 
   constructor(opts: { renderer: Renderer; input: InputManager; onScore?: (s: number) => void; onLivesChange?: (lives: number, previousLives?: number) => void; onGameOver?: () => void; onCombo?: (combo: number) => void; onSpeedChange?: (multiplier: number) => void }){
     this.renderer = opts.renderer
@@ -250,15 +252,25 @@ export class GameEngine {
       // Always include basic kana
       if(BASIC_KANA_IDS.includes(kana.id)) return true
       
-      // Include dakuten if unlocked
-      if(DAKUTEN_KANA_IDS.includes(kana.id)) return unlockDakuten
+      // Include dakuten if unlocked AND user setting is enabled
+      if(DAKUTEN_KANA_IDS.includes(kana.id)) return unlockDakuten && this.includeDakuten
       
-      // Include yoon only if unlocked
-      if(YOON_KANA_IDS.includes(kana.id)) return unlockYoon
+      // Include yoon only if unlocked AND user setting is enabled
+      if(YOON_KANA_IDS.includes(kana.id)) return unlockYoon && this.includeYoon
       
       // Unknown kana (shouldn't happen) - include by default
       return true
     })
+  }
+
+  getDifficultyMultiplier(): number {
+    // Adjust score based on which kana types are enabled
+    // Both enabled: 100% score (1.0x)
+    // One enabled: 75% score (0.75x)
+    // Both disabled: 50% score (0.5x)
+    if(this.includeDakuten && this.includeYoon) return 1.0
+    if(this.includeDakuten || this.includeYoon) return 0.75
+    return 0.5
   }
 
   spawnToken(){
@@ -364,7 +376,8 @@ export class GameEngine {
         const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
         const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
         const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
-        const points = Math.round((basePoints + timeBonus) * comboMultiplier)
+        const difficultyMultiplier = this.getDifficultyMultiplier()
+        const points = Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
         
         this.combo++
         this.score += points
@@ -404,7 +417,8 @@ export class GameEngine {
       const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed // time to reach danger zone
       const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
       const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
-      const points = Math.round((basePoints + timeBonus) * comboMultiplier)
+      const difficultyMultiplier = this.getDifficultyMultiplier()
+      const points = Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
       
       this.combo++
       this.score += points

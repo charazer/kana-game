@@ -61,6 +61,8 @@ const livesEl = document.getElementById(DOM_ID_LIVES)!
 const gameModeSelect = document.getElementById(DOM_ID_GAME_MODE) as HTMLSelectElement | null
 const kanaSelect = document.getElementById(DOM_ID_KANA_SET) as HTMLSelectElement | null
 const audioToggle = document.getElementById(DOM_ID_AUDIO_TOGGLE) as HTMLInputElement | null
+const includeDakutenToggle = document.getElementById('include-dakuten') as HTMLInputElement | null
+const includeYoonToggle = document.getElementById('include-yoon') as HTMLInputElement | null
 const inputEcho = document.getElementById(DOM_ID_INPUT_ECHO)!
 const endGameBtn = document.getElementById(DOM_ID_END_GAME) as HTMLButtonElement | null
 const pauseBtn = document.getElementById(DOM_ID_PAUSE) as HTMLButtonElement | null
@@ -137,6 +139,16 @@ function disableGameSettings(){
 		kanaSelect.style.opacity = UI_DISABLED_OPACITY
 		kanaSelect.style.cursor = UI_CURSOR_NOT_ALLOWED
 	}
+	if(includeDakutenToggle){
+		includeDakutenToggle.disabled = true
+		includeDakutenToggle.style.opacity = UI_DISABLED_OPACITY
+		includeDakutenToggle.style.cursor = UI_CURSOR_NOT_ALLOWED
+	}
+	if(includeYoonToggle){
+		includeYoonToggle.disabled = true
+		includeYoonToggle.style.opacity = UI_DISABLED_OPACITY
+		includeYoonToggle.style.cursor = UI_CURSOR_NOT_ALLOWED
+	}
 }
 
 function enableGameSettings(){
@@ -149,6 +161,16 @@ function enableGameSettings(){
 		kanaSelect.disabled = false
 		kanaSelect.style.opacity = UI_ENABLED_OPACITY
 		kanaSelect.style.cursor = UI_CURSOR_POINTER
+	}
+	if(includeDakutenToggle){
+		includeDakutenToggle.disabled = false
+		includeDakutenToggle.style.opacity = UI_ENABLED_OPACITY
+		includeDakutenToggle.style.cursor = UI_CURSOR_POINTER
+	}
+	if(includeYoonToggle){
+		includeYoonToggle.disabled = false
+		includeYoonToggle.style.opacity = UI_ENABLED_OPACITY
+		includeYoonToggle.style.cursor = UI_CURSOR_POINTER
 	}
 }
 
@@ -282,6 +304,28 @@ if(kanaSelect){
 		engine.loadKana(kanaSelect.value as any)
 		const s = loadSettings()
 		s.kanaSet = kanaSelect.value as any
+		saveSettings(s)
+	})
+}
+
+if(includeDakutenToggle){
+	includeDakutenToggle.checked = saved.includeDakuten !== false // default to true
+	engine.includeDakuten = includeDakutenToggle.checked
+	includeDakutenToggle.addEventListener('change', ()=>{
+		engine.includeDakuten = includeDakutenToggle.checked
+		const s = loadSettings()
+		s.includeDakuten = includeDakutenToggle.checked
+		saveSettings(s)
+	})
+}
+
+if(includeYoonToggle){
+	includeYoonToggle.checked = saved.includeYoon !== false // default to true
+	engine.includeYoon = includeYoonToggle.checked
+	includeYoonToggle.addEventListener('change', ()=>{
+		engine.includeYoon = includeYoonToggle.checked
+		const s = loadSettings()
+		s.includeYoon = includeYoonToggle.checked
 		saveSettings(s)
 	})
 }
