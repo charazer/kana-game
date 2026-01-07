@@ -478,7 +478,6 @@ header::before {
   padding: var(--space-2) var(--space-2);
   border-radius: var(--radius-md);
   font-weight: var(--font-bold);
-  font-size: var(--font-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
   display: inline-flex;
@@ -492,7 +491,7 @@ header::before {
 
 /* ensure internal spans align like the start/restart buttons */
 .btn-end-game .btn-left, .btn-pause .btn-left { width:18px; display:inline-flex; align-items:center; justify-content:center; font-size:var(--font-md); flex-shrink: 0 }
-.btn-end-game .btn-label, .btn-pause .btn-label { display:inline-block; padding:0; min-width:auto; text-align:left; font-size:var(--font-sm); flex-shrink: 1 }
+.btn-end-game .btn-label, .btn-pause .btn-label { display:inline-block; padding:0; min-width:auto; text-align:left; flex-shrink: 1 }
 .btn-end-game .btn-right, .btn-pause .btn-right { display:inline-flex; align-items:center; justify-content:flex-end; min-width:auto; flex-shrink: 0 }
 .btn-end-game .btn-right kbd, .btn-pause .btn-right kbd { padding: 2px 3px !important; font-size: var(--font-xs) !important; margin-left: 0 !important }
 
