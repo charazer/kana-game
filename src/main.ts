@@ -549,16 +549,20 @@ if(settingsBtn && settingsModal){
 		settingsModal.classList.remove(CSS_CLASS_HIDDEN)
 		// Show/hide active game notice and auto-pause if needed
 		if(activeGameNotice){
-			if(engine.running){
+			// Check if game is in progress (end game button is enabled)
+			const gameInProgress = endGameBtn && !endGameBtn.disabled
+			if(gameInProgress){
 				activeGameNotice.classList.remove(CSS_CLASS_HIDDEN)
-				// Auto-pause the game
-				engine.pause()
-				audio.playPause()
-				pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
-				autoPausedGame = true
-				// Update pause button to show resume state
-				if(pauseBtn){
-					DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
+				// Auto-pause the game if it's running
+				if(engine.running){
+					engine.pause()
+					audio.playPause()
+					pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
+					autoPausedGame = true
+					// Update pause button to show resume state
+					if(pauseBtn){
+						DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
+					}
 				}
 			} else {
 				activeGameNotice.classList.add(CSS_CLASS_HIDDEN)
