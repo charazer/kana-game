@@ -221,12 +221,10 @@ export class GameEngine {
       
       // In practice mode, don't lose lives
       if(this.gameMode === GAME_MODE_CHALLENGE){
-        // Lose a life and reset combo
+        // Lose a life
         const previousLives = this.lives
         this.lives--
-        this.combo = 0
         this.onLivesChange(this.lives, previousLives)
-        if(this.onCombo) this.onCombo(this.combo)
         
         // Show life lost indicator
         this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', FLOAT_TYPE_LIFE)
@@ -237,6 +235,10 @@ export class GameEngine {
           this.onGameOver()
           return
         }
+        
+        // Reset combo only if game continues
+        this.combo = 0
+        if(this.onCombo) this.onCombo(this.combo)
       } else {
         // In practice mode, just reset combo
         this.combo = 0
