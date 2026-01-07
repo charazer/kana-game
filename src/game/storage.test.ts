@@ -1,5 +1,4 @@
-import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './storage'
-import type { Settings } from './storage'
+import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore, type Settings } from './storage'
 
 describe('storage', () => {
   beforeEach(() => {

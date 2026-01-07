@@ -1,5 +1,4 @@
-import { createHighScoreEntry, createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates } from './templates'
-import type { HighScoreEntry } from './templates'
+import { createHighScoreEntry, createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './templates'
 import type { KanaEntry } from './types'
 
 describe('templates', () => {
@@ -173,7 +172,7 @@ describe('templates', () => {
     ]
 
     it('should create hiragana reference with basic kana section', () => {
-      const html = createKanaReference(mockHiraganaData, 'hiragana')
+      const html = createKanaReference(mockHiraganaData)
       
       expect(html).toContain('基本')
       expect(html).toContain('Basic Kana')
@@ -183,7 +182,7 @@ describe('templates', () => {
     })
 
     it('should create hiragana reference with dakuten section', () => {
-      const html = createKanaReference(mockHiraganaData, 'hiragana')
+      const html = createKanaReference(mockHiraganaData)
       
       expect(html).toContain('濁音・半濁音')
       expect(html).toContain('Dakuten')
@@ -192,7 +191,7 @@ describe('templates', () => {
     })
 
     it('should create hiragana reference with yoon section', () => {
-      const html = createKanaReference(mockHiraganaData, 'hiragana')
+      const html = createKanaReference(mockHiraganaData)
       
       expect(html).toContain('拗音')
       expect(html).toContain('Yoon')
@@ -205,13 +204,13 @@ describe('templates', () => {
         { id: 'shi', kana: 'し', romaji: ['shi', 'si'], type: 'hiragana' }
       ]
       
-      const html = createKanaReference(data, 'hiragana')
+      const html = createKanaReference(data)
       
       expect(html).toContain('shi / si')
     })
 
     it('should handle empty kana data', () => {
-      const html = createKanaReference([], 'hiragana')
+      const html = createKanaReference([])
       
       expect(html).toBe('')
     })
@@ -221,13 +220,13 @@ describe('templates', () => {
         { id: 'a', kana: 'ア', romaji: ['a'], type: 'katakana' }
       ]
       
-      const html = createKanaReference(katakanaData, 'katakana')
+      const html = createKanaReference(katakanaData)
       
       expect(html).toContain('ア')
     })
 
     it('should organize kana items into sections', () => {
-      const html = createKanaReference(mockHiraganaData, 'hiragana')
+      const html = createKanaReference(mockHiraganaData)
       
       expect(html).toContain('kana-section')
       expect(html).toContain('kana-item')
@@ -240,7 +239,7 @@ describe('templates', () => {
         { id: 'a', kana: 'あ', romaji: ['a'], type: 'hiragana' }
       ]
       
-      const html = createKanaReference(basicOnly, 'hiragana')
+      const html = createKanaReference(basicOnly)
       
       expect(html).toContain('基本')
       expect(html).not.toContain('濁音・半濁音')

@@ -114,7 +114,6 @@ export class GameEngine {
     this.onGameOver = opts.onGameOver || (()=>{})
     this.onCombo = opts.onCombo
     this.onSpeedChange = opts.onSpeedChange
-    this.input.onKey = (buffer) => this.handleInput(buffer)
     this.input.onCommit = (value) => this.handleCommit(value)
     this.loadKana(KANA_SET_HIRAGANA)
   }
@@ -363,10 +362,6 @@ export class GameEngine {
     
     this.renderer.setTokenPosition(el, x, 0)
     this.tokens.push({ id: entry.id, entry, el, kana: entry.kana, y: 0, x, spawnTime: performance.now() })
-  }
-
-  handleInput(buffer: string){
-    // highlight candidates or provide feedback; for now no-op
   }
 
   handleCommit(value: string){

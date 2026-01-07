@@ -158,10 +158,9 @@ function createKanaSection(kanaData: KanaEntry[], title: string, columns?: strin
 /**
  * Creates complete kana reference HTML for a specific type
  * @param kanaData - Full array of kana entries (hiragana or katakana)
- * @param type - Type of kana ('hiragana' or 'katakana')
  * @returns HTML string for complete kana reference
  */
-export function createKanaReference(kanaData: KanaEntry[], type: 'hiragana' | 'katakana'): string {
+export function createKanaReference(kanaData: KanaEntry[]): string {
   // Categorize kana
   const basicKana = kanaData.filter(k => BASIC_KANA_IDS.includes(k.id))
   const dakutenKana = kanaData.filter(k => DAKUTEN_KANA_IDS.includes(k.id))

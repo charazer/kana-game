@@ -100,7 +100,7 @@ const kanaContent = document.getElementById('kana-content')!
 
 function renderKanaReference(type: 'hiragana' | 'katakana') {
 	const kanaData = (type === 'hiragana' ? kanaHiragana : kanaKatakana) as KanaEntry[]
-	kanaContent.innerHTML = createKanaReference(kanaData, type)
+	kanaContent.innerHTML = createKanaReference(kanaData)
 }
 
 function renderHighScores(container: HTMLElement, highlightScore?: number){
