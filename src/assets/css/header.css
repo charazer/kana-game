@@ -3,7 +3,7 @@
    ========================================================================== */
 
 header {
-  background: linear-gradient(135deg, var(--accent-12), var(--combo-12));
+  background: linear-gradient(135deg, var(--black-70), var(--black-65));
   border-bottom: var(--token-border) solid var(--accent-30);
   padding: var(--space-2) var(--space-3);
   padding-top: var(--space-9);
@@ -11,6 +11,7 @@ header {
   flex-shrink: 0;
   position: relative;
   box-sizing: border-box;
+  backdrop-filter: blur(var(--backdrop-blur-md));
 }
 
 header::before {

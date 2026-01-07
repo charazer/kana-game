@@ -5,7 +5,7 @@
 footer {
   flex-shrink: 0;
   width: 100%;
-  background: var(--bg);
+  background: transparent;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -17,7 +17,7 @@ footer {
   width: 100%;
   margin: 0 auto;
   padding: var(--space-3) var(--space-4);
-  background: linear-gradient(135deg, var(--accent-10), var(--combo-08));
+  background: linear-gradient(135deg, var(--black-70), var(--black-65));
   border: var(--token-border) solid var(--accent);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   border-top: none;
@@ -26,7 +26,7 @@ footer {
   gap: var(--space-2);
   align-items: center;
   box-sizing: border-box;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--backdrop-blur-md));
 }
 
 #input-display label {

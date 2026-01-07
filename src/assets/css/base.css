@@ -11,23 +11,21 @@ html, body {
 }
 
 body {
-  background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: var(--font-sm);
   position: relative;
 }
 
-/* Background gradient overlay */
+/* Background image layer */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image:
-    radial-gradient(circle at 15% 20%, var(--accent-04) 0%, transparent 25%),
-    radial-gradient(circle at 85% 40%, var(--combo-03) 0%, transparent 25%),
-    radial-gradient(circle at 45% 70%, var(--accent-035) 0%, transparent 20%),
-    radial-gradient(circle at 70% 15%, var(--success-025) 0%, transparent 22%);
+  background-image: url('/assets/img/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   pointer-events: none;
   z-index: 0;
 }

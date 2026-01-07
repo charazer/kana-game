@@ -44,6 +44,8 @@
   --black-25: rgba(0,0,0,0.25);
   --black-30: rgba(45,27,46,0.4);  /* Plum tinted */
   --black-50: rgba(45,27,46,0.6);
+  --black-65: rgba(0,0,0,0.65);  /* Glass effect dark */
+  --black-70: rgba(0,0,0,0.7);  /* Glass effect darker */
   --black-85: rgba(45,27,46,0.92);
   
   /* Accent colors with alpha - Sakura pink */
@@ -137,7 +139,8 @@
   
   /* Backdrop */
   --backdrop-blur-sm: 4px;
-  --backdrop-blur-md: 12px;
+  --backdrop-blur-md: 8px;
+  --backdrop-blur-lg: 12px;
   
   /* Font families */
   --font-mono: 'Courier New', monospace;
