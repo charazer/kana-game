@@ -100,6 +100,21 @@
   max-width: 90vw;
 }
 
+.settings-notice {
+  background: linear-gradient(135deg, var(--accent-15), var(--combo-10));
+  border: 2px solid var(--accent-40);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.settings-notice p {
+  margin: 0;
+  color: var(--accent-light);
+  font-size: var(--font-sm);
+  line-height: 1.5;
+}
+
 .settings-group {
   display: flex;
   flex-direction: column;

@@ -80,6 +80,7 @@ const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement
 const settingsModal = document.getElementById('settings-modal')!
 const settingsCloseBtn = document.getElementById('settings-close') as HTMLButtonElement | null
 const modalOverlay = settingsModal.querySelector('.modal-overlay') as HTMLElement
+const activeGameNotice = document.getElementById('active-game-notice') as HTMLElement | null
 
 // Help modal elements
 const howToPlayLink = document.getElementById('how-to-play-link') as HTMLAnchorElement | null
@@ -463,15 +464,45 @@ document.addEventListener('keydown', (e) => {
 
 // Settings modal functionality
 if(settingsBtn && settingsModal){
+	// Track if we auto-paused the game when opening settings
+	let autoPausedGame = false
+	
 	// Open modal
 	settingsBtn.addEventListener('click', ()=>{
 		settingsModal.classList.remove(CSS_CLASS_HIDDEN)
+		// Show/hide active game notice and auto-pause if needed
+		if(activeGameNotice){
+			if(engine.running){
+				activeGameNotice.classList.remove(CSS_CLASS_HIDDEN)
+				// Auto-pause the game
+				engine.pause()
+				audio.playPause()
+				autoPausedGame = true
+				// Update pause button to show resume state
+				if(pauseBtn){
+					DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
+				}
+			} else {
+				activeGameNotice.classList.add(CSS_CLASS_HIDDEN)
+				autoPausedGame = false
+			}
+		}
 	})
 	
 	// Close modal - close button
 	if(settingsCloseBtn){
 		settingsCloseBtn.addEventListener('click', ()=>{
 			settingsModal.classList.add(CSS_CLASS_HIDDEN)
+			// Resume game if we auto-paused it
+			if(autoPausedGame){
+				engine.resume()
+				audio.playResume()
+				autoPausedGame = false
+				// Update pause button to show pause state
+				if(pauseBtn){
+					DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
+				}
+			}
 		})
 	}
 	
@@ -479,6 +510,16 @@ if(settingsBtn && settingsModal){
 	if(modalOverlay){
 		modalOverlay.addEventListener('click', ()=>{
 			settingsModal.classList.add(CSS_CLASS_HIDDEN)
+			// Resume game if we auto-paused it
+			if(autoPausedGame){
+				engine.resume()
+				audio.playResume()
+				autoPausedGame = false
+				// Update pause button to show pause state
+				if(pauseBtn){
+					DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
+				}
+			}
 		})
 	}
 	
