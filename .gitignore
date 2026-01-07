@@ -33,9 +33,6 @@ dist-ssr
 
 # Test screenshots
 screenshots/
-*.png
-*.jpg
-*.jpeg
 
 # Build output
 build/
