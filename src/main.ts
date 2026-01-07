@@ -189,7 +189,15 @@ const engine = new GameEngine({
 		audio.playSpeedIncrease()
 	},
 	onLivesChange: (lives, previousLives) => {
-		livesEl.textContent = '❤️ '.repeat(lives).trim()
+		// Clear and rebuild hearts with images
+		livesEl.innerHTML = ''
+		for (let i = 0; i < lives; i++) {
+			const heart = document.createElement('img')
+			heart.src = '/assets/img/heart.png'
+			heart.alt = '❤️'
+			heart.className = 'heart-icon'
+			livesEl.appendChild(heart)
+		}
 		// Only play sound and animate if lives actually decreased
 		if(previousLives !== undefined && lives < previousLives) {
 			livesEl.parentElement?.classList.add(CSS_CLASS_STAT_SHAKE)

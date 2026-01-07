@@ -89,6 +89,16 @@
   letter-spacing: 1px;
   white-space: nowrap;
   min-height: 1em;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.heart-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Stat animations */
@@ -137,6 +147,11 @@
   .stat-box > div {
     font-size: var(--font-xl);
   }
+
+  .heart-icon {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @media (min-width: 601px) {
@@ -149,6 +164,11 @@
 
   .stat-box .stat-label {
     font-size: var(--font-sm);
+  }
+
+  .heart-icon {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -171,5 +191,10 @@
 
   .lives-box #lives {
     letter-spacing: var(--space-1);
+  }
+
+  .heart-icon {
+    width: 28px;
+    height: 28px;
   }
 }
