@@ -1196,7 +1196,7 @@ footer {
   .control-section { gap: 4px }
   .section-items { gap: 4px }
   .section-label { font-size: var(--font-xs); padding-bottom: 2px }
-  .stat-box { padding: var(--space-4) var(--space-5); min-width: 75px; gap: 2px; border-width: 1px }
+  .stat-box { padding: var(--space-4) var(--space-5); min-width: 75px; gap: var(--space-4); border-width: 1px }
   .stat-box .stat-label { font-size: var(--font-xs) }
   .stat-box > div { font-size: var(--font-2xl) }
   .start-screen-content, .game-over-content { padding: 24px; max-width: 340px }
