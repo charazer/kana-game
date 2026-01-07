@@ -122,12 +122,12 @@ export const DOMBuilder = {
  */
 export const ButtonTemplates = {
   pause: {
-    leftIcon: '⏸️',
+    leftIcon: '<img src="/assets/img/button_pause.png" alt="Pause" class="btn-icon">',
     label: 'Pause',
     rightKey: 'Space'
   },
   resume: {
-    leftIcon: '▶️',
+    leftIcon: '<img src="/assets/img/button_play.png" alt="Resume" class="btn-icon">',
     label: 'Resume',
     rightKey: 'Space'
   },
