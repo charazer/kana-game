@@ -7,12 +7,21 @@
         "build": "vite build",
         "preview": "vite preview",
         "lint": "eslint . --ext .ts,.js",
-        "test": "echo \"No tests yet\" && exit 0",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:ui": "vitest --ui",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
         "test:responsive": "node test-responsive.js"
     },
     "devDependencies": {
+        "@vitest/coverage-v8": "^4.0.16",
+        "@vitest/ui": "^4.0.16",
+        "happy-dom": "^20.1.0",
+        "jsdom": "^27.4.0",
         "puppeteer": "^24.34.0",
         "typescript": "^5.9.3",
-        "vite": "^7.3.0"
+        "vite": "^7.3.0",
+        "vitest": "^4.0.16"
     }
 }

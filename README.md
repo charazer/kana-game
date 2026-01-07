@@ -62,6 +62,32 @@ npm run preview
 
 ### Testing
 
+The project has comprehensive unit test coverage using Vitest.
+
+Run unit tests:
+
+```bash
+npm test
+```
+
+Run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
+Run tests with coverage report:
+
+```bash
+npm run test:coverage
+```
+
+Open interactive test UI:
+
+```bash
+npm run test:ui
+```
+
 Run automated responsive testing across multiple screen sizes:
 
 ```bash
