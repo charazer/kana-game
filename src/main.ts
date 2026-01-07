@@ -12,6 +12,9 @@ import type { KanaEntry } from './game/types'
 import heartFullImg from './assets/img/heart.png'
 import heartEmptyImg from './assets/img/heart_empty.png'
 
+// Import audio assets
+import backgroundMusic from './assets/audio/yukarinoti_japanese_mood2.mp3'
+
 import {
   type GameMode,
   GAME_MODE_PRACTICE,
@@ -27,6 +30,7 @@ import {
   DOM_ID_GAME_MODE,
   DOM_ID_KANA_SET,
   DOM_ID_AUDIO_TOGGLE,
+  DOM_ID_MUSIC_TOGGLE,
   DOM_ID_INPUT_ECHO,
   DOM_ID_END_GAME,
   DOM_ID_PAUSE,
@@ -65,6 +69,7 @@ const speedEl = document.getElementById(DOM_ID_SPEED)!
 const livesEl = document.getElementById(DOM_ID_LIVES)!
 const gameModeSelect = document.getElementById(DOM_ID_GAME_MODE) as HTMLSelectElement | null
 const kanaSelect = document.getElementById(DOM_ID_KANA_SET) as HTMLSelectElement | null
+const musicToggle = document.getElementById(DOM_ID_MUSIC_TOGGLE) as HTMLInputElement | null
 const audioToggle = document.getElementById(DOM_ID_AUDIO_TOGGLE) as HTMLInputElement | null
 const includeDakutenToggle = document.getElementById('include-dakuten') as HTMLInputElement | null
 const includeYoonToggle = document.getElementById('include-yoon') as HTMLInputElement | null
@@ -294,6 +299,10 @@ input.onKey = (buffer) => {
 
 // load saved settings
 const saved = loadSettings()
+
+// Initialize music
+audio.initMusic(backgroundMusic)
+
 if(audioToggle){
 	audioToggle.checked = saved.audioEnabled !== false // default to true
 	audio.setEnabled(audioToggle.checked)
@@ -301,6 +310,17 @@ if(audioToggle){
 		audio.setEnabled(audioToggle.checked)
 		const s = loadSettings()
 		s.audioEnabled = audioToggle.checked
+		saveSettings(s)
+	})
+}
+
+if(musicToggle){
+	musicToggle.checked = saved.musicEnabled === true // default to false
+	audio.setMusicEnabled(musicToggle.checked)
+	musicToggle.addEventListener('change', ()=>{
+		audio.setMusicEnabled(musicToggle.checked)
+		const s = loadSettings()
+		s.musicEnabled = musicToggle.checked
 		saveSettings(s)
 	})
 }

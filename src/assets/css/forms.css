@@ -91,6 +91,31 @@
   color: var(--fg);
 }
 
+/* Music credit - styling for attribution link */
+.music-credit {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--white-10);
+}
+
+.music-credit span {
+  font-size: var(--font-xs);
+  color: var(--white-70);
+  display: block;
+  text-align: center;
+}
+
+.music-credit a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+  transition: color var(--transition-fast);
+}
+
+.music-credit a:hover {
+  color: var(--combo);
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (min-width: 421px) {
   .setting-item select {

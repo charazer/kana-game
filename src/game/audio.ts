@@ -1,6 +1,8 @@
 export class AudioManager {
   private audioContext: AudioContext | null = null
   private enabled = true
+  private musicElement: HTMLAudioElement | null = null
+  private musicEnabled = false
 
   constructor() {
     try {
@@ -12,6 +14,38 @@ export class AudioManager {
 
   setEnabled(enabled: boolean) {
     this.enabled = enabled
+  }
+
+  async initMusic(musicUrl: string) {
+    this.musicElement = new window.Audio(musicUrl)
+    this.musicElement.loop = true
+    this.musicElement.volume = 0.3
+    // Preload the audio
+    try {
+      await this.musicElement.load()
+    } catch (e) {
+      console.warn('Failed to load background music', e)
+    }
+  }
+
+  setMusicEnabled(enabled: boolean) {
+    this.musicEnabled = enabled
+    if (this.musicElement) {
+      if (enabled) {
+        this.musicElement.play().catch(e => {
+          console.warn('Failed to play background music', e)
+        })
+      } else {
+        this.musicElement.pause()
+      }
+    }
+  }
+
+  stopMusic() {
+    if (this.musicElement) {
+      this.musicElement.pause()
+      this.musicElement.currentTime = 0
+    }
   }
 
   playSuccess() {
