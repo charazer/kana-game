@@ -480,10 +480,11 @@ describe('engine', () => {
     })
 
     it('should ignore empty value', () => {
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
+      const initialTokens = engine.tokens.length
       engine.handleCommit('')
       
-      expect(engine.tokens.length).toBe(1)
+      expect(engine.tokens.length).toBe(initialTokens)
       expect(mockRenderer.flashToken).not.toHaveBeenCalled()
     })
 
@@ -496,7 +497,7 @@ describe('engine', () => {
     })
 
     it('should match romaji and remove token', () => {
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
       inputManager.buffer = 'ka'
       engine.handleCommit('ka')
       
@@ -573,7 +574,7 @@ describe('engine', () => {
         spawnTime: performance.now()
       })
       
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
       inputManager.buffer = 'kashi'
       engine.handleCommit('kashi')
       
@@ -584,7 +585,7 @@ describe('engine', () => {
     })
 
     it('should handle exact kana match for IME input', () => {
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
       inputManager.buffer = 'か'
       engine.handleCommit('か')
       
@@ -607,7 +608,7 @@ describe('engine', () => {
         spawnTime: performance.now()
       })
       
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
       inputManager.buffer = 'si'
       engine.handleCommit('si')
       
@@ -947,7 +948,7 @@ describe('engine', () => {
     })
 
     it('should handle input when buffer doesn\'t match any token', () => {
-      engine.start()
+      engine.running = true // Set running without calling start() to avoid spawning
       
       // Add token but commit something that doesn't match
       engine.tokens.push({

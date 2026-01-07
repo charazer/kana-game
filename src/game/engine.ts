@@ -38,7 +38,7 @@ import type { InputManager } from './input'
 const BASE_POINTS = 10
 const MAX_TIME_BONUS = 10
 const COMBO_MULTIPLIER = 0.05
-const SPAWN_INTERVAL = 0.9 // seconds
+const SPAWN_INTERVAL = 1.2 // seconds
 const DANGER_ZONE = 80 // pixels from bottom
 const TOKEN_WIDTH = 72 // pixels
 const SPAWN_MARGIN = 20 // pixels
@@ -121,6 +121,8 @@ export class GameEngine {
   start(){
     this.running = true
     this.last = performance.now()
+    // Spawn first token immediately
+    this.spawnToken()
     requestAnimationFrame(this.loop.bind(this))
   }
 
