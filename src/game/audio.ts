@@ -14,25 +14,6 @@ export class AudioManager {
     this.enabled = enabled
   }
 
-  private playTone(frequency: number, duration: number, volume: number = 0.3, type: OscillatorType = 'sine') {
-    if (!this.audioContext || !this.enabled) return
-
-    const oscillator = this.audioContext.createOscillator()
-    const gainNode = this.audioContext.createGain()
-
-    oscillator.connect(gainNode)
-    gainNode.connect(this.audioContext.destination)
-
-    oscillator.frequency.value = frequency
-    oscillator.type = type
-
-    gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration)
-
-    oscillator.start(this.audioContext.currentTime)
-    oscillator.stop(this.audioContext.currentTime + duration)
-  }
-
   playSuccess() {
     if (!this.enabled || !this.audioContext) return
     
@@ -59,19 +40,6 @@ export class AudioManager {
     osc2.start(now)
     osc1.stop(now + 0.15)
     osc2.stop(now + 0.15)
-  }
-
-  playMiss() {
-    // Low descending tone
-    this.playTone(200, 0.2, 0.2, 'sawtooth')
-  }
-
-  playCombo(comboCount: number) {
-    if (!this.enabled) return
-    // Higher pitch for higher combos
-    const baseFreq = 600
-    const frequency = Math.min(baseFreq + (comboCount * 50), 1200)
-    this.playTone(frequency, 0.1, 0.15, 'square')
   }
 
   playGameOver() {

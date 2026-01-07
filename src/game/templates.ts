@@ -10,7 +10,7 @@ import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTE
 /**
  * Button structure with left icon, label, and right keyboard shortcut
  */
-export interface ButtonParts {
+interface ButtonParts {
   leftIcon: string
   label: string
   rightKey: string
@@ -31,7 +31,7 @@ export interface HighScoreEntry {
  * @param parts - Button component parts
  * @returns HTML string for button content
  */
-export function createButtonContent(parts: ButtonParts): string {
+function createButtonContent(parts: ButtonParts): string {
   return `<span class="btn-left">${parts.leftIcon}</span><span class="btn-label">${parts.label}</span><span class="btn-right"><kbd>${parts.rightKey}</kbd></span>`
 }
 
@@ -80,36 +80,6 @@ export function createHighScoresList(
  */
 export const DOMBuilder = {
   /**
-   * Creates a div element with specified class and content
-   */
-  createDiv(className: string, content?: string): HTMLDivElement {
-    const div = document.createElement('div')
-    div.className = className
-    if (content) div.textContent = content
-    return div
-  },
-  
-  /**
-   * Creates a span element with specified class and content
-   */
-  createSpan(className: string, content?: string): HTMLSpanElement {
-    const span = document.createElement('span')
-    span.className = className
-    if (content) span.textContent = content
-    return span
-  },
-  
-  /**
-   * Creates a button with structured content
-   */
-  createButton(parts: ButtonParts, className?: string): HTMLButtonElement {
-    const button = document.createElement('button')
-    if (className) button.className = className
-    button.innerHTML = createButtonContent(parts)
-    return button
-  },
-  
-  /**
    * Updates button content while preserving button element
    */
   updateButton(button: HTMLButtonElement, parts: ButtonParts): void {
@@ -130,16 +100,6 @@ export const ButtonTemplates = {
     leftIcon: '<img src="/assets/img/button_play.png" alt="Resume" class="btn-icon">',
     label: 'Resume',
     rightKey: 'Space'
-  },
-  start: {
-    leftIcon: '🎌',
-    label: 'Start Game',
-    rightKey: 'Enter'
-  },
-  restart: {
-    leftIcon: '🔁',
-    label: 'Play Again',
-    rightKey: 'Enter'
   }
 }
 

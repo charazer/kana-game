@@ -7,12 +7,6 @@ export function exactMatch(entry: KanaEntry, buffer: string){
   return entry.romaji.some(r => r === buffer)
 }
 
-// Return whether buffer is a valid prefix of any romaji alternative
-export function isPrefix(entry: KanaEntry, buffer: string){
-  if(!buffer) return false
-  return entry.romaji.some(r => r.startsWith(buffer))
-}
-
 // Choose longest romaji match from candidate entries given buffer
 // Prefers matches at the start of the buffer for proper consumption
 export function longestRomajiMatch(entries: KanaEntry[], buffer: string){
