@@ -31,9 +31,6 @@ dist-ssr
 .env.development.local
 .env.test.local
 
-# Test screenshots
-screenshots/
-
 # Build output
 build/
 out/

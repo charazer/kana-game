@@ -13,8 +13,7 @@
         "test": "vitest run",
         "test:ui": "vitest --ui",
         "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "test:responsive": "node test-responsive.js"
+        "test:coverage": "vitest run --coverage"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.52.0",
