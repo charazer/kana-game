@@ -301,7 +301,7 @@ describe('renderer_dom', () => {
     it('should return container client width', () => {
       const width = renderer.getWidth()
       
-      // jsdom doesn't render elements, so clientWidth will be 0
+      // Test environment doesn't render elements, so clientWidth will be 0
       expect(typeof width).toBe('number')
       expect(width).toBeGreaterThanOrEqual(0)
     })
@@ -319,7 +319,7 @@ describe('renderer_dom', () => {
     it('should return container client height', () => {
       const height = renderer.getHeight()
       
-      // jsdom doesn't render elements, so clientHeight will be 0
+      // Test environment doesn't render elements, so clientHeight will be 0
       expect(typeof height).toBe('number')
       expect(height).toBeGreaterThanOrEqual(0)
     })

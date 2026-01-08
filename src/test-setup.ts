@@ -1,11 +1,11 @@
 // Setup file for vitest tests
 // 
 // NOTE: This file provides a localStorage mock that may be needed in certain environments.
-// In Node.js v25+, neither happy-dom nor jsdom properly expose localStorage, causing
+// In Node.js v25+, happy-dom doesn't properly expose localStorage, causing
 // "localStorage.clear is not a function" errors. This mock ensures consistent behavior
 // across all Node.js versions.
 //
-// On older Node versions (v18, v20, v22), the test environments typically provide
+// On older Node versions (v18, v20, v22), the test environment typically provides
 // localStorage automatically, so this setup may not be strictly necessary but doesn't hurt.
 
 class LocalStorageMock implements Storage {
