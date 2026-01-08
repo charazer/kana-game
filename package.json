@@ -11,6 +11,7 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
+        "optimize-images": "node scripts/optimize-images.js",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "typecheck": "tsc --noEmit",
@@ -31,6 +32,7 @@
         "jsdom": "^27.4.0",
         "postcss-html": "^1.8.0",
         "puppeteer": "^24.34.0",
+        "sharp": "^0.34.5",
         "typescript": "^5.9.3",
         "vite": "^7.3.0",
         "vitest": "^4.0.16"

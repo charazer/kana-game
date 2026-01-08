@@ -22,12 +22,19 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url('../img/background.png');
+  background-image: url('../img/background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Fallback for browsers that don't support WebP */
+@supports not (background-image: url('data:image/webp;base64,')) {
+  body::before {
+    background-image: url('../img/background.png');
+  }
 }
 
 body > * {
