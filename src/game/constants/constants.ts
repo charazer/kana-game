@@ -10,47 +10,9 @@ export const KANA_SET_MIXED = 'mixed' as const
 export type KanaSet = typeof KANA_SET_HIRAGANA | typeof KANA_SET_KATAKANA | typeof KANA_SET_MIXED
 
 // Floating text types
-export const FLOAT_TYPE_POINTS = 'points' as const
-export const FLOAT_TYPE_COMBO = 'combo' as const
-export const FLOAT_TYPE_LIFE = 'life' as const
-export const FLOAT_TYPE_SPEED = 'speed' as const
-export type FloatingTextType = typeof FLOAT_TYPE_POINTS | typeof FLOAT_TYPE_COMBO | typeof FLOAT_TYPE_LIFE | typeof FLOAT_TYPE_SPEED
+export type FloatingTextType = 'points' | 'combo' | 'life' | 'speed'
 
-// CSS class names
-export const CSS_CLASS_TOKEN = 'token'
-export const CSS_CLASS_TOKEN_SUCCESS = 'token-success'
-export const CSS_CLASS_TOKEN_MISS = 'token-miss'
-export const CSS_CLASS_FLOATING_TEXT = 'floating-text'
-export const CSS_CLASS_STAT_HIGHLIGHT = 'stat-highlight'
-export const CSS_CLASS_STAT_SHAKE = 'stat-shake'
-export const CSS_CLASS_SPEED_FLASH = 'speed-flash'
-export const CSS_CLASS_HIDDEN = 'hidden'
-
-// DOM element IDs
-export const DOM_ID_TOKENS = 'tokens'
-export const DOM_ID_SCORE = 'score'
-export const DOM_ID_COMBO = 'combo'
-export const DOM_ID_SPEED = 'speed'
-export const DOM_ID_LIVES = 'lives'
-export const DOM_ID_GAME_MODE = 'game-mode'
-export const DOM_ID_KANA_SET = 'kana-set'
-export const DOM_ID_AUDIO_TOGGLE = 'audio-toggle'
-export const DOM_ID_MUSIC_TOGGLE = 'music-toggle'
-export const DOM_ID_MUSIC_VOLUME = 'music-volume'
-export const DOM_ID_INPUT_ECHO = 'input-echo'
-export const DOM_ID_END_GAME = 'end-game'
-export const DOM_ID_PAUSE = 'pause'
-export const DOM_ID_START_SCREEN = 'start-screen'
-export const DOM_ID_START = 'start'
-export const DOM_ID_GAME_OVER = 'game-over'
-export const DOM_ID_FINAL_SCORE = 'final-score'
-export const DOM_ID_NEW_HIGH_SCORE = 'new-high-score'
-export const DOM_ID_HIGH_SCORES_START = 'high-scores-start'
-export const DOM_ID_HIGH_SCORES_END = 'high-scores-end'
-export const DOM_ID_RESTART = 'restart'
-export const DOM_ID_GAME_AREA = 'game-area'
-
-// Dataset keys
+// Dataset keys (keep this as it's used in multiple places)
 export const DATASET_KANA_ID = 'kanaId'
 
 // Game configuration

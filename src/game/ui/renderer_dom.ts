@@ -1,9 +1,5 @@
 import {
   type FloatingTextType,
-  CSS_CLASS_TOKEN,
-  CSS_CLASS_TOKEN_SUCCESS,
-  CSS_CLASS_TOKEN_MISS,
-  CSS_CLASS_FLOATING_TEXT,
   DATASET_KANA_ID,
   ANIM_DURATION_FLOATING_TEXT
 } from '../constants/constants'
@@ -16,7 +12,7 @@ export class DOMRenderer{
 
   createTokenEl(id: string, kana: string){
     const el = document.createElement('div')
-    el.className = CSS_CLASS_TOKEN
+    el.className = 'token'
     el.dataset[DATASET_KANA_ID] = id
     el.textContent = kana
     // Initialize position custom properties for animation continuity
@@ -38,7 +34,7 @@ export class DOMRenderer{
   }
 
   flashToken(el: HTMLElement, success: boolean){
-    const className = success ? CSS_CLASS_TOKEN_SUCCESS : CSS_CLASS_TOKEN_MISS
+    const className = success ? 'token-success' : 'token-miss'
     el.classList.add(className)
     
     // Use animation end event for immediate removal
@@ -50,7 +46,7 @@ export class DOMRenderer{
 
   showFloatingText(x: number, y: number, text: string, type: FloatingTextType){
     const floater = document.createElement('div')
-    floater.className = `${CSS_CLASS_FLOATING_TEXT} floating-${type}`
+    floater.className = `floating-text floating-${type}`
     floater.textContent = text
     floater.style.left = `${x}px`
     floater.style.top = `${y}px`

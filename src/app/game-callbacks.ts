@@ -8,18 +8,12 @@ import {
 	GAME_MODE_PRACTICE,
 	GAME_MODE_CHALLENGE,
 	INITIAL_LIVES,
-	CSS_CLASS_STAT_HIGHLIGHT,
-	CSS_CLASS_STAT_SHAKE,
-	CSS_CLASS_SPEED_FLASH,
-	CSS_CLASS_HIDDEN,
 	ANIM_DURATION_STAT_HIGHLIGHT,
 	ANIM_DURATION_STAT_SHAKE,
 	ANIM_DURATION_SPEED_FLASH,
 	GAME_AREA_WIDTH_MULTIPLIER,
 	SPEED_DISPLAY_DECIMAL_PLACES,
-	COMBO_DISPLAY_SUFFIX,
-	DOM_ID_GAME_AREA,
-	FLOAT_TYPE_SPEED
+	COMBO_DISPLAY_SUFFIX
 } from '../game/constants/constants'
 import { addHighScore, isHighScore, getHighScores } from '../game/storage/storage'
 import { createHighScoresList, type HighScoreEntry } from '../game/ui/templates'
@@ -53,34 +47,34 @@ export function createGameCallbacks(
 	return {
 		onScore: (s: number) => {
 			scoreEl.textContent = `${s}`
-			scoreEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
-			setTimeout(() => scoreEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
+			scoreEl.parentElement?.classList.add('stat-highlight')
+			setTimeout(() => scoreEl.parentElement?.classList.remove('stat-highlight'), ANIM_DURATION_STAT_HIGHLIGHT)
 			audio.playSuccess()
 		},
 
 		onCombo: (combo: number) => {
 			comboEl.textContent = `${combo}${COMBO_DISPLAY_SUFFIX}`
 			if (combo > 0) {
-				comboEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
-				setTimeout(() => comboEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
+				comboEl.parentElement?.classList.add('stat-highlight')
+				setTimeout(() => comboEl.parentElement?.classList.remove('stat-highlight'), ANIM_DURATION_STAT_HIGHLIGHT)
 			}
 		},
 
 		onSpeedChange: (multiplier: number) => {
 			speedEl.textContent = `${multiplier.toFixed(SPEED_DISPLAY_DECIMAL_PLACES)}${COMBO_DISPLAY_SUFFIX}`
-			speedEl.parentElement?.classList.add(CSS_CLASS_STAT_HIGHLIGHT)
-			setTimeout(() => speedEl.parentElement?.classList.remove(CSS_CLASS_STAT_HIGHLIGHT), ANIM_DURATION_STAT_HIGHLIGHT)
+			speedEl.parentElement?.classList.add('stat-highlight')
+			setTimeout(() => speedEl.parentElement?.classList.remove('stat-highlight'), ANIM_DURATION_STAT_HIGHLIGHT)
 
 			// Visual flash effect on game area
-			const gameArea = document.getElementById(DOM_ID_GAME_AREA)
+			const gameArea = document.getElementById('game-area')
 			if (gameArea) {
-				gameArea.classList.add(CSS_CLASS_SPEED_FLASH)
-				setTimeout(() => gameArea.classList.remove(CSS_CLASS_SPEED_FLASH), ANIM_DURATION_SPEED_FLASH)
+				gameArea.classList.add('speed-flash')
+				setTimeout(() => gameArea.classList.remove('speed-flash'), ANIM_DURATION_SPEED_FLASH)
 			}
 
 			// Show floating text notification
 			const width = renderer.getHeight() * GAME_AREA_WIDTH_MULTIPLIER
-			renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(SPEED_DISPLAY_DECIMAL_PLACES)}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_SPEED)
+			renderer.showFloatingText(width / 2, renderer.getHeight() / 2, `SPEED UP! ${multiplier.toFixed(SPEED_DISPLAY_DECIMAL_PLACES)}${COMBO_DISPLAY_SUFFIX}`, 'speed')
 
 			audio.playSpeedIncrease()
 		},
@@ -109,8 +103,8 @@ export function createGameCallbacks(
 
 			// Only play sound and animate if lives actually decreased
 			if (previousLives !== undefined && lives < previousLives) {
-				livesEl.parentElement?.classList.add(CSS_CLASS_STAT_SHAKE)
-				setTimeout(() => livesEl.parentElement?.classList.remove(CSS_CLASS_STAT_SHAKE), ANIM_DURATION_STAT_SHAKE)
+				livesEl.parentElement?.classList.add('stat-shake')
+				setTimeout(() => livesEl.parentElement?.classList.remove('stat-shake'), ANIM_DURATION_STAT_SHAKE)
 				audio.playLifeLost()
 			}
 		},
@@ -129,15 +123,15 @@ export function createGameCallbacks(
 
 			// Only check for high scores in challenge mode
 			if (engine.gameMode === GAME_MODE_CHALLENGE && isHighScore(finalScore)) {
-				newHighScoreEl.classList.remove(CSS_CLASS_HIDDEN)
+				newHighScoreEl.classList.remove('hidden')
 				addHighScore(finalScore)
 				renderHighScoresInternal(highScoresEndEl, finalScore)
 			} else {
-				newHighScoreEl.classList.add(CSS_CLASS_HIDDEN)
+				newHighScoreEl.classList.add('hidden')
 				renderHighScoresInternal(highScoresEndEl)
 			}
 
-			gameOverEl.classList.remove(CSS_CLASS_HIDDEN)
+			gameOverEl.classList.remove('hidden')
 		}
 	}
 }

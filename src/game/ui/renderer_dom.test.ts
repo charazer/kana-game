@@ -1,14 +1,7 @@
 import { DOMRenderer } from './renderer_dom'
 import {
-  CSS_CLASS_TOKEN,
-  CSS_CLASS_TOKEN_SUCCESS,
-  CSS_CLASS_TOKEN_MISS,
-  CSS_CLASS_FLOATING_TEXT,
   DATASET_KANA_ID,
-  ANIM_DURATION_FLOATING_TEXT,
-  FLOAT_TYPE_POINTS,
-  FLOAT_TYPE_COMBO,
-  FLOAT_TYPE_LIFE
+  ANIM_DURATION_FLOATING_TEXT
 } from '../constants/constants'
 
 describe('renderer_dom', () => {
@@ -49,7 +42,7 @@ describe('renderer_dom', () => {
       const el = renderer.createTokenEl('a', 'あ')
       
       expect(el).toBeInstanceOf(HTMLElement)
-      expect(el.className).toBe(CSS_CLASS_TOKEN)
+      expect(el.className).toBe('token')
       expect(el.textContent).toBe('あ')
     })
 
@@ -157,7 +150,7 @@ describe('renderer_dom', () => {
       
       renderer.flashToken(el, true)
       
-      expect(el.classList.contains(CSS_CLASS_TOKEN_SUCCESS)).toBe(true)
+      expect(el.classList.contains('token-success')).toBe(true)
     })
 
     it('should add miss class for failed match', () => {
@@ -165,7 +158,7 @@ describe('renderer_dom', () => {
       
       renderer.flashToken(el, false)
       
-      expect(el.classList.contains(CSS_CLASS_TOKEN_MISS)).toBe(true)
+      expect(el.classList.contains('token-miss')).toBe(true)
     })
 
     it('should attach animationend event listener for success', () => {
@@ -222,7 +215,7 @@ describe('renderer_dom', () => {
 
   describe('showFloatingText', () => {
     it('should create floating text element', () => {
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(1)
       const floater = container.firstChild as HTMLElement
@@ -230,31 +223,31 @@ describe('renderer_dom', () => {
     })
 
     it('should set correct classes for points type', () => {
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       const floater = container.firstChild as HTMLElement
-      expect(floater.classList.contains(CSS_CLASS_FLOATING_TEXT)).toBe(true)
+      expect(floater.classList.contains('floating-text')).toBe(true)
       expect(floater.classList.contains('floating-points')).toBe(true)
     })
 
     it('should set correct classes for combo type', () => {
-      renderer.showFloatingText(100, 200, '5x combo', FLOAT_TYPE_COMBO)
+      renderer.showFloatingText(100, 200, '5x combo', 'combo')
       
       const floater = container.firstChild as HTMLElement
-      expect(floater.classList.contains(CSS_CLASS_FLOATING_TEXT)).toBe(true)
+      expect(floater.classList.contains('floating-text')).toBe(true)
       expect(floater.classList.contains('floating-combo')).toBe(true)
     })
 
     it('should set correct classes for life type', () => {
-      renderer.showFloatingText(100, 200, '-1', FLOAT_TYPE_LIFE)
+      renderer.showFloatingText(100, 200, '-1', 'life')
       
       const floater = container.firstChild as HTMLElement
-      expect(floater.classList.contains(CSS_CLASS_FLOATING_TEXT)).toBe(true)
+      expect(floater.classList.contains('floating-text')).toBe(true)
       expect(floater.classList.contains('floating-life')).toBe(true)
     })
 
     it('should set position styles', () => {
-      renderer.showFloatingText(150, 250, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(150, 250, '+10', 'points')
       
       const floater = container.firstChild as HTMLElement
       expect(floater.style.left).toBe('150px')
@@ -262,7 +255,7 @@ describe('renderer_dom', () => {
     })
 
     it('should remove element after timeout', () => {
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(1)
       
@@ -272,7 +265,7 @@ describe('renderer_dom', () => {
     })
 
     it('should not remove element before timeout expires', () => {
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(1)
       
@@ -282,15 +275,15 @@ describe('renderer_dom', () => {
     })
 
     it('should create multiple floating texts', () => {
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
-      renderer.showFloatingText(150, 250, '3x', FLOAT_TYPE_COMBO)
-      renderer.showFloatingText(200, 300, '-1', FLOAT_TYPE_LIFE)
+      renderer.showFloatingText(100, 200, '+10', 'points')
+      renderer.showFloatingText(150, 250, '3x', 'combo')
+      renderer.showFloatingText(200, 300, '-1', 'life')
       
       expect(container.children.length).toBe(3)
     })
 
     it('should handle special characters and emoji', () => {
-      renderer.showFloatingText(100, 200, '💔 -1', FLOAT_TYPE_LIFE)
+      renderer.showFloatingText(100, 200, '💔 -1', 'life')
       
       const floater = container.firstChild as HTMLElement
       expect(floater.textContent).toBe('💔 -1')
@@ -342,7 +335,7 @@ describe('renderer_dom', () => {
       expect(el.style.transform).toBe('translate3d(100px, 200px, 0)')
       
       renderer.flashToken(el, true)
-      expect(el.classList.contains(CSS_CLASS_TOKEN_SUCCESS)).toBe(true)
+      expect(el.classList.contains('token-success')).toBe(true)
       
       el.dispatchEvent(new Event('animationend'))
       expect(container.children.length).toBe(0)
@@ -364,7 +357,7 @@ describe('renderer_dom', () => {
 
     it('should handle tokens and floating text simultaneously', () => {
       const el = renderer.createTokenEl('a', 'あ')
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(2)
       
@@ -381,7 +374,7 @@ describe('renderer_dom', () => {
     it('should handle clearing container with multiple elements', () => {
       renderer.createTokenEl('a', 'あ')
       renderer.createTokenEl('ka', 'か')
-      renderer.showFloatingText(100, 200, '+10', FLOAT_TYPE_POINTS)
+      renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(3)
       

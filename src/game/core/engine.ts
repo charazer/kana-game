@@ -12,9 +12,6 @@ import {
   KANA_SET_HIRAGANA,
   KANA_SET_KATAKANA,
   KANA_SET_MIXED,
-  FLOAT_TYPE_LIFE,
-  FLOAT_TYPE_POINTS,
-  FLOAT_TYPE_COMBO,
   FLOATING_TEXT_OFFSET_X,
   FLOATING_TEXT_OFFSET_Y,
   FLOATING_TEXT_COMBO_OFFSET_Y,
@@ -235,7 +232,7 @@ export class GameEngine {
         this.onLivesChange(this.lives, previousLives)
         
         // Show life lost indicator
-        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', FLOAT_TYPE_LIFE)
+        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', 'life')
         
         // Check for game over
         if(this.lives <= 0){
@@ -407,9 +404,9 @@ export class GameEngine {
     if(this.onCombo) this.onCombo(this.combo)
     
     // Show floating points text
-    this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
+    this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, 'points')
     if(this.combo > 1) {
-      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
+      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, 'combo')
     }
     
     // Clear buffer based on match type

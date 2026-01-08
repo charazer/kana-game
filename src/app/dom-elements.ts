@@ -3,66 +3,44 @@
  * All DOM queries are performed here to keep them organized and maintainable
  */
 
-import {
-	DOM_ID_TOKENS,
-	DOM_ID_SCORE,
-	DOM_ID_COMBO,
-	DOM_ID_SPEED,
-	DOM_ID_LIVES,
-	DOM_ID_GAME_MODE,
-	DOM_ID_KANA_SET,
-	DOM_ID_AUDIO_TOGGLE,
-	DOM_ID_MUSIC_TOGGLE,
-	DOM_ID_MUSIC_VOLUME,
-	DOM_ID_INPUT_ECHO,
-	DOM_ID_END_GAME,
-	DOM_ID_PAUSE,
-	DOM_ID_START_SCREEN,
-	DOM_ID_START,
-	DOM_ID_GAME_OVER,
-	DOM_ID_FINAL_SCORE,
-	DOM_ID_NEW_HIGH_SCORE,
-	DOM_ID_HIGH_SCORES_START,
-	DOM_ID_HIGH_SCORES_END,
-	DOM_ID_RESTART
-} from '../game/constants/constants'
+// DOM element queries - using string literals directly for clarity
 
 // Game area elements
-export const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
+export const tokensLayer = document.getElementById('tokens')!
 export const pausedIndicator = document.getElementById('paused-indicator')!
 
 // Stats display elements
-export const scoreEl = document.getElementById(DOM_ID_SCORE)!
-export const comboEl = document.getElementById(DOM_ID_COMBO)!
-export const speedEl = document.getElementById(DOM_ID_SPEED)!
-export const livesEl = document.getElementById(DOM_ID_LIVES)!
+export const scoreEl = document.getElementById('score')!
+export const comboEl = document.getElementById('combo')!
+export const speedEl = document.getElementById('speed')!
+export const livesEl = document.getElementById('lives')!
 
 // Settings controls
-export const gameModeSelect = document.getElementById(DOM_ID_GAME_MODE) as HTMLSelectElement | null
-export const kanaSelect = document.getElementById(DOM_ID_KANA_SET) as HTMLSelectElement | null
-export const musicToggle = document.getElementById(DOM_ID_MUSIC_TOGGLE) as HTMLInputElement | null
-export const musicVolumeSlider = document.getElementById(DOM_ID_MUSIC_VOLUME) as HTMLInputElement | null
+export const gameModeSelect = document.getElementById('game-mode') as HTMLSelectElement | null
+export const kanaSelect = document.getElementById('kana-set') as HTMLSelectElement | null
+export const musicToggle = document.getElementById('music-toggle') as HTMLInputElement | null
+export const musicVolumeSlider = document.getElementById('music-volume') as HTMLInputElement | null
 export const musicVolumeValue = document.getElementById('music-volume-value') as HTMLSpanElement | null
-export const audioToggle = document.getElementById(DOM_ID_AUDIO_TOGGLE) as HTMLInputElement | null
+export const audioToggle = document.getElementById('audio-toggle') as HTMLInputElement | null
 export const includeDakutenToggle = document.getElementById('include-dakuten') as HTMLInputElement | null
 export const includeYoonToggle = document.getElementById('include-yoon') as HTMLInputElement | null
 
 // Input display
-export const inputEcho = document.getElementById(DOM_ID_INPUT_ECHO)!
+export const inputEcho = document.getElementById('input-echo')!
 
 // Game control buttons
-export const endGameBtn = document.getElementById(DOM_ID_END_GAME) as HTMLButtonElement | null
-export const pauseBtn = document.getElementById(DOM_ID_PAUSE) as HTMLButtonElement | null
-export const startBtn = document.getElementById(DOM_ID_START) as HTMLButtonElement | null
-export const restartBtn = document.getElementById(DOM_ID_RESTART) as HTMLButtonElement | null
+export const endGameBtn = document.getElementById('end-game') as HTMLButtonElement | null
+export const pauseBtn = document.getElementById('pause') as HTMLButtonElement | null
+export const startBtn = document.getElementById('start') as HTMLButtonElement | null
+export const restartBtn = document.getElementById('restart') as HTMLButtonElement | null
 
 // Screen elements
-export const startScreenEl = document.getElementById(DOM_ID_START_SCREEN)!
-export const gameOverEl = document.getElementById(DOM_ID_GAME_OVER)!
-export const finalScoreEl = document.getElementById(DOM_ID_FINAL_SCORE)!
-export const newHighScoreEl = document.getElementById(DOM_ID_NEW_HIGH_SCORE)!
-export const highScoresStartEl = document.getElementById(DOM_ID_HIGH_SCORES_START)!
-export const highScoresEndEl = document.getElementById(DOM_ID_HIGH_SCORES_END)!
+export const startScreenEl = document.getElementById('start-screen')!
+export const gameOverEl = document.getElementById('game-over')!
+export const finalScoreEl = document.getElementById('final-score')!
+export const newHighScoreEl = document.getElementById('new-high-score')!
+export const highScoresStartEl = document.getElementById('high-scores-start')!
+export const highScoresEndEl = document.getElementById('high-scores-end')!
 
 // Settings modal elements
 export const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement | null

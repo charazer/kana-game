@@ -5,7 +5,6 @@
 
 import type { GameEngine } from '../game/core/engine'
 import type { AudioManager } from '../game/audio/audio'
-import { CSS_CLASS_HIDDEN } from '../game/constants/constants'
 import { setupModalHandlers } from '../game/ui/dom-helpers'
 import { DOMBuilder, ButtonTemplates } from '../game/ui/templates'
 import {
@@ -42,18 +41,18 @@ export function initializeSettingsModal(engine: GameEngine, audio: AudioManager)
 
 	// Open modal
 	settingsBtn.addEventListener('click', () => {
-		settingsModal.classList.remove(CSS_CLASS_HIDDEN)
+		settingsModal.classList.remove('hidden')
 		// Show/hide active game notice and auto-pause if needed
 		if (activeGameNotice) {
 			// Check if game is in progress (end game button is enabled)
 			const gameInProgress = endGameBtn && !endGameBtn.disabled
 			if (gameInProgress) {
-				activeGameNotice.classList.remove(CSS_CLASS_HIDDEN)
+				activeGameNotice.classList.remove('hidden')
 				// Auto-pause the game if it's running
 				if (engine.running) {
 					engine.pause()
 					audio.playPause()
-					pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
+					pausedIndicator.classList.remove('hidden')
 					autoPausedGame = true
 					// Update pause button to show resume state
 					if (pauseBtn) {
@@ -61,7 +60,7 @@ export function initializeSettingsModal(engine: GameEngine, audio: AudioManager)
 					}
 				}
 			} else {
-				activeGameNotice.classList.add(CSS_CLASS_HIDDEN)
+				activeGameNotice.classList.add('hidden')
 				autoPausedGame = false
 			}
 		}
@@ -69,12 +68,12 @@ export function initializeSettingsModal(engine: GameEngine, audio: AudioManager)
 
 	// Helper to close modal and resume if needed
 	const closeSettingsModal = () => {
-		settingsModal.classList.add(CSS_CLASS_HIDDEN)
+		settingsModal.classList.add('hidden')
 		// Resume game if we auto-paused it
 		if (autoPausedGame) {
 			engine.resume()
 			audio.playResume()
-			pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
+			pausedIndicator.classList.add('hidden')
 			autoPausedGame = false
 			// Update pause button to show pause state
 			if (pauseBtn) {
@@ -102,7 +101,7 @@ export function initializeHelpModal() {
 	if (howToPlayLink) {
 		howToPlayLink.addEventListener('click', (e) => {
 			e.preventDefault()
-			helpModal.classList.remove(CSS_CLASS_HIDDEN)
+			helpModal.classList.remove('hidden')
 		})
 	}
 
@@ -110,7 +109,7 @@ export function initializeHelpModal() {
 	if (howToPlayLinkEnd) {
 		howToPlayLinkEnd.addEventListener('click', (e) => {
 			e.preventDefault()
-			helpModal.classList.remove(CSS_CLASS_HIDDEN)
+			helpModal.classList.remove('hidden')
 		})
 	}
 
@@ -118,7 +117,7 @@ export function initializeHelpModal() {
 	setupModalHandlers(helpModal, {
 		closeButton: helpCloseBtn,
 		overlay: helpModalOverlay,
-		hideClass: CSS_CLASS_HIDDEN
+		hideClass: 'hidden'
 	})
 }
 
@@ -130,7 +129,7 @@ export function initializeKanaReferenceModal() {
 	if (openKanaReferenceBtn) {
 		openKanaReferenceBtn.addEventListener('click', () => {
 			renderKanaReference('hiragana')
-			kanaModal.classList.remove(CSS_CLASS_HIDDEN)
+			kanaModal.classList.remove('hidden')
 			// Set active tab
 			if (tabHiragana) tabHiragana.classList.add('active')
 			if (tabKatakana) tabKatakana.classList.remove('active')
@@ -159,7 +158,7 @@ export function initializeKanaReferenceModal() {
 	window.addEventListener('resize', () => {
 		clearTimeout(resizeTimeout)
 		resizeTimeout = setTimeout(() => {
-			if (!kanaModal.classList.contains(CSS_CLASS_HIDDEN)) {
+			if (!kanaModal.classList.contains('hidden')) {
 				updateKanaScrollIndicators()
 			}
 		}, 150)
@@ -169,7 +168,7 @@ export function initializeKanaReferenceModal() {
 	setupModalHandlers(kanaModal, {
 		closeButton: kanaCloseBtn,
 		overlay: kanaModalOverlay,
-		hideClass: CSS_CLASS_HIDDEN
+		hideClass: 'hidden'
 	})
 }
 
@@ -181,25 +180,25 @@ export function initializeModalEscapeKeys(engine: GameEngine) {
 		if (e.code !== 'Escape') return
 
 		// Close settings modal (only if game is not running or already handling escape)
-		if (!settingsModal.classList.contains(CSS_CLASS_HIDDEN)) {
+		if (!settingsModal.classList.contains('hidden')) {
 			if (!engine.running) {
 				e.preventDefault()
-				settingsModal.classList.add(CSS_CLASS_HIDDEN)
+				settingsModal.classList.add('hidden')
 			}
 			return
 		}
 
 		// Close help modal on escape
-		if (!helpModal.classList.contains(CSS_CLASS_HIDDEN)) {
+		if (!helpModal.classList.contains('hidden')) {
 			e.preventDefault()
-			helpModal.classList.add(CSS_CLASS_HIDDEN)
+			helpModal.classList.add('hidden')
 			return
 		}
 
 		// Close kana modal on escape
-		if (!kanaModal.classList.contains(CSS_CLASS_HIDDEN)) {
+		if (!kanaModal.classList.contains('hidden')) {
 			e.preventDefault()
-			kanaModal.classList.add(CSS_CLASS_HIDDEN)
+			kanaModal.classList.add('hidden')
 			return
 		}
 	})

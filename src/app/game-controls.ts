@@ -6,7 +6,6 @@
 import type { GameEngine } from '../game/core/engine'
 import type { AudioManager } from '../game/audio/audio'
 import {
-	CSS_CLASS_HIDDEN,
 	SPEED_INITIAL_DISPLAY
 } from '../game/constants/constants'
 import { DOMBuilder, ButtonTemplates } from '../game/ui/templates'
@@ -43,12 +42,12 @@ export function initializePauseButton(engine: GameEngine, audio: AudioManager) {
 		if (isPaused) {
 			engine.pause()
 			audio.playPause()
-			pausedIndicator.classList.remove(CSS_CLASS_HIDDEN)
+			pausedIndicator.classList.remove('hidden')
 			if (pauseBtn) DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
 		} else {
 			engine.resume()
 			audio.playResume()
-			pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
+			pausedIndicator.classList.add('hidden')
 			if (pauseBtn) DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 		}
 	})
@@ -57,7 +56,7 @@ export function initializePauseButton(engine: GameEngine, audio: AudioManager) {
 	window.enablePauseButton = () => {
 		gameStarted = true
 		isPaused = false
-		pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
+		pausedIndicator.classList.add('hidden')
 		enableElement(pauseBtn)
 		if (pauseBtn) DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 	}
@@ -85,7 +84,7 @@ export function initializeEndGameButton(engine: GameEngine, _audio: AudioManager
 		if (!endGameBtn || endGameBtn.disabled) return
 
 		// Hide paused indicator and resume if paused
-		pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
+		pausedIndicator.classList.add('hidden')
 		engine.resume()
 
 		// Stop the game and trigger game over
@@ -111,7 +110,7 @@ export function initializeStartButton(engine: GameEngine, audio: AudioManager) {
 	if (!startBtn) return
 
 	startBtn.addEventListener('click', () => {
-		startScreenEl.classList.add(CSS_CLASS_HIDDEN)
+		startScreenEl.classList.add('hidden')
 		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		if (window.enablePauseButton) window.enablePauseButton()
 		if (window.enableEndGameButton) window.enableEndGameButton()
@@ -132,7 +131,7 @@ export function initializeRestartButton(engine: GameEngine, audio: AudioManager)
 	if (!restartBtn) return
 
 	restartBtn.addEventListener('click', () => {
-		gameOverEl.classList.add(CSS_CLASS_HIDDEN)
+		gameOverEl.classList.add('hidden')
 		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		engine.reset()
 		if (window.enablePauseButton) window.enablePauseButton()
@@ -155,12 +154,12 @@ export function initializeKeyboardShortcuts(engine: GameEngine) {
 		// Enter for start/restart (only when game is not running)
 		if (e.code === 'Enter' && !engine.running) {
 			// Check if start screen is visible
-			if (!startScreenEl.classList.contains(CSS_CLASS_HIDDEN) && startBtn) {
+			if (!startScreenEl.classList.contains('hidden') && startBtn) {
 				e.preventDefault()
 				startBtn.click()
 			}
 			// Check if game over screen is visible
-			else if (!gameOverEl.classList.contains(CSS_CLASS_HIDDEN) && restartBtn) {
+			else if (!gameOverEl.classList.contains('hidden') && restartBtn) {
 				e.preventDefault()
 				restartBtn.click()
 			}
