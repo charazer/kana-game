@@ -422,6 +422,12 @@ export class GameEngine {
       this.input.buffer = ''
       this.input.onKey('')
     }
+    
+    // Instantly spawn a new tile if board is now empty
+    if(this.tokens.length === 0) {
+      this.spawnToken()
+      this.spawnAccumulator = 0 // Reset spawn timer
+    }
   }
 
   async loadKana(setName: KanaSet){

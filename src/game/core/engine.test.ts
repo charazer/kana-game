@@ -501,7 +501,8 @@ describe('engine', () => {
       inputManager.buffer = 'ka'
       engine.handleCommit('ka')
       
-      expect(engine.tokens.length).toBe(0)
+      // After matching the last token, a new one spawns instantly
+      expect(engine.tokens.length).toBe(1)
       expect(mockRenderer.flashToken).toHaveBeenCalledWith(expect.any(HTMLElement), true)
       expect(engine.score).toBeGreaterThan(0)
       expect(engine.combo).toBe(1)
@@ -589,7 +590,8 @@ describe('engine', () => {
       inputManager.buffer = 'か'
       engine.handleCommit('か')
       
-      expect(engine.tokens.length).toBe(0)
+      // After matching the last token, a new one spawns instantly
+      expect(engine.tokens.length).toBe(1)
       expect(mockRenderer.flashToken).toHaveBeenCalledWith(expect.any(HTMLElement), true)
       expect(inputManager.buffer).toBe('')
     })
@@ -612,7 +614,8 @@ describe('engine', () => {
       inputManager.buffer = 'si'
       engine.handleCommit('si')
       
-      expect(engine.tokens.length).toBe(0)
+      // After matching the last token, a new one spawns instantly
+      expect(engine.tokens.length).toBe(1)
       expect(mockRenderer.flashToken).toHaveBeenCalledWith(expect.any(HTMLElement), true)
     })
   })
