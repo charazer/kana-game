@@ -15,9 +15,8 @@ import {
 	SPEED_DISPLAY_DECIMAL_PLACES,
 	COMBO_DISPLAY_SUFFIX
 } from '../game/constants/constants'
-import { addHighScore, isHighScore, getHighScores } from '../game/storage/storage'
-import { createHighScoresList, type HighScoreEntry } from '../game/ui/templates'
-import { HIGH_SCORE_LIST_START_INDEX, HIGH_SCORE_RANK_PREFIX } from '../game/constants/constants'
+import { addHighScore, isHighScore } from '../game/storage/storage'
+import { renderHighScores } from './ui-helpers'
 import type { DOMRenderer } from '../game/ui/renderer_dom'
 import type { AudioManager } from '../game/audio/audio'
 import type { GameEngine } from '../game/core/engine'
@@ -125,33 +124,15 @@ export function createGameCallbacks(
 			if (engine.gameMode === GAME_MODE_CHALLENGE && isHighScore(finalScore)) {
 				newHighScoreEl.classList.remove('hidden')
 				addHighScore(finalScore)
-				renderHighScoresInternal(highScoresEndEl, finalScore)
+				renderHighScores(highScoresEndEl, finalScore)
 			} else {
 				newHighScoreEl.classList.add('hidden')
-				renderHighScoresInternal(highScoresEndEl)
+				renderHighScores(highScoresEndEl)
 			}
 
 			gameOverEl.classList.remove('hidden')
 		}
 	}
-}
-
-/**
- * Renders high scores list to a container element (internal helper)
- */
-function renderHighScoresInternal(container: HTMLElement, highlightScore?: number) {
-	const scores = getHighScores()
-
-	// Transform scores into HighScoreEntry format
-	const entries: HighScoreEntry[] = scores.map((entry, idx) => ({
-		score: entry.score,
-		date: entry.date,
-		rank: idx + HIGH_SCORE_LIST_START_INDEX,
-		highlight: highlightScore === entry.score
-	}))
-
-	// Use template utility to generate HTML
-	container.innerHTML = createHighScoresList(entries, HIGH_SCORE_RANK_PREFIX)
 }
 
 /**
