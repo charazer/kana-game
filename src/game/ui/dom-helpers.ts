@@ -8,7 +8,7 @@ import {
   UI_ENABLED_OPACITY,
   UI_CURSOR_NOT_ALLOWED,
   UI_CURSOR_POINTER
-} from './constants'
+} from '../constants/constants'
 
 /**
  * Interface for elements that can be enabled/disabled

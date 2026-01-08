@@ -1,5 +1,5 @@
 import { createHighScoreEntry, createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './templates'
-import type { KanaEntry } from './types'
+import type { KanaEntry } from '../core/types'
 
 describe('templates', () => {
   describe('createHighScoreEntry', () => {

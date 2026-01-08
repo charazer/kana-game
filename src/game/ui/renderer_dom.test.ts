@@ -9,7 +9,7 @@ import {
   FLOAT_TYPE_POINTS,
   FLOAT_TYPE_COMBO,
   FLOAT_TYPE_LIFE
-} from './constants'
+} from '../constants/constants'
 
 describe('renderer_dom', () => {
   let container: HTMLElement

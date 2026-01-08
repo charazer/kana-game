@@ -6,7 +6,7 @@ import {
   CSS_CLASS_FLOATING_TEXT,
   DATASET_KANA_ID,
   ANIM_DURATION_FLOATING_TEXT
-} from './constants'
+} from '../constants/constants'
 
 export class DOMRenderer{
   container: HTMLElement

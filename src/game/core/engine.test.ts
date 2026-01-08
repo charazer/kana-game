@@ -1,5 +1,5 @@
 import { GameEngine, type Renderer } from './engine'
-import { InputManager } from './input'
+import { InputManager } from '../input/input'
 import type { KanaEntry } from './types'
 import {
   GAME_MODE_PRACTICE,
@@ -8,7 +8,7 @@ import {
   KANA_SET_KATAKANA,
   KANA_SET_MIXED,
   INITIAL_LIVES
-} from './constants'
+} from '../constants/constants'
 
 describe('engine', () => {
   let mockRenderer: Renderer

@@ -1,13 +1,13 @@
-import { GameEngine } from './game/engine'
-import { DOMRenderer } from './game/renderer_dom'
-import { InputManager } from './game/input'
-import { AudioManager } from './game/audio'
-import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage'
-import { createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/templates'
-import { enableElement, disableElement, enableElements, disableElements, setupModalHandlers } from './game/dom-helpers'
+import { GameEngine } from './game/core/engine'
+import { DOMRenderer } from './game/ui/renderer_dom'
+import { InputManager } from './game/input/input'
+import { AudioManager } from './game/audio/audio'
+import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage/storage'
+import { createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/ui/templates'
+import { enableElement, disableElement, enableElements, disableElements, setupModalHandlers } from './game/ui/dom-helpers'
 import kanaHiragana from './data/kana/hiragana.json'
 import kanaKatakana from './data/kana/katakana.json'
-import type { KanaEntry } from './game/types'
+import type { KanaEntry } from './game/core/types'
 
 // Import image assets so Vite can process them
 import heartFullImg from './assets/img/heart.png'
@@ -55,7 +55,7 @@ import {
   COMBO_DISPLAY_SUFFIX,
   HIGH_SCORE_RANK_PREFIX,
   HIGH_SCORE_LIST_START_INDEX
-} from './game/constants'
+} from './game/constants/constants'
 
 const tokensLayer = document.getElementById(DOM_ID_TOKENS)!
 const pausedIndicator = document.getElementById('paused-indicator')!

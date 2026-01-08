@@ -1,4 +1,4 @@
-import { type GameMode, type KanaSet } from './constants'
+import { type GameMode, type KanaSet } from '../constants/constants'
 
 const STORAGE_KEY = 'kana-game:v1'
 

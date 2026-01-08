@@ -1,7 +1,7 @@
 /**
  * Test utilities for creating test fixtures
  */
-import type { KanaEntry } from './types'
+import type { KanaEntry } from './core/types'
 
 /**
  * Creates a test KanaEntry with sensible defaults for testing

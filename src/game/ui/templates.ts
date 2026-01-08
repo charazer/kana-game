@@ -4,12 +4,12 @@
  * scattered throughout the codebase.
  */
 
-import type { KanaEntry } from './types'
-import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from './kana-constants'
+import type { KanaEntry } from '../core/types'
+import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from '../constants/kana-constants'
 
 // Import image assets so Vite can process them
-import buttonPauseImg from '../assets/img/button_pause.png'
-import buttonPlayImg from '../assets/img/button_play.png'
+import buttonPauseImg from '../../assets/img/button_pause.png'
+import buttonPlayImg from '../../assets/img/button_play.png'
 
 /**
  * Button structure with left icon, label, and right keyboard shortcut

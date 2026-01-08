@@ -1,7 +1,7 @@
-import kanaHiragana from '../data/kana/hiragana.json'
-import kanaKatakana from '../data/kana/katakana.json'
+import kanaHiragana from '../../data/kana/hiragana.json'
+import kanaKatakana from '../../data/kana/katakana.json'
 import type { KanaEntry } from './types'
-import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from './kana-constants'
+import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from '../constants/kana-constants'
 import { findTokenMatch } from './game-helpers'
 import { 
   type GameMode, 
@@ -20,7 +20,7 @@ import {
   FLOATING_TEXT_COMBO_OFFSET_Y,
   COMBO_DISPLAY_SUFFIX,
   INITIAL_LIVES
-} from './constants'
+} from '../constants/constants'
 
 export type Renderer = {
   createTokenEl: (id: string, kana: string) => HTMLElement
@@ -31,8 +31,13 @@ export type Renderer = {
   getHeight: () => number
 }
 
+export type SoundPlayer = {
+  playSuccess: () => void
+  playMiss: () => void
+  playCombo: (count: number) => void
+}
 
-import type { InputManager } from './input'
+import type { InputManager } from '../input/input'
 
 // Game constants
 const BASE_POINTS = 10
