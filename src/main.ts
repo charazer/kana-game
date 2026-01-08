@@ -325,10 +325,8 @@ if(audioToggle){
 
 if(musicToggle){
 	musicToggle.checked = saved.musicEnabled === true // default to false
-	// Only load music if it was previously enabled
-	if(musicToggle.checked) {
-		audio.setMusicEnabled(true)
-	}
+	// Note: Don't autoplay on page load due to browser policies
+	// Music will start when user begins a game (user interaction)
 	musicToggle.addEventListener('change', async ()=>{
 		await audio.setMusicEnabled(musicToggle.checked)
 		const s = loadSettings()
