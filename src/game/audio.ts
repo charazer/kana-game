@@ -1,3 +1,5 @@
+import { playArpeggio, playChord, playSlide, type AudioNote } from './audio-helpers'
+
 export class AudioManager {
   private audioContext: AudioContext | null = null
   private enabled = true
@@ -78,175 +80,82 @@ export class AudioManager {
   playSuccess() {
     if (!this.enabled || !this.audioContext) return
     
-    // Happy ascending notes
-    const now = this.audioContext.currentTime
-    
-    const osc1 = this.audioContext.createOscillator()
-    const osc2 = this.audioContext.createOscillator()
-    const gain = this.audioContext.createGain()
-
-    osc1.connect(gain)
-    osc2.connect(gain)
-    gain.connect(this.audioContext.destination)
-
-    osc1.frequency.value = 523.25 // C5
-    osc2.frequency.value = 659.25 // E5
-    osc1.type = 'sine'
-    osc2.type = 'sine'
-
-    gain.gain.setValueAtTime(0.15, now)
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
-
-    osc1.start(now)
-    osc2.start(now)
-    osc1.stop(now + 0.15)
-    osc2.stop(now + 0.15)
+    // Happy ascending notes - using helper
+    playChord(this.audioContext, [523.25, 659.25], {
+      type: 'sine',
+      volume: 0.15,
+      duration: 0.15
+    })
   }
 
   playGameOver() {
     if (!this.enabled || !this.audioContext) return
     
-    // Descending arpeggio
-    const now = this.audioContext.currentTime
-
-    const notes = [392, 349.23, 293.66, 261.63] // G4, F4, D4, C4
-    notes.forEach((freq, i) => {
-      const osc = this.audioContext!.createOscillator()
-      const gain = this.audioContext!.createGain()
-
-      osc.connect(gain)
-      gain.connect(this.audioContext!.destination)
-
-      osc.frequency.value = freq
-      osc.type = 'triangle'
-
-      const startTime = now + (i * 0.15)
-      gain.gain.setValueAtTime(0.2, startTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.2)
-
-      osc.start(startTime)
-      osc.stop(startTime + 0.2)
-    })
+    // Descending arpeggio - using helper
+    const notes: AudioNote[] = [
+      { frequency: 392, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0 },
+      { frequency: 349.23, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.15 },
+      { frequency: 293.66, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.30 },
+      { frequency: 261.63, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.45 }
+    ]
+    playArpeggio(this.audioContext, notes)
   }
 
   playLifeLost() {
     if (!this.enabled || !this.audioContext) return
     
-    // Sharp descending tone
-    const now = this.audioContext.currentTime
-
-    const osc = this.audioContext.createOscillator()
-    const gain = this.audioContext.createGain()
-
-    osc.connect(gain)
-    gain.connect(this.audioContext.destination)
-
-    osc.frequency.setValueAtTime(440, now)
-    osc.frequency.exponentialRampToValueAtTime(220, now + 0.2)
-    osc.type = 'sawtooth'
-
-    gain.gain.setValueAtTime(0.3, now)
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2)
-
-    osc.start(now)
-    osc.stop(now + 0.2)
+    // Sharp descending tone - using helper
+    playSlide(this.audioContext, 440, 220, {
+      type: 'sawtooth',
+      volume: 0.3,
+      duration: 0.2
+    })
   }
 
   playSpeedIncrease() {
     if (!this.enabled || !this.audioContext) return
     
     // Fast upward arpeggio - exciting and recognizable
-    const now = this.audioContext.currentTime
-
-    const notes = [392, 493.88, 587.33, 783.99] // G4, B4, D5, G5
-    notes.forEach((freq, i) => {
-      const osc = this.audioContext!.createOscillator()
-      const gain = this.audioContext!.createGain()
-
-      osc.connect(gain)
-      gain.connect(this.audioContext!.destination)
-
-      osc.frequency.value = freq
-      osc.type = 'sine'
-
-      const startTime = now + (i * 0.08)
-      gain.gain.setValueAtTime(0.18, startTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.15)
-
-      osc.start(startTime)
-      osc.stop(startTime + 0.15)
-    })
+    const notes: AudioNote[] = [
+      { frequency: 392, type: 'sine', volume: 0.18, duration: 0.15, delay: 0 },
+      { frequency: 493.88, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.08 },
+      { frequency: 587.33, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.16 },
+      { frequency: 783.99, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.24 }
+    ]
+    playArpeggio(this.audioContext, notes)
   }
 
   playGameStart() {
     if (!this.enabled || !this.audioContext) return
     
     // Rising chord - energetic start
-    const now = this.audioContext.currentTime
-
-    const notes = [261.63, 329.63, 392] // C4, E4, G4
-    notes.forEach((freq, i) => {
-      const osc = this.audioContext!.createOscillator()
-      const gain = this.audioContext!.createGain()
-
-      osc.connect(gain)
-      gain.connect(this.audioContext!.destination)
-
-      osc.frequency.value = freq
-      osc.type = 'sine'
-
-      const startTime = now + (i * 0.05)
-      gain.gain.setValueAtTime(0.15, startTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.2)
-
-      osc.start(startTime)
-      osc.stop(startTime + 0.2)
-    })
+    const notes: AudioNote[] = [
+      { frequency: 261.63, type: 'sine', volume: 0.15, duration: 0.2, delay: 0 },
+      { frequency: 329.63, type: 'sine', volume: 0.15, duration: 0.2, delay: 0.05 },
+      { frequency: 392, type: 'sine', volume: 0.15, duration: 0.2, delay: 0.10 }
+    ]
+    playArpeggio(this.audioContext, notes)
   }
 
   playPause() {
     if (!this.enabled || !this.audioContext) return
     
-    // Short descending tone
-    const now = this.audioContext.currentTime
-
-    const osc = this.audioContext.createOscillator()
-    const gain = this.audioContext.createGain()
-
-    osc.connect(gain)
-    gain.connect(this.audioContext.destination)
-
-    osc.frequency.setValueAtTime(523.25, now) // C5
-    osc.frequency.exponentialRampToValueAtTime(392, now + 0.1) // G4
-    osc.type = 'sine'
-
-    gain.gain.setValueAtTime(0.12, now)
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
-
-    osc.start(now)
-    osc.stop(now + 0.15)
+    // Short descending tone - using helper
+    playSlide(this.audioContext, 523.25, 392, {
+      type: 'sine',
+      volume: 0.12,
+      duration: 0.15
+    })
   }
 
   playResume() {
     if (!this.enabled || !this.audioContext) return
     
-    // Short ascending tone
-    const now = this.audioContext.currentTime
-
-    const osc = this.audioContext.createOscillator()
-    const gain = this.audioContext.createGain()
-
-    osc.connect(gain)
-    gain.connect(this.audioContext.destination)
-
-    osc.frequency.setValueAtTime(392, now) // G4
-    osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.1) // C5
-    osc.type = 'sine'
-
-    gain.gain.setValueAtTime(0.12, now)
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15)
-
-    osc.start(now)
-    osc.stop(now + 0.15)
+    // Short ascending tone - using helper
+    playSlide(this.audioContext, 392, 523.25, {
+      type: 'sine',
+      volume: 0.12,
+      duration: 0.15
+    })
   }
 }

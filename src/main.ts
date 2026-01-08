@@ -4,6 +4,7 @@ import { InputManager } from './game/input'
 import { AudioManager } from './game/audio'
 import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore } from './game/storage'
 import { createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './game/templates'
+import { enableElement, disableElement, enableElements, disableElements, setupModalHandlers } from './game/dom-helpers'
 import kanaHiragana from './data/kana/hiragana.json'
 import kanaKatakana from './data/kana/katakana.json'
 import type { KanaEntry } from './game/types'
@@ -52,10 +53,6 @@ import {
   SPEED_DISPLAY_DECIMAL_PLACES,
   SPEED_INITIAL_DISPLAY,
   COMBO_DISPLAY_SUFFIX,
-  UI_DISABLED_OPACITY,
-  UI_ENABLED_OPACITY,
-  UI_CURSOR_NOT_ALLOWED,
-  UI_CURSOR_POINTER,
   HIGH_SCORE_RANK_PREFIX,
   HIGH_SCORE_LIST_START_INDEX
 } from './game/constants'
@@ -157,49 +154,11 @@ function updateLivesDisplay(mode: GameMode){
 }
 
 function disableGameSettings(){
-	if(gameModeSelect){
-		gameModeSelect.disabled = true
-		gameModeSelect.style.opacity = UI_DISABLED_OPACITY
-		gameModeSelect.style.cursor = UI_CURSOR_NOT_ALLOWED
-	}
-	if(kanaSelect){
-		kanaSelect.disabled = true
-		kanaSelect.style.opacity = UI_DISABLED_OPACITY
-		kanaSelect.style.cursor = UI_CURSOR_NOT_ALLOWED
-	}
-	if(includeDakutenToggle){
-		includeDakutenToggle.disabled = true
-		includeDakutenToggle.style.opacity = UI_DISABLED_OPACITY
-		includeDakutenToggle.style.cursor = UI_CURSOR_NOT_ALLOWED
-	}
-	if(includeYoonToggle){
-		includeYoonToggle.disabled = true
-		includeYoonToggle.style.opacity = UI_DISABLED_OPACITY
-		includeYoonToggle.style.cursor = UI_CURSOR_NOT_ALLOWED
-	}
+	disableElements(gameModeSelect, kanaSelect, includeDakutenToggle, includeYoonToggle)
 }
 
 function enableGameSettings(){
-	if(gameModeSelect){
-		gameModeSelect.disabled = false
-		gameModeSelect.style.opacity = UI_ENABLED_OPACITY
-		gameModeSelect.style.cursor = UI_CURSOR_POINTER
-	}
-	if(kanaSelect){
-		kanaSelect.disabled = false
-		kanaSelect.style.opacity = UI_ENABLED_OPACITY
-		kanaSelect.style.cursor = UI_CURSOR_POINTER
-	}
-	if(includeDakutenToggle){
-		includeDakutenToggle.disabled = false
-		includeDakutenToggle.style.opacity = UI_ENABLED_OPACITY
-		includeDakutenToggle.style.cursor = UI_CURSOR_POINTER
-	}
-	if(includeYoonToggle){
-		includeYoonToggle.disabled = false
-		includeYoonToggle.style.opacity = UI_ENABLED_OPACITY
-		includeYoonToggle.style.cursor = UI_CURSOR_POINTER
-	}
+	enableElements(gameModeSelect, kanaSelect, includeDakutenToggle, includeYoonToggle)
 }
 
 const renderer = new DOMRenderer(tokensLayer as HTMLElement)
@@ -403,9 +362,7 @@ if(pauseBtn){
 	let gameStarted = false
 	
 	// Disable pause button initially
-	pauseBtn.disabled = true
-	pauseBtn.style.opacity = UI_DISABLED_OPACITY
-	pauseBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
+	disableElement(pauseBtn)
 	
 	pauseBtn.addEventListener('click', ()=>{
 		if(!gameStarted) return // Don't allow pause before game starts
@@ -429,9 +386,7 @@ if(pauseBtn){
 		gameStarted = true
 		isPaused = false
 		pausedIndicator.classList.add(CSS_CLASS_HIDDEN)
-		pauseBtn.disabled = false
-		pauseBtn.style.opacity = UI_ENABLED_OPACITY
-		pauseBtn.style.cursor = UI_CURSOR_POINTER
+		enableElement(pauseBtn)
 		DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 	}
 	
@@ -439,18 +394,14 @@ if(pauseBtn){
 	window.disablePauseButton = () => {
 		gameStarted = false
 		isPaused = false
-		pauseBtn.disabled = true
-		pauseBtn.style.opacity = UI_DISABLED_OPACITY
-		pauseBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
+		disableElement(pauseBtn)
 		DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
 	}
 }
 
 if(endGameBtn){
 	// Disable end game button initially
-	endGameBtn.disabled = true
-	endGameBtn.style.opacity = UI_DISABLED_OPACITY
-	endGameBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
+	disableElement(endGameBtn)
 	
 	endGameBtn.addEventListener('click', ()=>{
 		// Only allow ending if button is enabled (which means game is running)
@@ -467,16 +418,12 @@ if(endGameBtn){
 	
 	// Export function to enable end game button
 	window.enableEndGameButton = () => {
-		endGameBtn.disabled = false
-		endGameBtn.style.opacity = UI_ENABLED_OPACITY
-		endGameBtn.style.cursor = UI_CURSOR_POINTER
+		enableElement(endGameBtn)
 	}
 	
 	// Export function to disable end game button
 	window.disableEndGameButton = () => {
-		endGameBtn.disabled = true
-		endGameBtn.style.opacity = UI_DISABLED_OPACITY
-		endGameBtn.style.cursor = UI_CURSOR_NOT_ALLOWED
+		disableElement(endGameBtn)
 	}
 }
 // Render high scores on start screen
@@ -649,19 +596,12 @@ if(settingsBtn && settingsModal){
 		})
 	}
 	
-	// Close help modal - close button
-	if(helpCloseBtn){
-		helpCloseBtn.addEventListener('click', ()=>{
-			helpModal.classList.add(CSS_CLASS_HIDDEN)
-		})
-	}
-	
-	// Close help modal - overlay click
-	if(helpModalOverlay){
-		helpModalOverlay.addEventListener('click', ()=>{
-			helpModal.classList.add(CSS_CLASS_HIDDEN)
-		})
-	}
+	// Setup help modal close handlers
+	setupModalHandlers(helpModal, {
+		closeButton: helpCloseBtn,
+		overlay: helpModalOverlay,
+		hideClass: CSS_CLASS_HIDDEN
+	})
 
 	// Kana reference modal handlers
 	if(openKanaReferenceBtn){
@@ -713,17 +653,10 @@ if(settingsBtn && settingsModal){
 		}, 150)
 	})
 
-	// Close kana modal - close button
-	if(kanaCloseBtn){
-		kanaCloseBtn.addEventListener('click', ()=>{
-			kanaModal.classList.add(CSS_CLASS_HIDDEN)
-		})
-	}
-
-	// Close kana modal - overlay click
-	if(kanaModalOverlay){
-		kanaModalOverlay.addEventListener('click', ()=>{
-			kanaModal.classList.add(CSS_CLASS_HIDDEN)
-		})
-	}
+	// Setup kana modal close handlers
+	setupModalHandlers(kanaModal, {
+		closeButton: kanaCloseBtn,
+		overlay: kanaModalOverlay,
+		hideClass: CSS_CLASS_HIDDEN
+	})
 }

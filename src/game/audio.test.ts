@@ -89,7 +89,8 @@ describe('audio', () => {
         manager.playSuccess()
         
         expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(2)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(1)
+        // After refactoring with audio helpers, each oscillator gets its own gain node
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(2)
       })
 
       it('should connect audio nodes correctly', () => {

@@ -1,8 +1,8 @@
 import kanaHiragana from '../data/kana/hiragana.json'
 import kanaKatakana from '../data/kana/katakana.json'
 import type { KanaEntry } from './types'
-import { exactMatch, longestRomajiMatch } from './matcher'
 import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from './kana-constants'
+import { findTokenMatch } from './game-helpers'
 import { 
   type GameMode, 
   type FloatingTextType,
@@ -375,73 +375,44 @@ export class GameEngine {
     // Don't process input when game is not running (paused or not started)
     if(!this.running) return
     
-    // Try longest romaji match first (supports chaining like "shika" -> "shi" + "ka")
-    const best = longestRomajiMatch(this.tokens.map(t=>t.entry), value)
-    if(best){
-      const idx = this.tokens.findIndex(t => t.entry.id === best.entry.id)
-      if(idx >= 0){
-        const t = this.tokens[idx]
-        // Remove from array immediately
-        this.tokens.splice(idx,1)
-        
-        // Flash green on success (removal happens via animationend)
-        this.renderer.flashToken(t.el, true)
-        
-        // Track correct answers for progressive difficulty
-        this.correctAnswers++
-        
-        // Calculate score with combo multiplier
-        const points = this.calculateScore(t)
-        
-        this.combo++
-        this.score += points
-        this.onScore(this.score)
-        if(this.onCombo) this.onCombo(this.combo)
-        
-        // Show floating points text
-        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
-        if(this.combo > 1) {
-          this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
-        }
-        
-        // Consume only the matched portion from buffer
-        const matchedLength = best.romaji.length
-        this.input.buffer = this.input.buffer.slice(matchedLength)
-        this.input.onKey(this.input.buffer)
-        
-        // Don't recursively match - wait for next keystroke
-        // This prevents multiple tokens from being cleared in one action
-        return
-      }
+    // Find matching token
+    const match = findTokenMatch(this.tokens, value)
+    if (!match) return
+    
+    const t = this.tokens[match.tokenIndex]
+    
+    // Remove from array immediately
+    this.tokens.splice(match.tokenIndex, 1)
+    
+    // Flash green on success (removal happens via animationend)
+    this.renderer.flashToken(t.el, true)
+    
+    // Track correct answers for progressive difficulty
+    this.correctAnswers++
+    
+    // Calculate score with combo multiplier
+    const points = this.calculateScore(t)
+    
+    this.combo++
+    this.score += points
+    this.onScore(this.score)
+    if(this.onCombo) this.onCombo(this.combo)
+    
+    // Show floating points text
+    this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
+    if(this.combo > 1) {
+      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
     }
     
-    // Fallback: try exact kana match (for IME input)
-    const matchIndex = this.tokens.findIndex(t => exactMatch(t.entry as any, value))
-    if(matchIndex >= 0){
-      const t = this.tokens[matchIndex]
-      // Remove from array immediately
-      this.tokens.splice(matchIndex,1)
-      
-      // Flash green on success (removal happens via animationend)
-      this.renderer.flashToken(t.el, true)
-      
-      // Calculate score with combo multiplier
-      const points = this.calculateScore(t)
-      
-      this.combo++
-      this.score += points
-      this.onScore(this.score)
-      if(this.onCombo) this.onCombo(this.combo)
-      
-      // Show floating points text
-      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, FLOAT_TYPE_POINTS)
-      if(this.combo > 1) {
-        this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, FLOAT_TYPE_COMBO)
-      }
+    // Clear buffer based on match type
+    if(match.matchType === 'romaji' && match.matchedLength) {
+      // Consume only the matched portion from buffer
+      this.input.buffer = this.input.buffer.slice(match.matchedLength)
+      this.input.onKey(this.input.buffer)
+    } else {
       // Clear buffer for exact kana match (IME)
       this.input.buffer = ''
       this.input.onKey('')
-      return
     }
   }
 
