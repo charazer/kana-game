@@ -3,6 +3,9 @@ export class AudioManager {
   private enabled = true
   private musicElement: HTMLAudioElement | null = null
   private musicEnabled = false
+  private musicUrl: string | null = null
+  private musicVolume = 0.3
+  private musicLoading = false
 
   constructor() {
     try {
@@ -16,29 +19,49 @@ export class AudioManager {
     this.enabled = enabled
   }
 
-  initMusic(musicUrl: string, volume = 0.3) {
-    this.musicElement = new window.Audio(musicUrl)
-    this.musicElement.loop = true
-    this.musicElement.volume = volume
-    // Preload the audio
-    this.musicElement.preload = 'auto'
-    this.musicElement.load()
+  async initMusic(musicUrl: string, volume = 0.3) {
+    this.musicUrl = musicUrl
+    this.musicVolume = volume
+    // Don't load music immediately - wait until it's actually needed
   }
 
-  setMusicVolume(volume: number) {
-    if (this.musicElement) {
-      this.musicElement.volume = Math.max(0, Math.min(1, volume))
+  private async loadMusic() {
+    if (this.musicElement || this.musicLoading || !this.musicUrl) return
+    
+    this.musicLoading = true
+    try {
+      this.musicElement = new window.Audio(this.musicUrl)
+      this.musicElement.loop = true
+      this.musicElement.volume = this.musicVolume
+      this.musicElement.preload = 'auto'
+      // The browser will start loading the audio file when Audio is created
+    } catch (e) {
+      console.warn('Failed to load background music', e)
+    } finally {
+      this.musicLoading = false
     }
   }
 
-  setMusicEnabled(enabled: boolean) {
-    this.musicEnabled = enabled
+  setMusicVolume(volume: number) {
+    this.musicVolume = Math.max(0, Math.min(1, volume))
     if (this.musicElement) {
-      if (enabled) {
+      this.musicElement.volume = this.musicVolume
+    }
+  }
+
+  async setMusicEnabled(enabled: boolean) {
+    this.musicEnabled = enabled
+    
+    if (enabled) {
+      // Load music on demand when user enables it
+      await this.loadMusic()
+      if (this.musicElement) {
         this.musicElement.play().catch(e => {
           console.warn('Failed to play background music', e)
         })
-      } else {
+      }
+    } else {
+      if (this.musicElement) {
         this.musicElement.pause()
       }
     }

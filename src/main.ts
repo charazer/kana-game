@@ -12,9 +12,6 @@ import type { KanaEntry } from './game/types'
 import heartFullImg from './assets/img/heart.png'
 import heartEmptyImg from './assets/img/heart_empty.png'
 
-// Import audio assets
-import backgroundMusic from './assets/audio/yukarinoti_japanese_mood2.mp3'
-
 import {
   type GameMode,
   GAME_MODE_PRACTICE,
@@ -305,8 +302,9 @@ input.onKey = (buffer) => {
 const saved = loadSettings()
 
 // Initialize music with saved volume or default to 30%
+// Music file will be loaded lazily only when enabled
 const initialMusicVolume = saved.musicVolume ?? 0.3
-audio.initMusic(backgroundMusic, initialMusicVolume)
+audio.initMusic('./assets/audio/yukarinoti_japanese_mood2.mp3', initialMusicVolume)
 
 if(audioToggle){
 	audioToggle.checked = saved.audioEnabled !== false // default to true
@@ -321,9 +319,12 @@ if(audioToggle){
 
 if(musicToggle){
 	musicToggle.checked = saved.musicEnabled === true // default to false
-	audio.setMusicEnabled(musicToggle.checked)
-	musicToggle.addEventListener('change', ()=>{
-		audio.setMusicEnabled(musicToggle.checked)
+	// Only load music if it was previously enabled
+	if(musicToggle.checked) {
+		audio.setMusicEnabled(true)
+	}
+	musicToggle.addEventListener('change', async ()=>{
+		await audio.setMusicEnabled(musicToggle.checked)
 		const s = loadSettings()
 		s.musicEnabled = musicToggle.checked
 		saveSettings(s)
