@@ -1,7 +1,7 @@
 # Kana Game
 
 <p align="center">
-  <img src="src/assets/img/favicon/android-chrome-512x512.png" alt="Kana Game Logo" width="200" />
+  <img src="public/favicon/android-chrome-512x512.png" alt="Kana Game Logo" width="200" />
 </p>
 
 A fast-paced browser game for learning Japanese Hiragana and Katakana. Type romaji to clear falling kana tokens before they reach the danger zone.
