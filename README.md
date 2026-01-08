@@ -11,10 +11,10 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 - **Two Game Modes** - Practice (no lives, slower) or Challenge (progressive difficulty, limited lives)
 - **Multiple Kana Sets** - Hiragana, Katakana, or Mixed
 - **Character Toggles** - Enable/disable dakuten and yōon characters
-- **Smart Spawning** - Weighted selection prioritizes characters you haven't seen recently
+- **Smart Spawning** - Weighted selection prioritises characters you haven't seen recently
 - **Combo System** - Chain correct answers for score multipliers
 - **Difficulty Scoring** - Score multipliers based on enabled character types (0.5x to 1.25x)
-- **Alternative Romaji** - Accepts multiple romanizations (e.g., "shi"/"si", "tsu"/"tu")
+- **Alternative Romaji** - Accepts multiple romanisations (e.g., "shi"/"si", "tsu"/"tu")
 - **High Scores** - Top 10 scores saved locally with dates
 - **Responsive Design** - Works on mobile, tablet, and desktop (320px-1920px)
 - **Audio Feedback** - Sound effects for game events (toggleable)
