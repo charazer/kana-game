@@ -8,7 +8,7 @@
         "npm": ">=10.0.0"
     },
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build",
         "preview": "vite preview",
         "optimize-images": "node scripts/optimize-images.js",
