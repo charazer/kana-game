@@ -43,7 +43,6 @@ import type { InputManager } from '../input/input'
 const BASE_POINTS = 10
 const MAX_TIME_BONUS = 10
 const COMBO_MULTIPLIER = 0.05
-const SPAWN_INTERVAL = 1.2 // seconds
 const DANGER_ZONE = 80 // pixels from bottom
 const TOKEN_WIDTH = 72 // pixels
 const SPAWN_MARGIN = 20 // pixels
@@ -76,10 +75,12 @@ const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
 // Practice mode settings
 const PRACTICE_BASE_SPEED = 20 // pixels/sec
 const PRACTICE_MAX_TOKENS = 5
+const PRACTICE_SPAWN_INTERVAL = 1.8 // seconds (slower spawning for learning)
 
 // Challenge mode settings
 const CHALLENGE_BASE_SPEED = 40 // pixels/sec (reduced from 60)
 const CHALLENGE_MAX_TOKENS = 8
+const CHALLENGE_SPAWN_INTERVAL = 1.2 // seconds (faster spawning for challenge)
 
 export class GameEngine {
   renderer: Renderer
@@ -101,7 +102,7 @@ export class GameEngine {
   kanaSet: KanaEntry[] = []
   kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown
   spawnAccumulator = 0
-  spawnInterval = SPAWN_INTERVAL
+  spawnInterval = CHALLENGE_SPAWN_INTERVAL // default to challenge mode interval
   baseSpeed = CHALLENGE_BASE_SPEED
   speed = CHALLENGE_BASE_SPEED
   lastSpeedMultiplier = 1.0 // track last speed multiplier to detect changes
@@ -138,10 +139,12 @@ export class GameEngine {
       this.baseSpeed = PRACTICE_BASE_SPEED
       this.speed = PRACTICE_BASE_SPEED
       this.maxActiveTokens = PRACTICE_MAX_TOKENS
+      this.spawnInterval = PRACTICE_SPAWN_INTERVAL
     } else {
       this.baseSpeed = CHALLENGE_BASE_SPEED
       this.speed = CHALLENGE_BASE_SPEED
       this.maxActiveTokens = CHALLENGE_MAX_TOKENS
+      this.spawnInterval = CHALLENGE_SPAWN_INTERVAL
     }
   }
 
