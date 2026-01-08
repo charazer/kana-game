@@ -3,7 +3,7 @@ export class AudioManager {
   private enabled = true
   private musicElement: HTMLAudioElement | null = null
   private musicEnabled = false
-  private musicUrl: string | null = null
+  private musicUrlLoader: (() => Promise<string>) | null = null
   private musicVolume = 0.3
   private musicLoading = false
 
@@ -19,18 +19,19 @@ export class AudioManager {
     this.enabled = enabled
   }
 
-  async initMusic(musicUrl: string, volume = 0.3) {
-    this.musicUrl = musicUrl
+  async initMusic(musicUrlLoader: () => Promise<string>, volume = 0.3) {
+    this.musicUrlLoader = musicUrlLoader
     this.musicVolume = volume
     // Don't load music immediately - wait until it's actually needed
   }
 
   private async loadMusic() {
-    if (this.musicElement || this.musicLoading || !this.musicUrl) return
+    if (this.musicElement || this.musicLoading || !this.musicUrlLoader) return
     
     this.musicLoading = true
     try {
-      this.musicElement = new window.Audio(this.musicUrl)
+      const musicUrl = await this.musicUrlLoader()
+      this.musicElement = new window.Audio(musicUrl)
       this.musicElement.loop = true
       this.musicElement.volume = this.musicVolume
       this.musicElement.preload = 'auto'

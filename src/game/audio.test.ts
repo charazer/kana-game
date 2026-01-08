@@ -361,7 +361,7 @@ describe('audio', () => {
         window.Audio = mockAudioSpy as any
         
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         
         // Music should not be loaded immediately
         expect(mockAudioSpy).not.toHaveBeenCalled()
@@ -369,7 +369,7 @@ describe('audio', () => {
 
       it('should load music when enabled', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         
         await manager.setMusicEnabled(true)
         
@@ -381,7 +381,7 @@ describe('audio', () => {
 
       it('should pause music when disabled', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         
         await manager.setMusicEnabled(true)
         await manager.setMusicEnabled(false)
@@ -394,7 +394,7 @@ describe('audio', () => {
         mockAudio.play = vi.fn().mockRejectedValue(new Error('Play failed'))
         
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         await manager.setMusicEnabled(true)
         
         // Wait for promise to reject
@@ -406,7 +406,7 @@ describe('audio', () => {
 
       it('should stop music and reset playback position', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         await manager.setMusicEnabled(true)
         audioInstance.currentTime = 10
         
@@ -432,7 +432,7 @@ describe('audio', () => {
 
       it('should initialize music with custom volume', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3', 0.5)
+        await manager.initMusic(async () => 'test.mp3', 0.5)
         await manager.setMusicEnabled(true)
         
         expect(audioInstance.volume).toBe(0.5)
@@ -440,7 +440,7 @@ describe('audio', () => {
 
       it('should set music volume', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         await manager.setMusicEnabled(true)
         
         manager.setMusicVolume(0.7)
@@ -449,7 +449,7 @@ describe('audio', () => {
 
       it('should clamp volume to 0-1 range', async () => {
         const manager = new AudioManager()
-        await manager.initMusic('test.mp3')
+        await manager.initMusic(async () => 'test.mp3')
         await manager.setMusicEnabled(true)
         
         manager.setMusicVolume(1.5)

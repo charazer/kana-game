@@ -304,7 +304,13 @@ const saved = loadSettings()
 // Initialize music with saved volume or default to 30%
 // Music file will be loaded lazily only when enabled
 const initialMusicVolume = saved.musicVolume ?? 0.3
-audio.initMusic('./assets/audio/yukarinoti_japanese_mood2.mp3', initialMusicVolume)
+audio.initMusic(
+	async () => {
+		const module = await import('./assets/audio/yukarinoti_japanese_mood2.mp3')
+		return module.default
+	},
+	initialMusicVolume
+)
 
 if(audioToggle){
 	audioToggle.checked = saved.audioEnabled !== false // default to true
