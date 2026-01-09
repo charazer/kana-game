@@ -9,6 +9,7 @@ import {
   KANA_SET_MIXED,
   INITIAL_LIVES
 } from '../constants/constants'
+import { BASIC_KANA_IDS } from '../constants/kana-constants'
 
 describe('engine', () => {
   let mockRenderer: Renderer
@@ -847,6 +848,112 @@ describe('engine', () => {
       
       expect(engine.combo).toBe(0)
       expect(mockOnCombo).toHaveBeenCalledWith(0)
+    })
+  })
+
+  describe('round-robin kana selection', () => {
+    it('should guarantee all kana shown N times before any shown N+1 times', () => {
+      // Use a small set of basic kana for easier verification
+      engine.correctAnswers = 0 // Only basic kana
+      engine.includeDakuten = false
+      engine.includeYoon = false
+      
+      const availableKana = engine.getAvailableKana()
+      const kanaCount = availableKana.length
+      
+      // Track spawn count for each kana
+      const spawnCounts: Map<string, number> = new Map()
+      availableKana.forEach(k => spawnCounts.set(k.id, 0))
+      
+      // Spawn many kana (3 full rounds = 3 * 46 = 138 spawns)
+      const totalSpawns = kanaCount * 3
+      
+      for (let i = 0; i < totalSpawns; i++) {
+        engine.tokens = [] // Clear tokens to allow spawning
+        engine.spawnToken()
+        
+        const spawnedId = engine.tokens[0].id
+        spawnCounts.set(spawnedId, (spawnCounts.get(spawnedId) || 0) + 1)
+        
+        // After each spawn, verify round-robin property:
+        // Max count should never exceed (min count + 1)
+        const counts = Array.from(spawnCounts.values())
+        const minCount = Math.min(...counts)
+        const maxCount = Math.max(...counts)
+        
+        expect(maxCount - minCount).toBeLessThanOrEqual(1)
+      }
+      
+      // After 3 full rounds, all kana should have been shown exactly 3 times
+      spawnCounts.forEach(count => {
+        expect(count).toBe(3)
+      })
+    })
+
+    it('should not show same kana twice in a row', () => {
+      engine.correctAnswers = 0
+      engine.includeDakuten = false
+      engine.includeYoon = false
+      
+      let previousId: string | null = null
+      
+      // Spawn many kana and verify no immediate repeats
+      for (let i = 0; i < 100; i++) {
+        engine.tokens = [] // Clear tokens to allow spawning
+        engine.spawnToken()
+        
+        const currentId = engine.tokens[0].id
+        
+        if (previousId !== null) {
+          expect(currentId).not.toBe(previousId)
+        }
+        
+        previousId = currentId
+      }
+    })
+
+    it('should maintain round-robin when dakuten unlocks', () => {
+      // Start with basic kana
+      engine.correctAnswers = 0
+      engine.includeDakuten = true
+      engine.includeYoon = false
+      
+      // Spawn first round of basic kana
+      const basicCount = 46
+      for (let i = 0; i < basicCount; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+      }
+      
+      // Now unlock dakuten
+      engine.correctAnswers = 10
+      
+      // Get new available set (should include dakuten)
+      const availableKana = engine.getAvailableKana()
+      const dakutenCount = availableKana.length - basicCount
+      expect(availableKana.length).toBeGreaterThan(basicCount)
+      
+      // Track spawn counts
+      const spawnCounts: Map<string, number> = new Map()
+      availableKana.forEach(k => {
+        // Basic kana have been shown once, dakuten zero times
+        const isBasic = BASIC_KANA_IDS.includes(k.id)
+        spawnCounts.set(k.id, isBasic ? 1 : 0)
+      })
+      
+      // Spawn another full round (should prioritize dakuten since they have 0 count)
+      for (let i = 0; i < dakutenCount; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+        
+        const spawnedId = engine.tokens[0].id
+        spawnCounts.set(spawnedId, (spawnCounts.get(spawnedId) || 0) + 1)
+      }
+      
+      // After 25 spawns, all dakuten should have count 1, basic still at 1
+      availableKana.forEach(k => {
+        expect(spawnCounts.get(k.id)).toBe(1)
+      })
     })
   })
 

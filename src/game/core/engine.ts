@@ -51,17 +51,6 @@ const SPEED_INCREASE_INTERVAL = 15 // seconds
 const SPEED_BASE_EXPONENT = 1.08 // exponential base (8% growth per interval)
 const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
 
-// Weighted spawn system
-const WEIGHT_UNSEEN = 10000
-const WEIGHT_VERY_RECENT = 1 // < 5 seconds
-const WEIGHT_RECENT = 10 // 5-15 seconds
-const WEIGHT_MODERATE = 50 // 15-30 seconds
-const WEIGHT_OLD = 100 // > 30 seconds
-const TIME_THRESHOLD_VERY_RECENT = 5000 // ms
-const TIME_THRESHOLD_RECENT = 15000 // ms
-const TIME_THRESHOLD_MODERATE = 30000 // ms
-
-
 // Unlock thresholds (based on correct answers)
 const UNLOCK_DAKUTEN_THRESHOLD = 10 // unlock after 10 correct answers
 const UNLOCK_YOON_THRESHOLD = 20 // unlock after 20 correct answers
@@ -98,6 +87,8 @@ export class GameEngine {
   onSpeedChange?: (multiplier: number) => void
   kanaSet: KanaEntry[] = []
   kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown
+  kanaSelectionQueue: string[] = [] // queue for round-robin selection (guarantees full cycle)
+  kanaRoundCount: Map<string, number> = new Map() // track how many times each kana has been shown
   spawnAccumulator = 0
   spawnInterval = CHALLENGE_SPAWN_INTERVAL // default to challenge mode interval
   baseSpeed = CHALLENGE_BASE_SPEED
@@ -166,6 +157,8 @@ export class GameEngine {
     this.gameTime = 0
     this.speed = this.baseSpeed
     this.lastSpeedMultiplier = 1.0
+    this.kanaSelectionQueue = []
+    this.kanaRoundCount.clear()
     this.tokens.forEach(t => this.renderer.removeTokenEl(t.el))
     this.tokens = []
     this.kanaLastSeen.clear()
@@ -310,45 +303,48 @@ export class GameEngine {
     const availableKana = this.getAvailableKana()
     if(availableKana.length === 0) return
     
-    // Calculate weights based on recency (last seen time)
     const now = performance.now()
-    const weights: number[] = []
     
-    for(const kana of availableKana){
-      const lastSeen = this.kanaLastSeen.get(kana.id) || 0
-      const timeSince = now - lastSeen
+    // Separate unseen kana from seen kana
+    const unseenKana = availableKana.filter(kana => !this.kanaLastSeen.has(kana.id))
+    
+    let entry
+    
+    // ALWAYS pick from unseen kana first if any exist
+    if(unseenKana.length > 0){
+      const randomIndex = Math.floor(Math.random() * unseenKana.length)
+      entry = unseenKana[randomIndex]
+    } else {
+      // All kana have been seen - use round-robin queue for guaranteed distribution
+      // Refill queue if empty or if available kana set changed
+      const availableIds = availableKana.map(k => k.id).sort().join(',')
+      const queueIds = this.kanaSelectionQueue.join(',')
       
-      // Weight increases with time since last seen
-      let weight = WEIGHT_VERY_RECENT
-      if(lastSeen === 0){
-        weight = WEIGHT_UNSEEN // strongly prefer unseen kana
-      } else if(timeSince < TIME_THRESHOLD_VERY_RECENT){
-        weight = WEIGHT_VERY_RECENT
-      } else if(timeSince < TIME_THRESHOLD_RECENT){
-        weight = WEIGHT_RECENT
-      } else if(timeSince < TIME_THRESHOLD_MODERATE){
-        weight = WEIGHT_MODERATE
-      } else {
-        weight = WEIGHT_OLD // not seen in a while
+      if(this.kanaSelectionQueue.length === 0 || availableIds !== queueIds){
+        // Find minimum round count
+        const roundCounts = availableKana.map(k => this.kanaRoundCount.get(k.id) || 0)
+        const minRoundCount = roundCounts.length > 0 ? Math.min(...roundCounts) : 0
+
+        // Only include kana with minimum round count
+        const eligibleKana = availableKana.filter(k => (this.kanaRoundCount.get(k.id) || 0) === minRoundCount)
+
+        // Create new shuffled queue with eligible kana only
+        this.kanaSelectionQueue = eligibleKana.map(k => k.id)
+        // Fisher-Yates shuffle
+        for(let i = this.kanaSelectionQueue.length - 1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i + 1))
+          ;[this.kanaSelectionQueue[i], this.kanaSelectionQueue[j]] = [this.kanaSelectionQueue[j], this.kanaSelectionQueue[i]]
+        }
       }
-      weights.push(weight)
+      
+      // Pick from front of queue and remove it
+      const nextId = this.kanaSelectionQueue.shift()!
+      entry = availableKana.find(k => k.id === nextId)!
     }
     
-    // Weighted random selection with improved randomness
-    const totalWeight = weights.reduce((sum, w) => sum + w, 0)
-    let random = Math.random() * totalWeight
-    let selectedIndex = 0
-    
-    for(let i = 0; i < weights.length; i++){
-      random -= weights[i]
-      if(random <= 0){
-        selectedIndex = i
-        break
-      }
-    }
-    
-    const entry = availableKana[selectedIndex]
     this.kanaLastSeen.set(entry.id, now)
+    const currentCount = this.kanaRoundCount.get(entry.id) || 0
+    this.kanaRoundCount.set(entry.id, currentCount + 1)
     
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
     const width = (this.renderer as any).getWidth ? (this.renderer as any).getWidth() : 400
