@@ -16,10 +16,12 @@ import {
 	gameModeSelect,
 	kanaSelect,
 	includeDakutenToggle,
-	includeYoonToggle
+	includeYoonToggle,
+	highScoresStartEl
 } from './dom-elements'
 import { updateLivesDisplay } from './game-callbacks'
 import { enableElements, disableElements } from '../game/ui/dom-helpers'
+import { renderHighScores } from './ui-helpers'
 
 /**
  * Initializes audio system with saved settings
@@ -100,6 +102,8 @@ export function initializeGameSettings(engine: GameEngine) {
 			const mode = gameModeSelect.value as GameMode
 			engine.setGameMode(mode)
 			updateLivesDisplay(mode)
+			// Re-render high scores on start screen to update display
+			renderHighScores(highScoresStartEl, mode)
 			const s = loadSettings()
 			s.gameMode = mode
 			saveSettings(s)

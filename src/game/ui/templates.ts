@@ -60,14 +60,20 @@ export function createHighScoreEntry(entry: HighScoreEntry, rankPrefix: string):
  * Creates the complete high scores list HTML
  * @param entries - Array of high score entries
  * @param rankPrefix - Prefix for rank display
+ * @param isPracticeMode - Whether the game is in practice mode (hides scores)
  * @param emptyMessage - Message to show when no scores exist
  * @returns HTML string for high scores section
  */
 export function createHighScoresList(
   entries: HighScoreEntry[],
   rankPrefix: string,
+  isPracticeMode: boolean = false,
   emptyMessage: string = 'No scores yet!'
 ): string {
+  if (isPracticeMode) {
+    return `<h3>High Scores</h3><p style="color:rgba(255,255,255,0.4);font-size:14px;padding:8px;">High scores are not recorded in practice mode.</p>`
+  }
+  
   if (entries.length === 0) {
     return `<h3>High Scores</h3><p style="color:rgba(255,255,255,0.4);font-size:14px;padding:8px;">${emptyMessage}</p>`
   }

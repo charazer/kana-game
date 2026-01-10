@@ -5,7 +5,7 @@
 
 import { getHighScores } from '../game/storage/storage'
 import { createHighScoresList, createKanaReference, type HighScoreEntry } from '../game/ui/templates'
-import { HIGH_SCORE_LIST_START_INDEX, HIGH_SCORE_RANK_PREFIX } from '../game/constants/constants'
+import { HIGH_SCORE_LIST_START_INDEX, HIGH_SCORE_RANK_PREFIX, GAME_MODE_PRACTICE, type GameMode } from '../game/constants/constants'
 import kanaHiragana from '../data/kana/hiragana.json'
 import kanaKatakana from '../data/kana/katakana.json'
 import type { KanaEntry } from '../game/core/types'
@@ -14,7 +14,7 @@ import { kanaContent } from './dom-elements'
 /**
  * Renders high scores list to a container element
  */
-export function renderHighScores(container: HTMLElement, highlightScore?: number) {
+export function renderHighScores(container: HTMLElement, gameMode: GameMode, highlightScore?: number) {
 	const scores = getHighScores()
 
 	// Transform scores into HighScoreEntry format
@@ -26,7 +26,7 @@ export function renderHighScores(container: HTMLElement, highlightScore?: number
 	}))
 
 	// Use template utility to generate HTML
-	container.innerHTML = createHighScoresList(entries, HIGH_SCORE_RANK_PREFIX)
+	container.innerHTML = createHighScoresList(entries, HIGH_SCORE_RANK_PREFIX, gameMode === GAME_MODE_PRACTICE)
 }
 
 /**

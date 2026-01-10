@@ -124,10 +124,10 @@ export function createGameCallbacks(
 			if (engine.gameMode === GAME_MODE_CHALLENGE && isHighScore(finalScore)) {
 				newHighScoreEl.classList.remove('hidden')
 				addHighScore(finalScore)
-				renderHighScores(highScoresEndEl, finalScore)
+				renderHighScores(highScoresEndEl, engine.gameMode, finalScore)
 			} else {
 				newHighScoreEl.classList.add('hidden')
-				renderHighScores(highScoresEndEl)
+				renderHighScores(highScoresEndEl, engine.gameMode)
 			}
 
 			gameOverEl.classList.remove('hidden')

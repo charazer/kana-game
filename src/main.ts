@@ -83,7 +83,7 @@ async function main() {
 	initializeModalEscapeKeys(engine)
 
 	// Render high scores on start screen
-	renderHighScores(highScoresStartEl)
+	renderHighScores(highScoresStartEl, engine.gameMode)
 }
 
 // Start the application

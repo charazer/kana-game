@@ -62,16 +62,28 @@ describe('templates', () => {
 
   describe('createHighScoresList', () => {
     it('should show empty message when no entries', () => {
-      const html = createHighScoresList([], '#')
+      const html = createHighScoresList([], '#', false)
       
       expect(html).toContain('High Scores')
       expect(html).toContain('No scores yet!')
     })
 
     it('should use custom empty message', () => {
-      const html = createHighScoresList([], '#', 'Play to get your first score!')
+      const html = createHighScoresList([], '#', false, 'Play to get your first score!')
       
       expect(html).toContain('Play to get your first score!')
+    })
+
+    it('should show practice mode message when in practice mode', () => {
+      const entries: HighScoreEntry[] = [
+        { score: 100, date: '2024-01-15T12:00:00.000Z', rank: 1 }
+      ]
+      
+      const html = createHighScoresList(entries, '#', true)
+      
+      expect(html).toContain('High Scores')
+      expect(html).toContain('High scores are not recorded in practice mode.')
+      expect(html).not.toContain('100')
     })
 
     it('should create list with single entry', () => {
@@ -79,7 +91,7 @@ describe('templates', () => {
         { score: 100, date: '2024-01-15T12:00:00.000Z', rank: 1 }
       ]
       
-      const html = createHighScoresList(entries, '#')
+      const html = createHighScoresList(entries, '#', false)
       
       expect(html).toContain('High Scores')
       expect(html).toContain('high-score-entry')
@@ -94,7 +106,7 @@ describe('templates', () => {
         { score: 60, date: '2024-01-13T12:00:00.000Z', rank: 3 }
       ]
       
-      const html = createHighScoresList(entries, '#')
+      const html = createHighScoresList(entries, '#', false)
       
       expect(html).toContain('#1')
       expect(html).toContain('#2')
