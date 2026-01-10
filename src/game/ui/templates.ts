@@ -71,11 +71,11 @@ export function createHighScoresList(
   emptyMessage: string = 'No scores yet!'
 ): string {
   if (isPracticeMode) {
-    return `<h3>High Scores</h3><p style="color:rgba(255,255,255,0.4);font-size:14px;padding:8px;">High scores are not recorded in practice mode.</p>`
+    return `<h3>High Scores</h3><p class="high-score-message">High scores are not recorded in practice mode.</p>`
   }
   
   if (entries.length === 0) {
-    return `<h3>High Scores</h3><p style="color:rgba(255,255,255,0.4);font-size:14px;padding:8px;">${emptyMessage}</p>`
+    return `<h3>High Scores</h3><p class="high-score-message">${emptyMessage}</p>`
   }
   
   const entriesHtml = entries
