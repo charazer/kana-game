@@ -22,34 +22,54 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 25+ (recommended: use `.nvmrc` with `nvm use`)
 - npm 10+
 
 ### Installation
+
 ```bash
 npm install
 ```
 
 ### Development
+
 ```bash
 npm run dev
 ```
+
 Open browser to `http://localhost:5173`
 
 ### Build
+
 ```bash
 npm run build
 ```
+
 Production files output to `dist/`
 
 ### Testing
+
 ```bash
-npm test              # Run tests
-npm run test:watch    # Watch mode
-npm run test:coverage # Coverage report
-npm run test:ui       # Interactive UI
-npm run typecheck     # TypeScript check
-npm run lint          # ESLint check
+# Run all tests
+npm run test                # Run unit tests and E2E tests
+
+# Unit tests
+npm run test:unit           # Run tests
+npm run test:unit:watch.    # Watch mode
+npm run test:unit:coverage  # Coverage report
+npm run test:unit:ui        # Interactive UI
+
+# End-to-end tests
+npm run test:e2e            # Run E2E tests (headless)
+npm run test:e2e:ui         # Run E2E tests with UI mode
+npm run test:e2e:headed     # Run E2E tests in headed mode
+npm run test:e2e:debug      # Debug E2E tests
+npm run test:e2e:report     # View last test report
+
+# Other checks
+npm run typecheck           # TypeScript check
+npm run lint                # ESLint check
 ```
 
 ## How to Play
@@ -71,7 +91,8 @@ npm run lint          # ESLint check
 
 ## Tech Stack
 
-- TypeScript, Vite, Vitest
+- TypeScript, Vite
+- Vitest (unit tests), Playwright (E2E tests)
 - Vanilla JS/DOM (no framework dependencies)
 - Web Audio API
 - CSS Transforms (GPU-accelerated)

@@ -154,7 +154,7 @@ export function initializeKanaReferenceModal() {
 	}
 
 	// Update scroll hints on window resize
-	let resizeTimeout: number
+	let resizeTimeout: ReturnType<typeof setTimeout>
 	window.addEventListener('resize', () => {
 		clearTimeout(resizeTimeout)
 		resizeTimeout = setTimeout(() => {
