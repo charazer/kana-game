@@ -39,13 +39,13 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     
     /* Enable traces for debugging - 'on' allows UI mode browser preview */
-    trace: isGitHubActions ? 'on-first-retry' : 'on',
+    trace: isGitHubActions ? 'off' : 'on',
     
     /* Screenshot on failure */
-    screenshot: 'only-on-failure',
+    screenshot: isGitHubActions ? 'off' : 'on',
     
     /* Video recording */
-    video: isGitHubActions ? 'retain-on-failure' : 'off',
+    video: isGitHubActions ? 'off' : 'on',
   },
 
   /* Configure projects for major browsers */
