@@ -16,8 +16,8 @@ jobs:
                   node-version: "25"
                   cache: "npm"
             - run: npm ci
-            - name: Install Playwright Browsers
-              run: npx playwright install --with-deps chromium
+            - name: Install Playwright browsers
+              run: npx playwright install chromium
             - run: npm run typecheck
             - run: npm run lint
             - run: npm run test
