@@ -38,14 +38,14 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')` */
     baseURL: 'http://localhost:5173',
     
-    /* Enable traces for debugging - 'on' allows UI mode browser preview */
-    trace: isGitHubActions ? 'off' : 'on',
+    /* Enable traces for debugging - 'on-first-retry' captures traces only when tests are retried */
+    trace: isGitHubActions ? 'off' : 'on-first-retry',
     
-    /* Screenshot on failure */
-    screenshot: isGitHubActions ? 'off' : 'on',
+    /* Capture screenshots only for failing tests */
+    screenshot: isGitHubActions ? 'off' : 'only-on-failure',
     
-    /* Video recording */
-    video: isGitHubActions ? 'off' : 'on',
+    /* Record videos but retain them only for failing tests */
+    video: isGitHubActions ? 'off' : 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
