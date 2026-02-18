@@ -1,71 +1,70 @@
 import { test, expect } from '@playwright/test';
+import { Selectors } from './fixtures/selectors';
+import { navigateToGame, openSettings, closeSettings, startGame } from './fixtures/helpers';
 
 /**
  * Test suite for settings configuration flows
  */
 test.describe('Settings', () => {
   test('should open, configure, and close settings modal flow', async ({ page }) => {
-    await page.goto('/');    
+    await navigateToGame(page);    
     
     // Open settings
-    await page.click('#settings-btn');
-    await expect(page.locator('#settings-modal')).toBeVisible();
+    await openSettings(page);
     
     // Change a setting
-    const gameModeSelect = page.locator('#game-mode');
+    const gameModeSelect = page.locator(Selectors.gameModeSelect);
     await gameModeSelect.selectOption('practice');
     await expect(gameModeSelect).toHaveValue('practice');
     
     // Close modal
-    await page.click('#settings-close');
-    await expect(page.locator('#settings-modal')).toHaveClass(/hidden/);
+    await closeSettings(page);
     
     // Setting should persist when reopening
-    await page.click('#settings-btn');
+    await openSettings(page);
     await expect(gameModeSelect).toHaveValue('practice');
   });
 
   test('should change kana set and start game with new setting', async ({ page }) => {
-    await page.goto('/');
-    await page.click('#settings-btn');
+    await navigateToGame(page);
+    await openSettings(page);
     
     // Change to katakana
-    const kanaSetSelect = page.locator('#kana-set');
+    const kanaSetSelect = page.locator(Selectors.kanaSetSelect);
     await kanaSetSelect.selectOption('katakana');
     
-    await page.click('#settings-close');
+    await closeSettings(page);
     
     // Start game and verify tokens spawn
-    await page.click('#start');
+    await startGame(page);
     
-    const tokens = page.locator('#tokens .token');
-    // Wait for at least one token to appear
+    const tokens = page.locator(Selectors.tokens);
     await expect(tokens.first()).toBeVisible();
     expect(await tokens.count()).toBeGreaterThan(0);
   });
 
   test('should persist settings across page reloads', async ({ page }) => {
-    await page.goto('/');
-    await page.click('#settings-btn');
+    await navigateToGame(page);
+    await openSettings(page);
     
     // Change multiple settings
-    await page.locator('#game-mode').selectOption('practice');
-    await page.locator('#kana-set').selectOption('mixed');
+    await page.locator(Selectors.gameModeSelect).selectOption('practice');
+    await page.locator(Selectors.kanaSetSelect).selectOption('mixed');
     
     // Dakuten defaults to checked, so clicking unchecks it
-    const dakuten = page.locator('#include-dakuten');
+    const dakuten = page.locator(Selectors.includeDakuten);
     const initialState = await dakuten.isChecked();
     await dakuten.click();
     
-    await page.click('#settings-close');
+    await closeSettings(page);
     
     // Reload page
     await page.reload();
     
     // Verify settings persisted
-    await page.click('#settings-btn');
-    await expect(page.locator('#game-mode')).toHaveValue('practice');
-    await expect(page.locator('#kana-set')).toHaveValue('mixed');
+    await openSettings(page);
+    await expect(page.locator(Selectors.gameModeSelect)).toHaveValue('practice');
+    await expect(page.locator(Selectors.kanaSetSelect)).toHaveValue('mixed');
     
     // Dakuten should be in opposite state from initial
     const dakutenAfterReload = await dakuten.isChecked();
@@ -73,19 +72,19 @@ test.describe('Settings', () => {
   });
 
   test('should adjust audio settings and persist them', async ({ page }) => {
-    await page.goto('/');
-    await page.click('#settings-btn');
+    await navigateToGame(page);
+    await openSettings(page);
     
     // Change volume
-    const volumeSlider = page.locator('#music-volume');
+    const volumeSlider = page.locator(Selectors.musicVolume);
     await volumeSlider.fill('75');
-    await expect(page.locator('#music-volume-value')).toHaveText('75%');
+    await expect(page.locator(Selectors.musicVolumeValue)).toHaveText('75%');
     
-    await page.click('#settings-close');
+    await closeSettings(page);
     
     // Reload and verify persistence
     await page.reload();
-    await page.click('#settings-btn');
+    await openSettings(page);
     await expect(volumeSlider).toHaveValue('75');
   });
 });
