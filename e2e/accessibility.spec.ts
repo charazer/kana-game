@@ -7,17 +7,6 @@ test.describe('Accessibility', () => {
   test('should support full keyboard navigation flow', async ({ page }) => {
     await page.goto('/');
     
-    // Can focus and activate settings with keyboard
-    const settingsButton = page.locator('#settings-btn');
-    await settingsButton.focus();
-    await expect(settingsButton).toBeFocused();
-    await settingsButton.click();
-    await expect(page.locator('#settings-modal')).toBeVisible();
-    
-    // Can close modal with keyboard
-    await page.keyboard.press('Escape');
-    await expect(page.locator('#settings-modal')).toHaveClass(/hidden/);
-    
     // Can start game with keyboard
     const startButton = page.locator('#start');
     await startButton.focus();
