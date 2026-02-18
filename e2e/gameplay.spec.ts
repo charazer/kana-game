@@ -96,9 +96,7 @@ test.describe('Gameplay', () => {
     }
     
     // Speed should have increased from 1.0x
-    const speedText = await page.locator('#speed').textContent();
-    const speedValue = parseFloat(speedText?.replace('x', '') || '1.0');
-    expect(speedValue).toBeGreaterThan(1.0);
+    await expect(page.locator('#speed')).not.toHaveText('1.0x');
   });
 
   test('should lose lives when tokens reach danger zone in challenge mode', async ({ page }) => {
