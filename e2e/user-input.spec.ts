@@ -39,17 +39,20 @@ test.describe('User Input', () => {
     await navigateToGame(page);
     await startGame(page);
     
-    const initialScore = await page.locator(Selectors.score).textContent();
+    // Wait for initial score to be displayed
+    const scoreLocator = page.locator(Selectors.score);
+    await expect(scoreLocator).toBeVisible();
     
     // Pause the game
     await page.keyboard.press('Space');
     await expect(page.locator(Selectors.pausedIndicator)).toBeVisible();
     
-    // Try typing while paused  
+    // Try typing while paused
     await page.keyboard.type('test');
     
-    // Score should remain unchanged
-    await expect(page.locator(Selectors.score)).toHaveText(initialScore || '0');
+    // Score should remain at initial value (0)
+    // Game state doesn't process input while paused even though input echo updates
+    await expect(scoreLocator).toHaveText('0');
     
     // Resume game
     await page.keyboard.press('Space');
