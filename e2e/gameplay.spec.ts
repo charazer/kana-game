@@ -25,8 +25,8 @@ test.describe('Gameplay', () => {
     await navigateToGame(page);
     await startGame(page);
     
-    // Wait for first token to spawn
-    await page.waitForTimeout(500);
+    // Wait for first token to be visible
+    await page.locator(Selectors.tokens).first().waitFor({ state: 'visible' });
     
     // Initial combo should be 0x
     await expect(page.locator(Selectors.combo)).toHaveText('0x');
@@ -35,18 +35,21 @@ test.describe('Gameplay', () => {
     const firstTokenId = await getFirstTokenId(page);
     if (!firstTokenId) throw new Error('No token found');
     await page.keyboard.type(firstTokenId);
-    await page.waitForTimeout(300);
     
-    // Combo should be 1x
+    // Wait for combo to update to 1x
     await expect(page.locator(Selectors.combo)).toHaveText('1x');
+    
+    // Wait for game to process answer and spawn new token
+    // This is necessary due to game timing - answering too quickly
+    // can result in answering the same token twice
+    await page.waitForTimeout(300);
     
     // Answer second token correctly
     const secondTokenId = await getFirstTokenId(page);
     if (!secondTokenId) throw new Error('No token found');
     await page.keyboard.type(secondTokenId);
-    await page.waitForTimeout(300);
     
-    // Combo should be 2x
+    // Combo should be 2x (assertion will wait for update)
     await expect(page.locator(Selectors.combo)).toHaveText('2x');
   });
 
@@ -70,11 +73,9 @@ test.describe('Gameplay', () => {
       // Answer tokens every couple iterations to keep game alive
       if (i % 2 === 0) {
         const token = page.locator(Selectors.tokens).first();
-        if (await token.count() > 0) {
-          const tokenId = await token.getAttribute('data-kana-id');
-          if (tokenId) {
-            await page.keyboard.type(tokenId);
-          }
+        const tokenId = await token.getAttribute('data-kana-id');
+        if (tokenId) {
+          await page.keyboard.type(tokenId);
         }
       }
     }
@@ -119,7 +120,7 @@ test.describe('Gameplay', () => {
     
     // Lives display should be hidden in practice mode
     const livesBox = page.locator(Selectors.livesBox);
-    expect(await livesBox.isVisible()).toBe(false);
+    await expect(livesBox).not.toBeVisible();
   });
 
   test('should persist high scores across game sessions', async ({ page }) => {
