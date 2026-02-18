@@ -44,3 +44,35 @@ export const UI_CURSOR_POINTER = 'pointer'
 // High score display
 export const HIGH_SCORE_RANK_PREFIX = '#' // prefix for rank display
 export const HIGH_SCORE_LIST_START_INDEX = 1 // start index for rank numbering (1-based)
+
+// Game engine constants
+export const BASE_POINTS = 10
+export const MAX_TIME_BONUS = 10
+export const COMBO_MULTIPLIER = 0.05
+export const DANGER_ZONE = 80 // pixels from bottom
+export const TOKEN_WIDTH = 72 // pixels
+export const SPAWN_MARGIN = 20 // pixels
+export const MIN_TOKEN_DISTANCE = 100 // pixels
+export const MAX_SPAWN_ATTEMPTS = 10
+
+// Speed progression constants (challenge mode)
+export const SPEED_INCREASE_INTERVAL = 15 // seconds
+export const SPEED_BASE_EXPONENT = 1.08 // exponential base (8% growth per interval)
+export const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
+
+// Unlock thresholds (based on correct answers)
+export const UNLOCK_DAKUTEN_THRESHOLD = 10 // unlock after 10 correct answers
+export const UNLOCK_YOON_THRESHOLD = 20 // unlock after 20 correct answers
+
+// Spawn overlap detection
+export const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
+
+// Practice mode settings
+export const PRACTICE_BASE_SPEED = 20 // pixels/sec
+export const PRACTICE_MAX_TOKENS = 5
+export const PRACTICE_SPAWN_INTERVAL = 1.8 // seconds (slower spawning for learning)
+
+// Challenge mode settings
+export const CHALLENGE_BASE_SPEED = 40 // pixels/sec (reduced from 60)
+export const CHALLENGE_MAX_TOKENS = 8
+export const CHALLENGE_SPAWN_INTERVAL = 1.2 // seconds (faster spawning for challenge)

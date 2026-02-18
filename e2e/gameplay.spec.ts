@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { SPEED_INCREASE_INTERVAL } from '../src/game/constants/constants';
 
 /**
  * Test suite for core gameplay mechanics with actual game state verification
@@ -69,24 +70,27 @@ test.describe('Gameplay', () => {
     await page.locator('#game-mode').selectOption('challenge');
     await page.click('#settings-close');
     
+    // Install fake timers after page setup but before starting game
+    await page.clock.install({ time: 0 });
+    
     await page.click('#start');
     
     // Speed should be visible and start at 1.0x  
     await expect(page.locator('#speed')).toHaveText('1.0x');
     
-    // Play for 16 seconds to trigger speed increase (increases every 15s in challenge mode)
-    // Keep answering tokens to prevent game over
-    const startTime = Date.now();
-    while (Date.now() - startTime < 16000) {
-      await page.waitForTimeout(800);
+    // Fast-forward past the speed increase interval using fake timers
+    const secondsToAdvance = SPEED_INCREASE_INTERVAL + 1;
+    for (let i = 0; i < secondsToAdvance; i++) {
+      await page.clock.runFor(1000);
       
-      // Try to answer a token if one exists
-      const token = page.locator('#tokens .token').first();
-      const count = await token.count();
-      if (count > 0) {
-        const tokenId = await token.getAttribute('data-kana-id');
-        if (tokenId) {
-          await page.keyboard.type(tokenId);
+      // Answer tokens every couple iterations to keep game alive
+      if (i % 2 === 0) {
+        const token = page.locator('#tokens .token').first();
+        if (await token.count() > 0) {
+          const tokenId = await token.getAttribute('data-kana-id');
+          if (tokenId) {
+            await page.keyboard.type(tokenId);
+          }
         }
       }
     }
@@ -105,31 +109,28 @@ test.describe('Gameplay', () => {
     await page.locator('#game-mode').selectOption('challenge');
     await page.click('#settings-close');
     
+    // Install fake timers after page setup but before starting game
+    await page.clock.install({ time: 0 });
+    
     await page.click('#start');
     
     // Initial lives should show 3 filled hearts
     const hearts = page.locator('#lives .heart-icon');
     await expect(hearts).toHaveCount(3);
     
-    // Wait for lives to decrease by checking periodically
-    // This allows rendering to happen between checks so we see lives lost gradually
-    let livesHTML = await page.locator('#lives').innerHTML();
-    let livesLost = false;
-    const maxWaitTime = 20000; // 20 seconds max
-    const checkInterval = 1000; // Check every second
-    let elapsed = 0;
+    // Fast-forward time while checking for life loss
+    const emptyHeart = page.locator('#lives .heart-icon[src*="heart_empty"]').first();
     
-    while (!livesLost && elapsed < maxWaitTime) {
-      await page.waitForTimeout(checkInterval);
-      elapsed += checkInterval;
-      
-      livesHTML = await page.locator('#lives').innerHTML();
-      livesLost = livesHTML.includes('heart_empty.png');
+    for (let i = 0; i < 20; i++) {
+      await page.clock.runFor(1000);
+      // Check periodically to reduce overhead
+      if (i % 2 === 0 && await emptyHeart.isVisible()) {
+        break;
+      }
     }
     
-    // At least one life should be lost (empty heart should appear)
-    expect(livesLost).toBe(true);
-    expect(livesHTML).toContain('heart_empty.png');
+    // At least one life should be lost
+    await expect(emptyHeart).toBeVisible();
   });
 
   test('should not show lives in practice mode', async ({ page }) => {
