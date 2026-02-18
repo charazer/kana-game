@@ -37,9 +37,10 @@ test.describe('Settings', () => {
     
     // Start game and verify tokens spawn
     await page.click('#start');
-    await page.waitForTimeout(1000);
     
     const tokens = page.locator('#tokens .token');
+    // Wait for at least one token to appear
+    await expect(tokens.first()).toBeVisible();
     expect(await tokens.count()).toBeGreaterThan(0);
   });
 
