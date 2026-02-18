@@ -12,8 +12,7 @@ test.describe('User Input', () => {
     await page.keyboard.type('a');
     
     // Input echo should update with the typed character
-    const inputEcho = await page.locator('#input-echo').textContent();
-    expect(inputEcho).toContain('a');
+    await expect(page.locator('#input-echo')).toContainText('a');
     
     // Game should still be running
     await expect(page.locator('#score')).toBeVisible();
@@ -26,14 +25,12 @@ test.describe('User Input', () => {
     // Type multiple characters
     await page.keyboard.type('abc');
     
-    let inputEcho = await page.locator('#input-echo').textContent();
-    expect(inputEcho).toContain('abc');
+    await expect(page.locator('#input-echo')).toContainText('abc');
     
     // Delete one character
     await page.keyboard.press('Backspace');
     
-    inputEcho = await page.locator('#input-echo').textContent();
-    expect(inputEcho).not.toContain('abc');
+    await expect(page.locator('#input-echo')).not.toContainText('abc');
   });
 
   test('should block input when paused and resume when unpaused', async ({ page }) => {
@@ -58,7 +55,6 @@ test.describe('User Input', () => {
     
     // Input should work again after resume
     await page.keyboard.type('a');
-    const inputEcho = await page.locator('#input-echo').textContent();
-    expect(inputEcho).not.toBe('_');
+    await expect(page.locator('#input-echo')).not.toHaveText('_');
   });
 });
