@@ -62,7 +62,7 @@ npm run test                # Run unit tests and E2E tests
 
 # Unit tests
 npm run test:unit           # Run tests
-npm run test:unit:watch.    # Watch mode
+npm run test:unit:watch     # Watch mode
 npm run test:unit:coverage  # Coverage report
 npm run test:unit:ui        # Interactive UI
 
