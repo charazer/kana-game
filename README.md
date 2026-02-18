@@ -32,6 +32,12 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 npm install
 ```
 
+**For E2E testing:** Install Playwright browsers (one-time setup):
+
+```bash
+npx playwright install chromium
+```
+
 ### Development
 
 ```bash
@@ -60,7 +66,7 @@ npm run test:unit:watch.    # Watch mode
 npm run test:unit:coverage  # Coverage report
 npm run test:unit:ui        # Interactive UI
 
-# End-to-end tests
+# End-to-end tests (requires: npx playwright install chromium)
 npm run test:e2e            # Run E2E tests (headless)
 npm run test:e2e:ui         # Run E2E tests with UI mode
 npm run test:e2e:headed     # Run E2E tests in headed mode
