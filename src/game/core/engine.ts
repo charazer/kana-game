@@ -16,7 +16,27 @@ import {
   FLOATING_TEXT_OFFSET_Y,
   FLOATING_TEXT_COMBO_OFFSET_Y,
   COMBO_DISPLAY_SUFFIX,
-  INITIAL_LIVES
+  INITIAL_LIVES,
+  BASE_POINTS,
+  MAX_TIME_BONUS,
+  COMBO_MULTIPLIER,
+  DANGER_ZONE,
+  TOKEN_WIDTH,
+  SPAWN_MARGIN,
+  MIN_TOKEN_DISTANCE,
+  MAX_SPAWN_ATTEMPTS,
+  SPEED_INCREASE_INTERVAL,
+  SPEED_BASE_EXPONENT,
+  SPEED_CHANGE_DELAY,
+  UNLOCK_DAKUTEN_THRESHOLD,
+  UNLOCK_YOON_THRESHOLD,
+  VERTICAL_OVERLAP_THRESHOLD,
+  PRACTICE_BASE_SPEED,
+  PRACTICE_MAX_TOKENS,
+  PRACTICE_SPAWN_INTERVAL,
+  CHALLENGE_BASE_SPEED,
+  CHALLENGE_MAX_TOKENS,
+  CHALLENGE_SPAWN_INTERVAL
 } from '../constants/constants'
 
 export type Renderer = {
@@ -35,38 +55,6 @@ export type SoundPlayer = {
 }
 
 import type { InputManager } from '../input/input'
-
-// Game constants
-const BASE_POINTS = 10
-const MAX_TIME_BONUS = 10
-const COMBO_MULTIPLIER = 0.05
-const DANGER_ZONE = 80 // pixels from bottom
-const TOKEN_WIDTH = 72 // pixels
-const SPAWN_MARGIN = 20 // pixels
-const MIN_TOKEN_DISTANCE = 100 // pixels
-const MAX_SPAWN_ATTEMPTS = 10
-
-// Speed progression constants (challenge mode)
-const SPEED_INCREASE_INTERVAL = 15 // seconds
-const SPEED_BASE_EXPONENT = 1.08 // exponential base (8% growth per interval)
-const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
-
-// Unlock thresholds (based on correct answers)
-const UNLOCK_DAKUTEN_THRESHOLD = 10 // unlock after 10 correct answers
-const UNLOCK_YOON_THRESHOLD = 20 // unlock after 20 correct answers
-
-// Spawn overlap detection
-const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
-
-// Practice mode settings
-const PRACTICE_BASE_SPEED = 20 // pixels/sec
-const PRACTICE_MAX_TOKENS = 5
-const PRACTICE_SPAWN_INTERVAL = 1.8 // seconds (slower spawning for learning)
-
-// Challenge mode settings
-const CHALLENGE_BASE_SPEED = 40 // pixels/sec (reduced from 60)
-const CHALLENGE_MAX_TOKENS = 8
-const CHALLENGE_SPAWN_INTERVAL = 1.2 // seconds (faster spawning for challenge)
 
 export class GameEngine {
   renderer: Renderer

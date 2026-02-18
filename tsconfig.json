@@ -10,7 +10,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "outDir": "dist",
-    "types": ["vitest/globals", "vite/client"]
+    "types": ["vitest/globals", "vite/client", "node", "@playwright/test"]
   },
-  "include": ["src"]
+  "include": ["src", "e2e", "*.config.ts"]
 }

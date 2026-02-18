@@ -156,8 +156,8 @@ export function initializeKanaReferenceModal() {
 	// Update scroll hints on window resize
 	let resizeTimeout: number
 	window.addEventListener('resize', () => {
-		clearTimeout(resizeTimeout)
-		resizeTimeout = setTimeout(() => {
+		window.clearTimeout(resizeTimeout)
+		resizeTimeout = window.setTimeout(() => {
 			if (!kanaModal.classList.contains('hidden')) {
 				updateKanaScrollIndicators()
 			}

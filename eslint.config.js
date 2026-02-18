@@ -40,8 +40,9 @@ export default [
       'node_modules/**',
       'coverage/**',
       'src/coverage/**',
-      '*.config.js',
-      '*.config.ts'
+      'test-results/**',
+      'playwright-report/**',
+      '*.config.js'
     ]
   },
 
