@@ -14,6 +14,8 @@ describe('input', () => {
     mockOnCommit = vi.fn()
     inputManager.onKey = mockOnKey as any
     inputManager.onCommit = mockOnCommit as any
+    // Enable input by default so existing tests work
+    inputManager.enabled = true
   })
 
   describe('InputManager', () => {
@@ -137,18 +139,45 @@ describe('input', () => {
       expect(inputManager.buffer).toBe('')
     })
 
-    it('should handle numbers as valid input', () => {
+    it('should ignore numbers (not valid romaji)', () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: '1' }))
       
-      expect(inputManager.buffer).toBe('1')
-      expect(mockOnKey).toHaveBeenCalledWith('1')
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+      expect(mockOnCommit).not.toHaveBeenCalled()
     })
 
-    it('should handle special characters as valid input', () => {
+    it('should ignore special characters (not valid romaji)', () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: '-' }))
       
-      expect(inputManager.buffer).toBe('-')
-      expect(mockOnKey).toHaveBeenCalledWith('-')
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should ignore letters not used in any romaji (l, q, v, x)', () => {
+      for (const key of ['l', 'q', 'v', 'x']) {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key }))
+      }
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should accept all valid romaji characters', () => {
+      for (const key of 'abcdefghijkmnoprstuwyz') {
+        inputManager.buffer = ''
+        mockOnKey.mockClear()
+        window.dispatchEvent(new KeyboardEvent('keydown', { key }))
+        expect(inputManager.buffer).toBe(key)
+        expect(mockOnKey).toHaveBeenCalledWith(key)
+      }
+    })
+
+    it('should accept kana characters for IME input', () => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'か' }))
+      
+      expect(inputManager.buffer).toBe('か')
+      expect(mockOnKey).toHaveBeenCalledWith('か')
+      expect(mockOnCommit).toHaveBeenCalledWith('か')
     })
 
     it('should prevent default behavior on backspace', () => {
@@ -158,6 +187,33 @@ describe('input', () => {
       window.dispatchEvent(event)
       
       expect(preventDefaultSpy).toHaveBeenCalled()
+    })
+
+    it('should initialize with enabled set to false', () => {
+      const freshManager = new InputManager()
+      expect(freshManager.enabled).toBe(false)
+    })
+
+    it('should ignore all keydown events when disabled', () => {
+      inputManager.enabled = false
+      
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }))
+      
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+      expect(mockOnCommit).not.toHaveBeenCalled()
+    })
+
+    it('should accept input again after being re-enabled', () => {
+      inputManager.enabled = false
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+      expect(inputManager.buffer).toBe('')
+      
+      inputManager.enabled = true
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }))
+      expect(inputManager.buffer).toBe('b')
+      expect(mockOnKey).toHaveBeenCalledWith('b')
     })
   })
 })

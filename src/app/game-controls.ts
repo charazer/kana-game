@@ -83,12 +83,12 @@ export function initializeEndGameButton(engine: GameEngine, _audio: AudioManager
 		// Only allow ending if button is enabled (which means game is running)
 		if (!endGameBtn || endGameBtn.disabled) return
 
-		// Hide paused indicator and resume if paused
+		// Hide paused indicator, stop the game properly (disables input) and trigger game over
 		pausedIndicator.classList.add('hidden')
-		engine.resume()
-
-		// Stop the game and trigger game over
 		engine.running = false
+		engine.input.enabled = false
+		engine.input.buffer = ''
+		engine.input.onKey('')
 		engine.onGameOver()
 	})
 

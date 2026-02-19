@@ -23,6 +23,7 @@ export const ANIM_DURATION_STAT_HIGHLIGHT = 300
 export const ANIM_DURATION_STAT_SHAKE = 400
 export const ANIM_DURATION_SPEED_FLASH = 600
 export const ANIM_DURATION_FLOATING_TEXT = 1000
+export const INPUT_ECHO_CLEAR_DELAY = 100 // ms to linger matched input before clearing echo
 
 // UI positioning and sizing
 export const FLOATING_TEXT_OFFSET_X = 36 // pixels - horizontal offset for floating text

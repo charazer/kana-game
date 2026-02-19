@@ -7,7 +7,8 @@ import {
   KANA_SET_HIRAGANA,
   KANA_SET_KATAKANA,
   KANA_SET_MIXED,
-  INITIAL_LIVES
+  INITIAL_LIVES,
+  INPUT_ECHO_CLEAR_DELAY
 } from '../constants/constants'
 import { BASIC_KANA_IDS } from '../constants/kana-constants'
 
@@ -116,6 +117,7 @@ describe('engine', () => {
       engine.start()
       
       expect(engine.running).toBe(true)
+      expect(inputManager.enabled).toBe(true)
       expect(rafSpy).toHaveBeenCalled()
     })
 
@@ -124,6 +126,18 @@ describe('engine', () => {
       engine.pause()
       
       expect(engine.running).toBe(false)
+      expect(inputManager.enabled).toBe(false)
+    })
+
+    it('should clear input buffer and echo when pausing', () => {
+      engine.start()
+      inputManager.buffer = 'ka'
+      const mockOnKey = vi.fn()
+      inputManager.onKey = mockOnKey
+      engine.pause()
+      
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).toHaveBeenCalledWith('')
     })
 
     it('should resume the game after pause', () => {
@@ -134,6 +148,7 @@ describe('engine', () => {
       engine.resume()
       
       expect(engine.running).toBe(true)
+      expect(inputManager.enabled).toBe(true)
       expect(rafSpy).toHaveBeenCalled()
     })
 
@@ -191,6 +206,7 @@ describe('engine', () => {
       engine.reset()
       
       expect(inputManager.buffer).toBe('')
+      expect(inputManager.enabled).toBe(false)
     })
   })
 
@@ -618,6 +634,62 @@ describe('engine', () => {
       // After matching the last token, a new one spawns instantly
       expect(engine.tokens.length).toBe(1)
       expect(mockRenderer.flashToken).toHaveBeenCalledWith(expect.any(HTMLElement), true)
+    })
+
+    describe('delayed echo after match', () => {
+      let mockOnKey: ReturnType<typeof vi.fn>
+
+      beforeEach(() => {
+        mockOnKey = vi.fn()
+        inputManager.onKey = mockOnKey as any
+        engine.running = true
+      })
+
+      it('should not call onKey immediately after a successful match', () => {
+        inputManager.buffer = 'ka'
+        engine.handleCommit('ka')
+        
+        expect(mockOnKey).not.toHaveBeenCalled()
+      })
+
+      it('should call onKey with cleared buffer after the delay', () => {
+        inputManager.buffer = 'ka'
+        engine.handleCommit('ka')
+        
+        vi.advanceTimersByTime(INPUT_ECHO_CLEAR_DELAY)
+        
+        expect(mockOnKey).toHaveBeenCalledWith('')
+      })
+
+      it('should not call onKey if new input arrived before the delay fires', () => {
+        inputManager.buffer = 'ka'
+        engine.handleCommit('ka')
+        
+        // Simulate player typing a new char before delay fires – buffer changes
+        inputManager.buffer = 's'
+        mockOnKey.mockClear()
+        
+        vi.advanceTimersByTime(INPUT_ECHO_CLEAR_DELAY)
+        
+        // Snapshot guard should prevent overwriting the new input
+        expect(mockOnKey).not.toHaveBeenCalled()
+      })
+
+      it('should call onKey with remaining buffer for partial match after delay', () => {
+        const shiEntry: KanaEntry = { id: 'shi', kana: 'し', romaji: ['shi', 'si'], type: 'hiragana' }
+        engine.tokens.push({
+          id: 'shi', entry: shiEntry, el: document.createElement('div'),
+          kana: 'し', y: 150, x: 100, spawnTime: performance.now()
+        })
+        inputManager.buffer = 'kashi'
+        engine.handleCommit('kashi')
+        // Buffer is 'shi' immediately (ka was consumed)
+        expect(inputManager.buffer).toBe('shi')
+        
+        vi.advanceTimersByTime(INPUT_ECHO_CLEAR_DELAY)
+        
+        expect(mockOnKey).toHaveBeenCalledWith('shi')
+      })
     })
   })
 

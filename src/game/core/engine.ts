@@ -28,6 +28,7 @@ import {
   SPEED_INCREASE_INTERVAL,
   SPEED_BASE_EXPONENT,
   SPEED_CHANGE_DELAY,
+  INPUT_ECHO_CLEAR_DELAY,
   UNLOCK_DAKUTEN_THRESHOLD,
   UNLOCK_YOON_THRESHOLD,
   VERTICAL_OVERLAP_THRESHOLD,
@@ -102,6 +103,7 @@ export class GameEngine {
 
   start(){
     this.running = true
+    this.input.enabled = true
     this.last = performance.now()
     // Spawn first token immediately
     this.spawnToken()
@@ -126,11 +128,15 @@ export class GameEngine {
 
   pause(){
     this.running = false
+    this.input.enabled = false
+    this.input.buffer = ''
+    this.input.onKey('')
   }
 
   resume(){
     if(!this.running){
       this.running = true
+      this.input.enabled = true
       this.last = performance.now()
       requestAnimationFrame(this.loop.bind(this))
     }
@@ -151,7 +157,9 @@ export class GameEngine {
     this.tokens = []
     this.kanaLastSeen.clear()
     this.spawnAccumulator = 0
+    this.input.enabled = false
     this.input.buffer = ''
+    this.input.onKey('')
     this.onScore(this.score)
     this.onLivesChange(this.lives)
     if(this.onCombo) this.onCombo(this.combo)
@@ -218,6 +226,9 @@ export class GameEngine {
         // Check for game over
         if(this.lives <= 0){
           this.running = false
+          this.input.enabled = false
+          this.input.buffer = ''
+          this.input.onKey('')
           this.onGameOver()
           return
         }
@@ -393,16 +404,23 @@ export class GameEngine {
       this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, 'combo')
     }
     
-    // Clear buffer based on match type
+    // Clear buffer based on match type, then update the visual echo after a short
+    // delay so the player can briefly see the characters they entered.
     if(match.matchType === 'romaji' && match.matchedLength) {
       // Consume only the matched portion from buffer
       this.input.buffer = this.input.buffer.slice(match.matchedLength)
-      this.input.onKey(this.input.buffer)
     } else {
       // Clear buffer for exact kana match (IME)
       this.input.buffer = ''
-      this.input.onKey('')
     }
+    // Snapshot the cleared value; only update the echo if no new input arrived
+    // during the delay (fast typists will have already moved onKey forward).
+    const displaySnapshot = this.input.buffer
+    setTimeout(() => {
+      if(this.input.buffer === displaySnapshot) {
+        this.input.onKey(displaySnapshot)
+      }
+    }, INPUT_ECHO_CLEAR_DELAY)
     
     // Instantly spawn a new tile if board is now empty
     if(this.tokens.length === 0) {
