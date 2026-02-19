@@ -641,7 +641,7 @@ describe('engine', () => {
 
       beforeEach(() => {
         mockOnKey = vi.fn()
-        inputManager.onKey = mockOnKey
+        inputManager.onKey = mockOnKey as any
         engine.running = true
       })
 
