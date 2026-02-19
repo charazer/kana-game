@@ -72,6 +72,16 @@ export async function resumeGame(page: Page): Promise<void> {
 }
 
 /**
+ * Ends the game via the end button and confirms the modal
+ */
+export async function confirmAndEndGame(page: Page): Promise<void> {
+  await page.click(Selectors.endGameButton);
+  await expect(page.locator(Selectors.confirmEndModal)).toBeVisible();
+  await page.click(Selectors.confirmEndYes);
+  await expect(page.locator(Selectors.gameOver)).toBeVisible();
+}
+
+/**
  * Gets the first visible token and returns its kana-id attribute
  */
 export async function getFirstTokenId(page: Page): Promise<string | null> {

@@ -28,7 +28,9 @@ test.describe('Game Start', () => {
     // Start and end game
     await startGame(page);
     await page.keyboard.press('Escape');
-    
+    await expect(page.locator(Selectors.confirmEndModal)).toBeVisible();
+    await page.keyboard.press('y');
+
     // Restart game
     await page.click(Selectors.restartButton);
     

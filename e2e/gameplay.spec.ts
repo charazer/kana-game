@@ -140,14 +140,18 @@ test.describe('Gameplay', () => {
     }
     
     await page.keyboard.press('Escape');
-    
+    await expect(page.locator(Selectors.confirmEndModal)).toBeVisible();
+    await page.keyboard.press('y');
+
     // High scores should be shown on game over
     await expect(page.locator(Selectors.highScoresEnd)).toBeVisible();
     
     // Restart and check high scores persist
     await page.click(Selectors.restartButton);
     await page.keyboard.press('Escape');
-    
+    await expect(page.locator(Selectors.confirmEndModal)).toBeVisible();
+    await page.keyboard.press('y');
+
     await expect(page.locator(Selectors.highScoresEnd)).toBeVisible();
   });
 });

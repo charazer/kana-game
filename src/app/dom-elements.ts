@@ -64,3 +64,8 @@ export const kanaModalOverlay = kanaModal.querySelector('.modal-overlay') as HTM
 export const tabHiragana = document.getElementById('tab-hiragana') as HTMLButtonElement | null
 export const tabKatakana = document.getElementById('tab-katakana') as HTMLButtonElement | null
 export const kanaContent = document.getElementById('kana-content')!
+
+// Confirm end game modal elements
+export const confirmEndModal = document.getElementById('confirm-end-modal')!
+export const confirmEndYesBtn = document.getElementById('confirm-end-yes') as HTMLButtonElement | null
+export const confirmEndNoBtn = document.getElementById('confirm-end-no') as HTMLButtonElement | null

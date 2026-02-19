@@ -19,7 +19,10 @@ import {
 	restartBtn,
 	gameOverEl,
 	speedEl,
-	musicToggle
+	musicToggle,
+	confirmEndModal,
+	confirmEndYesBtn,
+	confirmEndNoBtn
 } from './dom-elements'
 import { disableGameSettings } from './settings'
 
@@ -114,25 +117,75 @@ export function initializePauseButton(engine: GameEngine, audio: AudioManager) {
 /**
  * Initializes the end game button
  */
-export function initializeEndGameButton(engine: GameEngine, _audio: AudioManager) {
+export function initializeEndGameButton(engine: GameEngine, audio: AudioManager) {
 	if (!endGameBtn) return
 
 	// Disable end game button initially
 	disableElement(endGameBtn)
 
-	endGameBtn.addEventListener('click', () => {
-		// Only allow ending if button is enabled (which means game is running)
-		if (!endGameBtn || endGameBtn.disabled) return
+	let confirmOpen = false
+	let wasPausedBeforeConfirm = false
 
-		pressAnimation(endGameBtn)
-
-		// Hide paused indicator, stop the game properly (disables input) and trigger game over
+	const doEndGame = () => {
+		confirmOpen = false
+		confirmEndModal.classList.add('hidden')
 		pausedIndicator.classList.add('hidden')
 		engine.running = false
 		engine.input.enabled = false
 		engine.input.buffer = ''
 		engine.input.onKey('')
 		engine.onGameOver()
+	}
+
+	const openConfirmModal = () => {
+		if (confirmOpen) return
+		wasPausedBeforeConfirm = !engine.running
+		if (!wasPausedBeforeConfirm) {
+			engine.pause()
+			audio.playPause()
+			pausedIndicator.classList.remove('hidden')
+			if (pauseBtn) DOMBuilder.updateButton(pauseBtn, ButtonTemplates.resume)
+		}
+		// Disable input so modal key presses don't reach the game
+		engine.input.enabled = false
+		engine.input.buffer = ''
+		confirmOpen = true
+		confirmEndModal.classList.remove('hidden')
+	}
+
+	const closeConfirmModal = () => {
+		if (!confirmOpen) return
+		confirmOpen = false
+		confirmEndModal.classList.add('hidden')
+		if (!wasPausedBeforeConfirm) {
+			engine.resume()
+			audio.playResume()
+			pausedIndicator.classList.add('hidden')
+			if (pauseBtn) DOMBuilder.updateButton(pauseBtn, ButtonTemplates.pause)
+		}
+		// Re-enable input now that modal is dismissed
+		engine.input.enabled = true
+		engine.input.buffer = ''
+	}
+
+	endGameBtn.addEventListener('click', () => {
+		if (!endGameBtn || endGameBtn.disabled) return
+		pressAnimation(endGameBtn)
+		openConfirmModal()
+	})
+
+	confirmEndYesBtn?.addEventListener('click', () => doEndGame())
+	confirmEndNoBtn?.addEventListener('click', () => closeConfirmModal())
+
+	// Y / N keys — only active while the confirm modal is open
+	document.addEventListener('keydown', (e) => {
+		if (!confirmOpen) return
+		// Stop the event reaching any further listeners (e.g. InputManager on window)
+		e.stopImmediatePropagation()
+		e.preventDefault()
+		if (e.key === 'y' || e.key === 'Y') { doEndGame() }
+		if (e.key === 'n' || e.key === 'N') { closeConfirmModal() }
+		if (e.code === 'Escape') { closeConfirmModal() }
 	})
 
 	// Export function to enable end game button
@@ -220,8 +273,9 @@ export function initializeKeyboardShortcuts(engine: GameEngine) {
 			pauseBtn.click()
 		}
 
-		// Escape for end game (only when game is running)
+		// Escape for end game (only when game is running and confirm modal is not already open)
 		if (e.code === 'Escape' && endGameBtn && !endGameBtn.disabled) {
+			if (!confirmEndModal.classList.contains('hidden')) return // modal's own listener handles this
 			e.preventDefault()
 			endGameBtn.click()
 		}

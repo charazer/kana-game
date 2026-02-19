@@ -312,6 +312,27 @@
       </div>
     </div>
 
+    <!-- Confirm End Game Modal -->
+    <div id="confirm-end-modal" class="modal hidden" role="dialog" aria-labelledby="confirm-end-title" aria-modal="true">
+      <div class="modal-overlay"></div>
+      <div class="modal-content confirm-end-modal-content">
+        <div class="modal-header">
+          <h2 id="confirm-end-title">End Game?</h2>
+        </div>
+        <div class="modal-body confirm-end-body">
+          <p class="confirm-end-message">Are you sure you want to end the current game?</p>
+          <div class="confirm-end-actions">
+            <button id="confirm-end-yes" class="btn-confirm btn-confirm-yes">
+              <span>Yes</span><kbd>Y</kbd>
+            </button>
+            <button id="confirm-end-no" class="btn-confirm btn-confirm-no">
+              <span>No</span><kbd>N</kbd>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="module">
       const basePath = import.meta.env.BASE_URL;
       document.querySelectorAll('img[src^="/assets/"]').forEach(img => {
