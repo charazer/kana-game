@@ -60,8 +60,8 @@
 }
 
 .modal-header-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: inline-block;
   vertical-align: middle;
 }
@@ -438,8 +438,8 @@
   }
 
   .modal-header-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 }
 

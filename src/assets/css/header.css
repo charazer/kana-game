@@ -96,7 +96,7 @@ header::before {
   background: linear-gradient(135deg, var(--accent-15), var(--combo-10));
   border: 1px solid var(--accent-30);
   color: var(--fg);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-4) var(--space-3);
   border-radius: var(--radius-lg);
   cursor: pointer;
   font-size: var(--font-sm);
@@ -269,7 +269,7 @@ header::before {
     right: var(--space-7);
     padding: var(--space-4) var(--space-7);
     font-size: var(--font-lg);
-    gap: var(--space-4);
+    gap: var(--space-6);
   }
 
   .btn-settings .btn-icon-wrap .btn-icon {
