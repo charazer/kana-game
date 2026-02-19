@@ -23,6 +23,46 @@ import {
 } from './dom-elements'
 import { disableGameSettings } from './settings'
 
+// ─── Animation helpers ────────────────────────────────────────────────────────
+
+/**
+ * Plays the press-pop keyframe on a button, then removes the class.
+ * Safe to call repeatedly — forces a reflow to restart the animation.
+ */
+function pressAnimation(btn: HTMLButtonElement | null) {
+	if (!btn) return
+	btn.classList.remove('btn-press-pop')
+	// Force browser to acknowledge the removal before re-adding
+	void btn.offsetWidth
+	btn.classList.add('btn-press-pop')
+	btn.addEventListener('animationend', () => btn.classList.remove('btn-press-pop'), { once: true })
+}
+
+/**
+ * Plays the `.screen-exiting` exit animation on a screen element, then calls
+ * `onComplete` (which should add `.hidden`). Falls back instantly if no
+ * animatable card is found.
+ */
+function hideScreenWithAnimation(el: HTMLElement | null, onComplete: () => void) {
+	if (!el) { onComplete(); return }
+
+	const card = el.querySelector<HTMLElement>('.start-screen-content, .game-over-content')
+	if (!card) { onComplete(); return }
+
+	let done = false
+	const finish = () => {
+		if (done) return
+		done = true
+		el.classList.remove('screen-exiting')
+		onComplete()
+	}
+
+	el.classList.add('screen-exiting')
+	// Listen on the card directly to avoid catching unrelated bubbled animationend events
+	card.addEventListener('animationend', finish, { once: true })
+	// Safety fallback — if the animation never fires, still hide after 500 ms
+	setTimeout(finish, 500)
+}
 /**
  * Initializes the pause button
  */
@@ -38,6 +78,7 @@ export function initializePauseButton(engine: GameEngine, audio: AudioManager) {
 	pauseBtn.addEventListener('click', () => {
 		if (!gameStarted) return // Don't allow pause before game starts
 
+		pressAnimation(pauseBtn)
 		isPaused = !isPaused
 		if (isPaused) {
 			engine.pause()
@@ -83,6 +124,8 @@ export function initializeEndGameButton(engine: GameEngine, _audio: AudioManager
 		// Only allow ending if button is enabled (which means game is running)
 		if (!endGameBtn || endGameBtn.disabled) return
 
+		pressAnimation(endGameBtn)
+
 		// Hide paused indicator, stop the game properly (disables input) and trigger game over
 		pausedIndicator.classList.add('hidden')
 		engine.running = false
@@ -110,7 +153,10 @@ export function initializeStartButton(engine: GameEngine, audio: AudioManager) {
 	if (!startBtn) return
 
 	startBtn.addEventListener('click', () => {
-		startScreenEl.classList.add('hidden')
+		pressAnimation(startBtn)
+		hideScreenWithAnimation(startScreenEl, () => {
+			startScreenEl.classList.add('hidden')
+		})
 		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		if (window.enablePauseButton) window.enablePauseButton()
 		if (window.enableEndGameButton) window.enableEndGameButton()
@@ -131,7 +177,10 @@ export function initializeRestartButton(engine: GameEngine, audio: AudioManager)
 	if (!restartBtn) return
 
 	restartBtn.addEventListener('click', () => {
-		gameOverEl.classList.add('hidden')
+		pressAnimation(restartBtn)
+		hideScreenWithAnimation(gameOverEl, () => {
+			gameOverEl.classList.add('hidden')
+		})
 		speedEl.textContent = SPEED_INITIAL_DISPLAY
 		engine.reset()
 		if (window.enablePauseButton) window.enablePauseButton()

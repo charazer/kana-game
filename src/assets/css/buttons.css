@@ -2,6 +2,22 @@
    Buttons
    ========================================================================== */
 
+/* --- Button click / press keyframes --- */
+
+/* Simulates a physical button press: pushes down, springs back up, settles.
+   Scale stays ≤ 1 to avoid border-radius / layout bleed. */
+@keyframes btn-press-pop {
+  0%   { transform: translateY(0)    scale(1); }
+  28%  { transform: translateY(3px)  scale(0.96); }
+  65%  { transform: translateY(-2px) scale(0.99); }
+  100% { transform: translateY(0)    scale(1); }
+}
+
+/* Applied by JS on click */
+.btn-press-pop {
+  animation: btn-press-pop 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+}
+
 /* Control Buttons (Pause, End) */
 .controls-section .section-items button {
   border: none;
@@ -81,7 +97,8 @@
 }
 
 .btn-end-game:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 6px var(--color-error-glow);
 }
 
 .btn-end-game:disabled {
@@ -103,7 +120,8 @@
 }
 
 .btn-pause:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 6px var(--accent-40);
 }
 
 .btn-pause:disabled {
@@ -177,7 +195,8 @@
 
 .btn-start:active,
 .btn-restart:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 8px var(--accent-40);
 }
 
 /* Keyboard Shortcut Badge */
