@@ -42,4 +42,9 @@ export const Selectors = {
   gameOver: '#game-over',
   highScoresStart: '#high-scores-start',
   highScoresEnd: '#high-scores-end',
+
+  // Confirm end game modal
+  confirmEndModal: '#confirm-end-modal',
+  confirmEndYes: '#confirm-end-yes',
+  confirmEndNo: '#confirm-end-no',
 } as const;

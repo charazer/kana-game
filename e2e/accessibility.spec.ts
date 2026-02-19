@@ -21,8 +21,10 @@ test.describe('Accessibility', () => {
     
     await page.keyboard.press('Space'); // Resume
     await expect(page.locator(Selectors.pausedIndicator)).toHaveClass(/hidden/);
-    
-    await page.keyboard.press('Escape'); // End game
+
+    await page.keyboard.press('Escape'); // Open confirm modal
+    await expect(page.locator(Selectors.confirmEndModal)).toBeVisible();
+    await page.keyboard.press('y'); // Confirm end
     await expect(page.locator(Selectors.gameOver)).toBeVisible();
   });
 
@@ -33,11 +35,10 @@ test.describe('Accessibility', () => {
     // Should be able to start game on mobile
     await page.click(Selectors.startButton);
     await expect(page.locator(Selectors.startScreen)).toBeHidden();
-    
+
     // Should be able to open settings on mobile
-    await page.keyboard.press('Escape');
     await openSettings(page);
-    
+
     // Should be able to close modal on mobile
     await closeSettings(page);
   });

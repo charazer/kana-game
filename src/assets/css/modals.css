@@ -60,8 +60,8 @@
 }
 
 .modal-header-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: inline-block;
   vertical-align: middle;
 }
@@ -355,7 +355,7 @@
 
 .kana-scroll-hint {
   display: none;
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
   color: var(--white-40);
   font-weight: var(--font-normal);
   font-style: italic;
@@ -438,8 +438,8 @@
   }
 
   .modal-header-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -535,10 +535,6 @@
     margin-bottom: var(--space-1);
   }
 
-  .kana-romaji {
-    font-size: var(--font-xs);
-  }
-
   .kana-column .kana-item {
     width: 60px;
   }
@@ -603,4 +599,85 @@
   .kana-content {
     max-height: calc(85vh - 120px);
   }
+}
+
+/* Confirm End Game Modal */
+.confirm-end-modal-content {
+  width: 460px;
+  max-width: 90vw;
+}
+
+.confirm-end-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.confirm-end-message {
+  margin: 0;
+  font-size: var(--font-lg);
+  color: var(--fg);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.confirm-end-actions {
+  display: flex;
+  gap: var(--space-5);
+  justify-content: center;
+}
+
+.btn-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-7);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-lg);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 130px;
+  justify-content: center;
+}
+
+.btn-confirm kbd {
+  font-size: var(--font-sm);
+  padding: var(--space-1) var(--space-2);
+  background: var(--black-20);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  color: inherit;
+  border: 1px solid var(--black-30);
+}
+
+.btn-confirm-yes {
+  background: linear-gradient(135deg, var(--color-error), var(--color-error-hover));
+  color: var(--black-70);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-confirm-yes:hover {
+  background: linear-gradient(135deg, var(--color-error-hover), var(--color-error));
+  transform: translateY(-1px);
+}
+
+.btn-confirm-yes:active {
+  transform: translateY(1px);
+}
+
+.btn-confirm-no {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  color: var(--black-70);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-confirm-no:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  transform: translateY(-1px);
+}
+
+.btn-confirm-no:active {
+  transform: translateY(1px);
 }

@@ -2,74 +2,88 @@
    Buttons
    ========================================================================== */
 
-/* Control Buttons (Pause, End) */
-.controls-section .section-items button {
+/* --- Button click / press keyframes --- */
+
+/* Simulates a physical button press: pushes down, springs back up, settles.
+   Scale stays ≤ 1 to avoid border-radius / layout bleed. */
+@keyframes btn-press-pop {
+  0%   { transform: translateY(0)    scale(1); }
+  28%  { transform: translateY(3px)  scale(0.96); }
+  65%  { transform: translateY(-2px) scale(0.99); }
+  100% { transform: translateY(0)    scale(1); }
+}
+
+/* Applied by JS on click */
+.btn-press-pop {
+  animation: btn-press-pop 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+}
+
+/* ── Shared layout for all game action buttons ── */
+.btn-start,
+.btn-restart,
+.btn-end-game,
+.btn-pause {
   border: none;
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
   font-weight: var(--font-bold);
+  font-size: var(--font-md);
   cursor: pointer;
   transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-1);
-  width: auto;
-  max-width: 48%;
-  min-width: 140px;
   box-sizing: border-box;
-  font-size: var(--font-xs);
 }
 
-/* Button internal structure */
-.controls-section .section-items button .btn-left {
-  width: 16px;
+.btn-start .btn-icon-wrap,
+.btn-restart .btn-icon-wrap,
+.btn-end-game .btn-icon-wrap,
+.btn-pause .btn-icon-wrap {
+  width: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-md);
   flex-shrink: 0;
 }
 
-.controls-section .section-items button .btn-left .btn-icon {
-  width: 16px;
-  height: 16px;
+.btn-start .btn-icon-wrap .btn-icon,
+.btn-restart .btn-icon-wrap .btn-icon,
+.btn-end-game .btn-icon-wrap .btn-icon,
+.btn-pause .btn-icon-wrap .btn-icon {
+  width: 20px;
+  height: 20px;
   display: block;
 }
 
-.controls-section .section-items button .btn-label {
-  display: inline-block;
-  padding: 0 var(--space-2);
-  min-width: 0;
-  text-align: center;
-  flex: 1;
+.btn-start .btn-label,
+.btn-restart .btn-label,
+.btn-end-game .btn-label,
+.btn-pause .btn-label {
   white-space: nowrap;
-  font-size: var(--font-xs);
+  font-size: var(--font-md);
+  padding: 0 var(--space-2);
 }
 
-.controls-section .section-items button .btn-right {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-  width: auto;
-  flex-shrink: 0;
-}
-
-.controls-section .section-items button .btn-right kbd {
-  padding: 2px 3px !important;
-  font-size: var(--font-xs) !important;
-  margin-left: 0 !important;
-}
-
+/* Control buttons – size constraints */
 .btn-end-game,
 .btn-pause {
-  border-radius: var(--radius-lg);
+  width: auto;
+  max-width: 48%;
+  min-width: 140px;
+  justify-content: flex-start;
+}
+
+/* Start/Restart – full width within card */
+.btn-start,
+.btn-restart {
+  width: 100%;
+  justify-content: center;
 }
 
 .btn-end-game {
   background: linear-gradient(135deg, var(--color-error), var(--color-error-hover));
-  color: var(--white);
+  color: var(--black-70);
   box-shadow: var(--shadow-md), 0 2px 4px var(--plum-shadow);
   border: 1px solid var(--white-15);
 }
@@ -81,7 +95,8 @@
 }
 
 .btn-end-game:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 6px var(--color-error-glow);
 }
 
 .btn-end-game:disabled {
@@ -91,7 +106,7 @@
 
 .btn-pause {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  color: var(--black-70);
   box-shadow: var(--shadow-md), 0 2px 4px var(--plum-shadow);
   border: 1px solid var(--white-20);
 }
@@ -103,7 +118,8 @@
 }
 
 .btn-pause:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 6px var(--accent-40);
 }
 
 .btn-pause:disabled {
@@ -111,61 +127,13 @@
   cursor: not-allowed;
 }
 
-/* Start/Restart Buttons */
+/* Start/Restart – colour, shadow & border */
 .btn-start,
 .btn-restart {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  color: var(--black-70);
   border: 1px solid var(--white-20);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-bold);
-  font-size: var(--font-xs);
-  cursor: pointer;
-  transition: all var(--transition-fast);
   box-shadow: 0 4px 12px var(--accent-40), 0 2px 4px var(--plum-shadow);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-width: 0;
-  width: 100%;
-  justify-content: center;
-}
-
-.btn-start .btn-left,
-.btn-restart .btn-left {
-  width: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-xl);
-  flex-shrink: 0;
-}
-
-.btn-start .btn-left .btn-icon,
-.btn-restart .btn-left .btn-icon {
-  width: 20px;
-  height: 20px;
-  display: block;
-}
-
-.btn-start .btn-label,
-.btn-restart .btn-label {
-  display: inline-block;
-  padding: 0 var(--space-2);
-  min-width: 0;
-  text-align: center;
-  font-size: var(--font-sm);
-}
-
-.btn-start .btn-right,
-.btn-restart .btn-right {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  width: auto;
-  flex-shrink: 0;
 }
 
 .btn-start:hover,
@@ -177,14 +145,15 @@
 
 .btn-start:active,
 .btn-restart:active {
-  transform: translateY(0);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 1px 8px var(--accent-40);
 }
 
 /* Keyboard Shortcut Badge */
 kbd {
-  display: none; /* Hidden on mobile/tablet by default */
+  display: none;
   padding: var(--space-1) var(--space-2);
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
   font-weight: var(--font-semibold);
   line-height: 1;
   color: var(--white-90);
@@ -199,130 +168,80 @@ kbd {
 
 /* Responsive */
 @media (min-width: 421px) {
-  .controls-section .section-items button {
-    padding: var(--space-3);
-    font-size: var(--font-md);
+  .btn-start,
+  .btn-restart,
+  .btn-end-game,
+  .btn-pause {
+    padding: var(--space-3) var(--space-4);
     gap: var(--space-2);
     border-radius: var(--radius-xl);
   }
 
-  .controls-section .section-items button .btn-left {
-    font-size: var(--font-xl);
+  .btn-start .btn-icon-wrap,
+  .btn-restart .btn-icon-wrap,
+  .btn-end-game .btn-icon-wrap,
+  .btn-pause .btn-icon-wrap {
     width: 28px;
   }
 
-  .controls-section .section-items button .btn-left .btn-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .controls-section .section-items button .btn-label {
-    font-size: var(--font-md);
-    padding: 0 var(--space-3);
-  }
-
-  .controls-section .section-items button .btn-right kbd {
-    font-size: var(--font-sm) !important;
-    padding: 3px 6px !important;
-  }
-
-  .btn-start,
-  .btn-restart {
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--font-md);
-    gap: var(--space-2);
-  }
-
-  .btn-start .btn-label,
-  .btn-restart .btn-label {
-    padding: 0 var(--space-3);
-  }
-
-  .btn-start .btn-left,
-  .btn-restart .btn-left {
-    width: 28px;
-  }
-
-  .btn-start .btn-left .btn-icon,
-  .btn-restart .btn-left .btn-icon {
+  .btn-start .btn-icon-wrap .btn-icon,
+  .btn-restart .btn-icon-wrap .btn-icon,
+  .btn-end-game .btn-icon-wrap .btn-icon,
+  .btn-pause .btn-icon-wrap .btn-icon {
     width: 24px;
     height: 24px;
   }
 
-  kbd {
-    display: inline-block; /* Show on larger screens with keyboards */
-    padding: var(--space-1) var(--space-3);
+  .btn-start .btn-label,
+  .btn-restart .btn-label,
+  .btn-end-game .btn-label,
+  .btn-pause .btn-label {
+    padding: 0 var(--space-3);
   }
 }
 
 @media (min-width: 601px) {
-  .controls-section .section-items button {
-    width: auto;
-    max-width: 48%;
-    min-width: 150px;
+  .btn-end-game,
+  .btn-pause {
     padding: var(--space-4) var(--space-5);
+    min-width: 180px;
     gap: var(--space-3);
-  }
-
-  .controls-section .section-items button .btn-left .btn-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .controls-section .section-items button .btn-label {
-    min-width: 0;
-    padding: 0 var(--space-3);
-    flex: 1;
-    text-align: center;
   }
 
   .btn-start,
   .btn-restart {
     padding: var(--space-4) var(--space-6);
-    font-size: var(--font-lg);
     gap: var(--space-3);
   }
 
-  .btn-start .btn-label,
-  .btn-restart .btn-label {
-    padding: 0 var(--space-6);
-    min-width: 90px;
+  .btn-start .btn-icon-wrap,
+  .btn-restart .btn-icon-wrap,
+  .btn-end-game .btn-icon-wrap,
+  .btn-pause .btn-icon-wrap {
+    width: 32px;
   }
 
-  .btn-start .btn-left .btn-icon,
-  .btn-restart .btn-left .btn-icon {
+  .btn-start .btn-icon-wrap .btn-icon,
+  .btn-restart .btn-icon-wrap .btn-icon,
+  .btn-end-game .btn-icon-wrap .btn-icon,
+  .btn-pause .btn-icon-wrap .btn-icon {
     width: 28px;
     height: 28px;
+  }
+
+  .btn-start .btn-label,
+  .btn-restart .btn-label,
+  .btn-end-game .btn-label,
+  .btn-pause .btn-label {
+    font-size: var(--font-lg);
+    padding: 0 var(--space-4);
   }
 }
 
 @media (min-width: 901px) {
-  .controls-section .section-items button {
-    display: flex;
+  .btn-end-game,
+  .btn-pause {
     padding: var(--space-4) var(--space-6);
-    gap: var(--space-6);
-  }
-
-  .controls-section .section-items button .btn-left {
-    width: 36px;
-    font-size: var(--font-xl);
-  }
-
-  .controls-section .section-items button .btn-left .btn-icon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .controls-section .section-items button .btn-label {
-    padding: 0;
-    text-align: left;
-    font-size: var(--font-sm);
-  }
-
-  .controls-section .section-items button .btn-right {
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
   }
 
   .btn-start,
@@ -331,31 +250,33 @@ kbd {
     border-radius: var(--radius-2xl);
   }
 
-  .btn-start .btn-left,
-  .btn-restart .btn-left {
+  .btn-start .btn-icon-wrap,
+  .btn-restart .btn-icon-wrap,
+  .btn-end-game .btn-icon-wrap,
+  .btn-pause .btn-icon-wrap {
     width: 40px;
-    font-size: var(--font-3xl);
   }
 
-  .btn-start .btn-left .btn-icon,
-  .btn-restart .btn-left .btn-icon {
+  .btn-start .btn-icon-wrap .btn-icon,
+  .btn-restart .btn-icon-wrap .btn-icon,
+  .btn-end-game .btn-icon-wrap .btn-icon,
+  .btn-pause .btn-icon-wrap .btn-icon {
     width: 32px;
     height: 32px;
   }
 
   .btn-start .btn-label,
-  .btn-restart .btn-label {
-    min-width: 140px;
-  }
-
-  .btn-start .btn-right,
-  .btn-restart .btn-right {
-    min-width: 56px;
+  .btn-restart .btn-label,
+  .btn-end-game .btn-label,
+  .btn-pause .btn-label {
+    font-size: var(--font-xl);
+    padding: 0 var(--space-6);
   }
 }
 
 @media (min-width: 1061px) {
-  .controls-section .section-items button {
+  .btn-end-game,
+  .btn-pause {
     width: 100%;
     max-width: 200px;
   }

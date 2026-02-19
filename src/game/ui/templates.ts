@@ -12,12 +12,11 @@ import buttonPauseImg from '../../assets/img/button_pause.png'
 import buttonPlayImg from '../../assets/img/button_play.png'
 
 /**
- * Button structure with left icon, label, and right keyboard shortcut
+ * Button structure with label and icon
  */
 interface ButtonParts {
-  leftIcon: string
+  icon: string
   label: string
-  rightKey: string
 }
 
 /**
@@ -31,12 +30,12 @@ export interface HighScoreEntry {
 }
 
 /**
- * Creates a button's inner HTML structure with icon, label, and keyboard hint
+ * Creates a button's inner HTML structure with label and icon
  * @param parts - Button component parts
  * @returns HTML string for button content
  */
 function createButtonContent(parts: ButtonParts): string {
-  return `<span class="btn-left">${parts.leftIcon}</span><span class="btn-label">${parts.label}</span><span class="btn-right"><kbd>${parts.rightKey}</kbd></span>`
+  return `<span class="btn-icon-wrap">${parts.icon}</span><span class="btn-label">${parts.label}</span>`
 }
 
 /**
@@ -102,14 +101,12 @@ export const DOMBuilder = {
  */
 export const ButtonTemplates = {
   pause: {
-    leftIcon: `<img src="${buttonPauseImg}" alt="Pause" class="btn-icon">`,
-    label: 'Pause',
-    rightKey: 'Space'
+    icon: `<img src="${buttonPauseImg}" alt="Pause" class="btn-icon">`,
+    label: 'Pause'
   },
   resume: {
-    leftIcon: `<img src="${buttonPlayImg}" alt="Resume" class="btn-icon">`,
-    label: 'Resume',
-    rightKey: 'Space'
+    icon: `<img src="${buttonPlayImg}" alt="Resume" class="btn-icon">`,
+    label: 'Resume'
   }
 }
 
