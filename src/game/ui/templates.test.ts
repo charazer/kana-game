@@ -123,17 +123,14 @@ describe('templates', () => {
         const button = document.createElement('button')
         
         DOMBuilder.updateButton(button, {
-          leftIcon: '<img src="test.png" alt="test">',
-          label: 'Test Button',
-          rightKey: 'T'
+          icon: '<img src="test.png" alt="test">',
+          label: 'Test Button'
         })
         
-        expect(button.innerHTML).toContain('btn-left')
+        expect(button.innerHTML).toContain('btn-icon-wrap')
         expect(button.innerHTML).toContain('btn-label')
-        expect(button.innerHTML).toContain('btn-right')
         expect(button.innerHTML).toContain('<img src="test.png" alt="test">')
         expect(button.innerHTML).toContain('Test Button')
-        expect(button.innerHTML).toContain('<kbd>T</kbd>')
       })
 
       it('should preserve button element reference', () => {
@@ -142,9 +139,8 @@ describe('templates', () => {
         button.id = 'btn-1'
         
         DOMBuilder.updateButton(button, {
-          leftIcon: '',
-          label: 'Updated',
-          rightKey: 'U'
+          icon: '',
+          label: 'Updated'
         })
         
         expect(button.className).toBe('my-button')
@@ -157,15 +153,13 @@ describe('templates', () => {
     it('should have pause button template', () => {
       expect(ButtonTemplates.pause).toBeDefined()
       expect(ButtonTemplates.pause.label).toBe('Pause')
-      expect(ButtonTemplates.pause.rightKey).toBe('Space')
-      expect(ButtonTemplates.pause.leftIcon).toContain('button_pause.png')
+      expect(ButtonTemplates.pause.icon).toContain('button_pause.png')
     })
 
     it('should have resume button template', () => {
       expect(ButtonTemplates.resume).toBeDefined()
       expect(ButtonTemplates.resume.label).toBe('Resume')
-      expect(ButtonTemplates.resume.rightKey).toBe('Space')
-      expect(ButtonTemplates.resume.leftIcon).toContain('button_play.png')
+      expect(ButtonTemplates.resume.icon).toContain('button_play.png')
     })
   })
 

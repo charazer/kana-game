@@ -130,7 +130,7 @@
   margin: var(--space-1) 0;
   background: var(--white-5);
   border-radius: var(--radius-sm);
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
 }
 
 .high-score-entry.highlight {
@@ -151,7 +151,7 @@
 
 .high-score-date {
   color: var(--white-40);
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
 }
 
 .game-over-content .final-score {
@@ -222,11 +222,6 @@
 
   .high-score-entry {
     padding: var(--space-2) var(--space-4);
-    font-size: var(--font-sm);
-  }
-
-  .high-score-date {
-    font-size: var(--font-xs);
   }
 
   .game-over-content .final-score {

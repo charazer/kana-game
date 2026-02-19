@@ -355,7 +355,7 @@
 
 .kana-scroll-hint {
   display: none;
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
   color: var(--white-40);
   font-weight: var(--font-normal);
   font-style: italic;
@@ -533,10 +533,6 @@
   .kana-char {
     font-size: var(--font-2xl);
     margin-bottom: var(--space-1);
-  }
-
-  .kana-romaji {
-    font-size: var(--font-xs);
   }
 
   .kana-column .kana-item {
