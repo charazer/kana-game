@@ -33,6 +33,11 @@ export const DAKUTEN_COLUMNS = [
 	['ga','gi','gu','ge','go']                // がぎぐげご
 ]
 
+// Valid characters that can appear in any romaji transcription.
+// Derived from all romaji strings across both hiragana and katakana data.
+// Letters not present (l, q, v, x) are never needed and are excluded intentionally.
+export const VALID_ROMAJI_CHARS: ReadonlySet<string> = new Set('abcdefghijkmnoprstuwyz')
+
 // Yoon table structure - right-to-left, organized by vowel ending (kyo, kyu, kya)
 export const YOON_COLUMNS = [
 	['kyo','sho','cho','nyo','hyo','myo','ryo','gyo','jo','byo','pyo'],    // きょ しょ ちょ...
