@@ -116,6 +116,7 @@ describe('engine', () => {
       engine.start()
       
       expect(engine.running).toBe(true)
+      expect(inputManager.enabled).toBe(true)
       expect(rafSpy).toHaveBeenCalled()
     })
 
@@ -124,6 +125,18 @@ describe('engine', () => {
       engine.pause()
       
       expect(engine.running).toBe(false)
+      expect(inputManager.enabled).toBe(false)
+    })
+
+    it('should clear input buffer and echo when pausing', () => {
+      engine.start()
+      inputManager.buffer = 'ka'
+      const mockOnKey = vi.fn()
+      inputManager.onKey = mockOnKey
+      engine.pause()
+      
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).toHaveBeenCalledWith('')
     })
 
     it('should resume the game after pause', () => {
@@ -134,6 +147,7 @@ describe('engine', () => {
       engine.resume()
       
       expect(engine.running).toBe(true)
+      expect(inputManager.enabled).toBe(true)
       expect(rafSpy).toHaveBeenCalled()
     })
 
@@ -191,6 +205,7 @@ describe('engine', () => {
       engine.reset()
       
       expect(inputManager.buffer).toBe('')
+      expect(inputManager.enabled).toBe(false)
     })
   })
 

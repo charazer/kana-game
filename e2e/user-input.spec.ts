@@ -47,11 +47,13 @@ test.describe('User Input', () => {
     await page.keyboard.press('Space');
     await expect(page.locator(Selectors.pausedIndicator)).toBeVisible();
     
-    // Try typing while paused
+    // Try typing while paused - input echo should NOT update (buffer is gated)
     await page.keyboard.type('test');
     
+    // Echo should remain at its cleared state (underscore placeholder)
+    await expect(page.locator(Selectors.inputEcho)).toHaveText('_');
+    
     // Score should remain at initial value (0)
-    // Game state doesn't process input while paused even though input echo updates
     await expect(scoreLocator).toHaveText('0');
     
     // Resume game

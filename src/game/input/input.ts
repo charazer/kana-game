@@ -1,10 +1,13 @@
 export class InputManager{
   buffer = ''
+  enabled = false
   onKey: (buffer: string) => void = ()=>{}
   onCommit: (value: string) => void = ()=>{}
 
   constructor(){
     window.addEventListener('keydown', (e)=>{
+      if(!this.enabled) return
+
       if(e.key === 'Backspace'){
         this.buffer = this.buffer.slice(0,-1)
         this.onKey(this.buffer)

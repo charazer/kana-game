@@ -102,6 +102,7 @@ export class GameEngine {
 
   start(){
     this.running = true
+    this.input.enabled = true
     this.last = performance.now()
     // Spawn first token immediately
     this.spawnToken()
@@ -126,11 +127,15 @@ export class GameEngine {
 
   pause(){
     this.running = false
+    this.input.enabled = false
+    this.input.buffer = ''
+    this.input.onKey('')
   }
 
   resume(){
     if(!this.running){
       this.running = true
+      this.input.enabled = true
       this.last = performance.now()
       requestAnimationFrame(this.loop.bind(this))
     }
@@ -151,7 +156,9 @@ export class GameEngine {
     this.tokens = []
     this.kanaLastSeen.clear()
     this.spawnAccumulator = 0
+    this.input.enabled = false
     this.input.buffer = ''
+    this.input.onKey('')
     this.onScore(this.score)
     this.onLivesChange(this.lives)
     if(this.onCombo) this.onCombo(this.combo)
@@ -218,6 +225,9 @@ export class GameEngine {
         // Check for game over
         if(this.lives <= 0){
           this.running = false
+          this.input.enabled = false
+          this.input.buffer = ''
+          this.input.onKey('')
           this.onGameOver()
           return
         }

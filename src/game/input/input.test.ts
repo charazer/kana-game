@@ -14,6 +14,8 @@ describe('input', () => {
     mockOnCommit = vi.fn()
     inputManager.onKey = mockOnKey as any
     inputManager.onCommit = mockOnCommit as any
+    // Enable input by default so existing tests work
+    inputManager.enabled = true
   })
 
   describe('InputManager', () => {
@@ -158,6 +160,33 @@ describe('input', () => {
       window.dispatchEvent(event)
       
       expect(preventDefaultSpy).toHaveBeenCalled()
+    })
+
+    it('should initialize with enabled set to false', () => {
+      const freshManager = new InputManager()
+      expect(freshManager.enabled).toBe(false)
+    })
+
+    it('should ignore all keydown events when disabled', () => {
+      inputManager.enabled = false
+      
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }))
+      
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+      expect(mockOnCommit).not.toHaveBeenCalled()
+    })
+
+    it('should accept input again after being re-enabled', () => {
+      inputManager.enabled = false
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+      expect(inputManager.buffer).toBe('')
+      
+      inputManager.enabled = true
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }))
+      expect(inputManager.buffer).toBe('b')
+      expect(mockOnKey).toHaveBeenCalledWith('b')
     })
   })
 })
