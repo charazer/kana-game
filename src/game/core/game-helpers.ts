@@ -1,5 +1,5 @@
 /**
- * Game logic helpers for common patterns
+ * Game logic helpers
  */
 
 import type { KanaEntry } from './types'
@@ -10,18 +10,7 @@ export function kanaKey(entry: KanaEntry): string {
   return `${entry.type}-${entry.id}`
 }
 
-/**
- * Processes a successful token match (common logic extraction)
- */
-export interface TokenMatchResult {
-  shouldClearBuffer: boolean
-  matchedLength?: number
-}
-
-/**
- * Find and consume a matching token from buffer
- * Returns match info for buffer management
- */
+/** Find and consume a matching token from the input buffer */
 export function findTokenMatch(
   tokens: Array<{ entry: KanaEntry }>,
   buffer: string

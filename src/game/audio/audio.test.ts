@@ -62,7 +62,7 @@ describe('audio', () => {
       const manager = new AudioManager()
       manager.playSuccess() // Should not throw
       
-      expect(consoleWarnSpy).toHaveBeenCalledWith('Web Audio API not supported', expect.any(Error))
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Web Audio API not supported')
       consoleWarnSpy.mockRestore()
     })
 

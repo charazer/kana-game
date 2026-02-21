@@ -1,4 +1,4 @@
-import { createHighScoreEntry, createHighScoresList, createKanaReference, DOMBuilder, ButtonTemplates, type HighScoreEntry } from './templates'
+import { createHighScoreEntry, createHighScoresList, createKanaReference, updateButtonContent, ButtonTemplates, type HighScoreEntry } from './templates'
 import type { KanaEntry } from '../core/types'
 
 describe('templates', () => {
@@ -117,12 +117,12 @@ describe('templates', () => {
     })
   })
 
-  describe('DOMBuilder', () => {
+  describe('updateButtonContent', () => {
     describe('updateButton', () => {
       it('should update button innerHTML with correct structure', () => {
         const button = document.createElement('button')
         
-        DOMBuilder.updateButton(button, {
+        updateButtonContent(button, {
           icon: '<img src="test.png" alt="test">',
           label: 'Test Button'
         })
@@ -138,7 +138,7 @@ describe('templates', () => {
         button.className = 'my-button'
         button.id = 'btn-1'
         
-        DOMBuilder.updateButton(button, {
+        updateButtonContent(button, {
           icon: '',
           label: 'Updated'
         })

@@ -31,20 +31,7 @@ export const FLOATING_TEXT_OFFSET_Y = 36 // pixels - vertical offset for floatin
 export const FLOATING_TEXT_COMBO_OFFSET_Y = 60 // pixels - vertical offset for combo text (below points)
 export const GAME_AREA_WIDTH_MULTIPLIER = 0.6 // multiplier for calculating game area width from height
 
-// Display formatting
-export const SPEED_DISPLAY_DECIMAL_PLACES = 1 // decimal places for speed multiplier display
-export const SPEED_INITIAL_DISPLAY = '1.0x' // initial speed display value
-export const COMBO_DISPLAY_SUFFIX = 'x' // suffix for combo display
 
-// UI styling (opacity and cursor states)
-export const UI_DISABLED_OPACITY = '0.5'
-export const UI_ENABLED_OPACITY = '1'
-export const UI_CURSOR_NOT_ALLOWED = 'not-allowed'
-export const UI_CURSOR_POINTER = 'pointer'
-
-// High score display
-export const HIGH_SCORE_RANK_PREFIX = '#' // prefix for rank display
-export const HIGH_SCORE_LIST_START_INDEX = 1 // start index for rank numbering (1-based)
 
 // Game engine constants
 export const BASE_POINTS = 10

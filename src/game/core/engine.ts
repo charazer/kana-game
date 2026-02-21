@@ -3,8 +3,8 @@ import kanaKatakana from '../../data/kana/katakana.json'
 import type { KanaEntry } from './types'
 import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from '../constants/kana-constants'
 import { findTokenMatch, kanaKey } from './game-helpers'
-import { 
-  type GameMode, 
+import {
+  type GameMode,
   type FloatingTextType,
   type KanaSet,
   GAME_MODE_PRACTICE,
@@ -15,7 +15,6 @@ import {
   FLOATING_TEXT_OFFSET_X,
   FLOATING_TEXT_OFFSET_Y,
   FLOATING_TEXT_COMBO_OFFSET_Y,
-  COMBO_DISPLAY_SUFFIX,
   INITIAL_LIVES,
   BASE_POINTS,
   MAX_TIME_BONUS,
@@ -47,12 +46,6 @@ export type Renderer = {
   flashToken: (el: HTMLElement, success: boolean) => void
   showFloatingText: (x: number, y: number, text: string, type: FloatingTextType) => void
   getHeight: () => number
-}
-
-export type SoundPlayer = {
-  playSuccess: () => void
-  playMiss: () => void
-  playCombo: (count: number) => void
 }
 
 import type { InputManager } from '../input/input'
@@ -89,32 +82,38 @@ export class GameEngine {
   includeYoon = true // user setting for including yoon
   currentKanaSet: KanaSet = KANA_SET_HIRAGANA // track current kana set for scoring
 
-  constructor(opts: { renderer: Renderer; input: InputManager; onScore?: (s: number) => void; onLivesChange?: (lives: number, previousLives?: number) => void; onGameOver?: () => void; onCombo?: (combo: number) => void; onSpeedChange?: (multiplier: number) => void }){
+  constructor(opts: {
+    renderer: Renderer
+    input: InputManager
+    onScore?: (s: number) => void
+    onLivesChange?: (lives: number, previousLives?: number) => void
+    onGameOver?: () => void
+    onCombo?: (combo: number) => void
+    onSpeedChange?: (multiplier: number) => void
+  }) {
     this.renderer = opts.renderer
     this.input = opts.input
     this.tokens = []
-    this.onScore = opts.onScore || (()=>{})
-    this.onLivesChange = opts.onLivesChange || (()=>{})
-    this.onGameOver = opts.onGameOver || (()=>{})
+    this.onScore = opts.onScore ?? (() => {})
+    this.onLivesChange = opts.onLivesChange ?? (() => {})
+    this.onGameOver = opts.onGameOver ?? (() => {})
     this.onCombo = opts.onCombo
     this.onSpeedChange = opts.onSpeedChange
     this.input.onCommit = (value) => this.handleCommit(value)
     this.loadKana(KANA_SET_HIRAGANA)
   }
 
-  start(){
+  start() {
     this.running = true
     this.input.enabled = true
     this.last = performance.now()
-    // Spawn first token immediately
     this.spawnToken()
     requestAnimationFrame(this.loop.bind(this))
   }
 
-  setGameMode(mode: GameMode){
+  setGameMode(mode: GameMode) {
     this.gameMode = mode
-    // Adjust settings based on mode
-    if(mode === GAME_MODE_PRACTICE){
+    if (mode === GAME_MODE_PRACTICE) {
       this.baseSpeed = PRACTICE_BASE_SPEED
       this.speed = PRACTICE_BASE_SPEED
       this.maxActiveTokens = PRACTICE_MAX_TOKENS
@@ -127,23 +126,22 @@ export class GameEngine {
     }
   }
 
-  pause(){
+  pause() {
     this.running = false
     this.input.enabled = false
     this.input.buffer = ''
     this.input.onKey('')
   }
 
-  resume(){
-    if(!this.running){
-      this.running = true
-      this.input.enabled = true
-      this.last = performance.now()
-      requestAnimationFrame(this.loop.bind(this))
-    }
+  resume() {
+    if (this.running) return
+    this.running = true
+    this.input.enabled = true
+    this.last = performance.now()
+    requestAnimationFrame(this.loop.bind(this))
   }
 
-  reset(){
+  reset() {
     this.running = false
     this.score = 0
     this.lives = INITIAL_LIVES
@@ -155,306 +153,237 @@ export class GameEngine {
     this.kanaSelectionQueue = []
     this.kanaRoundCount.clear()
     this.kanaSetFingerprint = ''
-    this.tokens.forEach(t => this.renderer.removeTokenEl(t.el))
+    for (const t of this.tokens) this.renderer.removeTokenEl(t.el)
     this.tokens = []
     this.kanaLastSeen.clear()
     this.spawnAccumulator = 0
+    this.clearInput()
+    this.onScore(this.score)
+    this.onLivesChange(this.lives)
+    this.onCombo?.(this.combo)
+  }
+
+  private clearInput() {
     this.input.enabled = false
     this.input.buffer = ''
     this.input.onKey('')
-    this.onScore(this.score)
-    this.onLivesChange(this.lives)
-    if(this.onCombo) this.onCombo(this.combo)
   }
 
-  loop(now: number){
-    const dt = (now - this.last)/1000
+  private resetCombo() {
+    this.combo = 0
+    this.onCombo?.(this.combo)
+  }
+
+  loop(now: number) {
+    const dt = (now - this.last) / 1000
     this.last = now
-    
-    // Track game time and increase speed gradually (only in challenge mode)
+
+    // Speed progression (challenge mode only)
     this.gameTime += dt
-    if(this.gameMode === GAME_MODE_CHALLENGE){
-      // Speed increases exponentially: multiplier = BASE^intervals
+    if (this.gameMode === GAME_MODE_CHALLENGE) {
       const intervals = Math.floor(this.gameTime / SPEED_INCREASE_INTERVAL)
       const speedMultiplier = Math.pow(SPEED_BASE_EXPONENT, intervals)
-      // Notify only when multiplier increases AND game has been running for at least SPEED_CHANGE_DELAY
-      // (prevents triggering on game start)
-      if(speedMultiplier > this.lastSpeedMultiplier && this.gameTime > SPEED_CHANGE_DELAY && this.onSpeedChange){
-        this.onSpeedChange(speedMultiplier)
+      if (speedMultiplier > this.lastSpeedMultiplier && this.gameTime > SPEED_CHANGE_DELAY) {
+        this.onSpeedChange?.(speedMultiplier)
       }
       this.lastSpeedMultiplier = speedMultiplier
       this.speed = this.baseSpeed * speedMultiplier
     }
 
-    // spawn by timer
+    // Spawn by timer
     this.spawnAccumulator += dt
-    if(this.spawnAccumulator >= this.spawnInterval){
+    if (this.spawnAccumulator >= this.spawnInterval) {
       this.spawnAccumulator = 0
       this.spawnToken()
     }
 
-    // update tokens
+    // Move tokens and collect failures
     const failureY = this.renderer.getHeight() - DANGER_ZONE
-    const tokensToRemove: typeof this.tokens = []
-    
-    for(let i = 0; i < this.tokens.length; i++){
-      const t = this.tokens[i]
+    const failed: typeof this.tokens = []
+
+    for (const t of this.tokens) {
       t.y += this.speed * dt
       this.renderer.setTokenPosition(t.el, t.x, t.y)
-      if(t.y > failureY){
-        tokensToRemove.push(t)
-      }
+      if (t.y > failureY) failed.push(t)
     }
-    
-    // Process removed tokens after iteration
-    for(const t of tokensToRemove){
-      // Remove from tokens array efficiently
+
+    // Process failures
+    for (const t of failed) {
       const idx = this.tokens.indexOf(t)
-      if(idx >= 0) this.tokens.splice(idx, 1)
-      
-      // Flash red on miss (removal happens via animationend)
+      if (idx >= 0) this.tokens.splice(idx, 1)
       this.renderer.flashToken(t.el, false)
-      
-      // In practice mode, don't lose lives
-      if(this.gameMode === GAME_MODE_CHALLENGE){
-        // Lose a life
+
+      if (this.gameMode === GAME_MODE_CHALLENGE) {
         const previousLives = this.lives
         this.lives--
         this.onLivesChange(this.lives, previousLives)
-        
-        // Show life lost indicator
         this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, '💔 -1', 'life')
-        
-        // Check for game over
-        if(this.lives <= 0){
+
+        if (this.lives <= 0) {
           this.running = false
-          this.input.enabled = false
-          this.input.buffer = ''
-          this.input.onKey('')
+          this.clearInput()
           this.onGameOver()
           return
         }
-        
-        // Reset combo only if game continues
-        this.combo = 0
-        if(this.onCombo) this.onCombo(this.combo)
-      } else {
-        // In practice mode, just reset combo
-        this.combo = 0
-        if(this.onCombo) this.onCombo(this.combo)
       }
+
+      this.resetCombo()
     }
 
-    if(this.running) requestAnimationFrame(this.loop.bind(this))
+    if (this.running) requestAnimationFrame(this.loop.bind(this))
   }
 
-  getAvailableKana(){
-    // Progressive difficulty - unlock kana based on correct answers
+  getAvailableKana() {
     const unlockDakuten = this.correctAnswers >= UNLOCK_DAKUTEN_THRESHOLD
     const unlockYoon = this.correctAnswers >= UNLOCK_YOON_THRESHOLD
-    
+
     return this.kanaSet.filter(kana => {
-      // Always include basic kana
-      if(BASIC_KANA_IDS.includes(kana.id)) return true
-      
-      // Include dakuten if unlocked AND user setting is enabled
-      if(DAKUTEN_KANA_IDS.includes(kana.id)) return unlockDakuten && this.includeDakuten
-      
-      // Include yoon only if unlocked AND user setting is enabled
-      if(YOON_KANA_IDS.includes(kana.id)) return unlockYoon && this.includeYoon
-      
-      // Unknown kana (shouldn't happen) - include by default
+      if (BASIC_KANA_IDS.includes(kana.id)) return true
+      if (DAKUTEN_KANA_IDS.includes(kana.id)) return unlockDakuten && this.includeDakuten
+      if (YOON_KANA_IDS.includes(kana.id)) return unlockYoon && this.includeYoon
       return true
     })
   }
 
   getDifficultyMultiplier(): number {
-    // Base multiplier based on character types enabled
-    // Both enabled: 100% score (1.0x)
-    // One enabled: 75% score (0.75x)
-    // Both disabled: 50% score (0.5x)
-    let baseMultiplier = 0.5
-    if(this.includeDakuten && this.includeYoon) {
-      baseMultiplier = 1.0
-    } else if(this.includeDakuten || this.includeYoon) {
-      baseMultiplier = 0.75
-    }
-    
-    // Kana set multiplier - mixed gives 25% bonus
+    const enabledCount = Number(this.includeDakuten) + Number(this.includeYoon)
+    const baseMultiplier = [0.5, 0.75, 1.0][enabledCount]
     const kanaSetMultiplier = this.currentKanaSet === KANA_SET_MIXED ? 1.25 : 1.0
-    
     return baseMultiplier * kanaSetMultiplier
   }
 
   calculateScore(token: { spawnTime: number }): number {
-    const basePoints = BASE_POINTS
     const elapsed = (performance.now() - token.spawnTime) / 1000
     const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed
     const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
     const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
-    const difficultyMultiplier = this.getDifficultyMultiplier()
-    return Math.round((basePoints + timeBonus) * comboMultiplier * difficultyMultiplier)
+    return Math.round((BASE_POINTS + timeBonus) * comboMultiplier * this.getDifficultyMultiplier())
   }
 
-  spawnToken(){
-    if(this.kanaSet.length === 0) return
-    if(this.tokens.length >= this.maxActiveTokens) return // don't spawn if at limit
-    
-    // Get available kana based on progression
+  spawnToken() {
+    if (this.kanaSet.length === 0 || this.tokens.length >= this.maxActiveTokens) return
+
     const availableKana = this.getAvailableKana()
-    if(availableKana.length === 0) return
-    
+    if (availableKana.length === 0) return
+
     const now = performance.now()
-    
-    // Separate unseen kana from seen kana (using unique kanaKey to distinguish hiragana/katakana)
-    const unseenKana = availableKana.filter(kana => !this.kanaLastSeen.has(kanaKey(kana)))
-    
-    let entry
-    
-    // ALWAYS pick from unseen kana first if any exist
-    if(unseenKana.length > 0){
-      const randomIndex = Math.floor(Math.random() * unseenKana.length)
-      entry = unseenKana[randomIndex]
-    } else {
-      // All kana have been seen - use round-robin queue for guaranteed distribution
-      // Detect if the available kana set has changed (e.g. dakuten unlocked)
-      const availableFingerprint = availableKana.map(k => kanaKey(k)).sort().join(',')
-      
-      if(this.kanaSelectionQueue.length === 0 || this.kanaSetFingerprint !== availableFingerprint){
-        this.kanaSetFingerprint = availableFingerprint
-        
-        // Find minimum round count
-        const roundCounts = availableKana.map(k => this.kanaRoundCount.get(kanaKey(k)) || 0)
-        const minRoundCount = roundCounts.length > 0 ? Math.min(...roundCounts) : 0
+    const entry = this.selectNextKana(availableKana)
 
-        // Only include kana with minimum round count
-        const eligibleKana = availableKana.filter(k => (this.kanaRoundCount.get(kanaKey(k)) || 0) === minRoundCount)
-
-        // Create new shuffled queue with eligible kana keys
-        this.kanaSelectionQueue = eligibleKana.map(k => kanaKey(k))
-        // Fisher-Yates shuffle
-        for(let i = this.kanaSelectionQueue.length - 1; i > 0; i--){
-          const j = Math.floor(Math.random() * (i + 1))
-          ;[this.kanaSelectionQueue[i], this.kanaSelectionQueue[j]] = [this.kanaSelectionQueue[j], this.kanaSelectionQueue[i]]
-        }
-
-        // Prevent consecutive repeat: if the first item in the new queue matches the
-        // most recently spawned kana, swap it with a random later position.
-        if(this.kanaSelectionQueue.length > 1){
-          const lastSpawnedKeys = [...this.kanaLastSeen.entries()]
-          if(lastSpawnedKeys.length > 0){
-            const mostRecentKey = lastSpawnedKeys.reduce((a, b) => a[1] > b[1] ? a : b)[0]
-            if(this.kanaSelectionQueue[0] === mostRecentKey){
-              const swapIdx = 1 + Math.floor(Math.random() * (this.kanaSelectionQueue.length - 1))
-              ;[this.kanaSelectionQueue[0], this.kanaSelectionQueue[swapIdx]] = [this.kanaSelectionQueue[swapIdx], this.kanaSelectionQueue[0]]
-            }
-          }
-        }
-      }
-      
-      // Pick from front of queue and remove it
-      const nextKey = this.kanaSelectionQueue.shift()!
-      entry = availableKana.find(k => kanaKey(k) === nextKey)!
-    }
-    
     this.kanaLastSeen.set(kanaKey(entry), now)
-    const currentCount = this.kanaRoundCount.get(kanaKey(entry)) || 0
-    this.kanaRoundCount.set(kanaKey(entry), currentCount + 1)
-    
+    this.kanaRoundCount.set(kanaKey(entry), (this.kanaRoundCount.get(kanaKey(entry)) ?? 0) + 1)
+
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
     const width = (this.renderer as any).getWidth ? (this.renderer as any).getWidth() : 400
-    
-    // Calculate safe spawn range to prevent cutoff
     const safeWidth = width - (SPAWN_MARGIN * 2) - TOKEN_WIDTH
     let x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))
-    
-    // Check for overlap with existing tokens and adjust if needed
-    let attempts = 0
-    while(attempts < MAX_SPAWN_ATTEMPTS){
-      const overlapping = this.tokens.some(t => {
-        const distance = Math.abs(t.x - x)
-        const verticalDiff = Math.abs(t.y - 0)
-        return distance < MIN_TOKEN_DISTANCE && verticalDiff < VERTICAL_OVERLAP_THRESHOLD
-      })
-      if(!overlapping) break
+
+    // Avoid overlap with existing tokens
+    for (let attempts = 0; attempts < MAX_SPAWN_ATTEMPTS; attempts++) {
+      const overlapping = this.tokens.some(t =>
+        Math.abs(t.x - x) < MIN_TOKEN_DISTANCE && Math.abs(t.y) < VERTICAL_OVERLAP_THRESHOLD
+      )
+      if (!overlapping) break
       x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))
-      attempts++
     }
-    
+
     this.renderer.setTokenPosition(el, x, 0)
     this.tokens.push({ id: entry.id, entry, el, kana: entry.kana, y: 0, x, spawnTime: performance.now() })
   }
 
-  handleCommit(value: string){
-    if(!value) return
-    
-    // Don't process input when game is not running (paused or not started)
-    if(!this.running) return
-    
-    // Find matching token
+  /** Round-robin kana selection with unseen-first priority */
+  private selectNextKana(availableKana: KanaEntry[]): KanaEntry {
+    // Always pick unseen kana first
+    const unseen = availableKana.filter(k => !this.kanaLastSeen.has(kanaKey(k)))
+    if (unseen.length > 0) {
+      return unseen[Math.floor(Math.random() * unseen.length)]
+    }
+
+    // All seen — use round-robin queue for even distribution
+    const fingerprint = availableKana.map(k => kanaKey(k)).sort().join(',')
+
+    if (this.kanaSelectionQueue.length === 0 || this.kanaSetFingerprint !== fingerprint) {
+      this.kanaSetFingerprint = fingerprint
+
+      // Build queue from kana with minimum round count
+      const minRound = Math.min(...availableKana.map(k => this.kanaRoundCount.get(kanaKey(k)) ?? 0))
+      const eligible = availableKana
+        .filter(k => (this.kanaRoundCount.get(kanaKey(k)) ?? 0) === minRound)
+        .map(k => kanaKey(k))
+
+      // Fisher-Yates shuffle
+      for (let i = eligible.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[eligible[i], eligible[j]] = [eligible[j], eligible[i]]
+      }
+
+      // Prevent consecutive repeat
+      if (eligible.length > 1) {
+        const entries = [...this.kanaLastSeen.entries()]
+        if (entries.length > 0) {
+          const mostRecent = entries.reduce((a, b) => a[1] > b[1] ? a : b)[0]
+          if (eligible[0] === mostRecent) {
+            const swapIdx = 1 + Math.floor(Math.random() * (eligible.length - 1))
+            ;[eligible[0], eligible[swapIdx]] = [eligible[swapIdx], eligible[0]]
+          }
+        }
+      }
+
+      this.kanaSelectionQueue = eligible
+    }
+
+    const nextKey = this.kanaSelectionQueue.shift()!
+    return availableKana.find(k => kanaKey(k) === nextKey)!
+  }
+
+  handleCommit(value: string) {
+    if (!value || !this.running) return
+
     const match = findTokenMatch(this.tokens, value)
     if (!match) return
-    
+
     const t = this.tokens[match.tokenIndex]
-    
-    // Remove from array immediately
     this.tokens.splice(match.tokenIndex, 1)
-    
-    // Flash green on success (removal happens via animationend)
     this.renderer.flashToken(t.el, true)
-    
-    // Track correct answers for progressive difficulty
     this.correctAnswers++
-    
-    // Calculate score with combo multiplier
+
     const points = this.calculateScore(t)
-    
     this.combo++
     this.score += points
     this.onScore(this.score)
-    if(this.onCombo) this.onCombo(this.combo)
-    
-    // Show floating points text
+    this.onCombo?.(this.combo)
+
+    // Floating UI feedback
     this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, 'points')
-    if(this.combo > 1) {
-      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}${COMBO_DISPLAY_SUFFIX}`, 'combo')
+    if (this.combo > 1) {
+      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}x`, 'combo')
     }
-    
-    // Clear buffer based on match type, then update the visual echo after a short
-    // delay so the player can briefly see the characters they entered.
-    if(match.matchType === 'romaji' && match.matchedLength) {
-      // Consume only the matched portion from buffer
-      this.input.buffer = this.input.buffer.slice(match.matchedLength)
-    } else {
-      // Clear buffer for exact kana match (IME)
-      this.input.buffer = ''
-    }
-    // Snapshot the cleared value; only update the echo if no new input arrived
-    // during the delay (fast typists will have already moved onKey forward).
-    const displaySnapshot = this.input.buffer
+
+    // Consume matched portion from buffer
+    this.input.buffer = (match.matchType === 'romaji' && match.matchedLength)
+      ? this.input.buffer.slice(match.matchedLength)
+      : ''
+
+    // Delayed echo update (skip if player typed ahead)
+    const snapshot = this.input.buffer
     setTimeout(() => {
-      if(this.input.buffer === displaySnapshot) {
-        this.input.onKey(displaySnapshot)
-      }
+      if (this.input.buffer === snapshot) this.input.onKey(snapshot)
     }, INPUT_ECHO_CLEAR_DELAY)
-    
-    // Instantly spawn a new tile if board is now empty
-    if(this.tokens.length === 0) {
+
+    // Instantly spawn if board is empty
+    if (this.tokens.length === 0) {
       this.spawnToken()
-      this.spawnAccumulator = 0 // Reset spawn timer
+      this.spawnAccumulator = 0
     }
   }
 
-  async loadKana(setName: KanaSet){
+  loadKana(setName: KanaSet) {
     this.currentKanaSet = setName
-    if(setName === KANA_SET_KATAKANA){
-      this.kanaSet = kanaKatakana as any
-    } else if(setName === KANA_SET_MIXED){
-      // Combine both hiragana and katakana
-      this.kanaSet = [...(kanaHiragana as any), ...(kanaKatakana as any)]
+    if (setName === KANA_SET_KATAKANA) {
+      this.kanaSet = kanaKatakana as KanaEntry[]
+    } else if (setName === KANA_SET_MIXED) {
+      this.kanaSet = [...(kanaHiragana as KanaEntry[]), ...(kanaKatakana as KanaEntry[])]
     } else {
-      // default to hiragana
-      this.kanaSet = kanaHiragana as any
+      this.kanaSet = kanaHiragana as KanaEntry[]
     }
   }
 }
