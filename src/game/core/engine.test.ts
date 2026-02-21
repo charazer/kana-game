@@ -1,4 +1,5 @@
 import { GameEngine, type Renderer } from './engine'
+import { kanaKey } from './game-helpers'
 import { InputManager } from '../input/input'
 import type { KanaEntry } from './types'
 import {
@@ -456,8 +457,8 @@ describe('engine', () => {
       engine.spawnToken()
       const after = performance.now()
       
-      const spawnedId = engine.tokens[0].id
-      const lastSeen = engine.kanaLastSeen.get(spawnedId)
+      const spawnedEntry = engine.tokens[0].entry
+      const lastSeen = engine.kanaLastSeen.get(kanaKey(spawnedEntry))
       
       expect(lastSeen).toBeDefined()
       expect(lastSeen!).toBeGreaterThanOrEqual(before)
@@ -467,7 +468,7 @@ describe('engine', () => {
     it('should prefer unseen kana', () => {
       // Mark one kana as recently seen
       const firstKana = engine.kanaSet[0]
-      engine.kanaLastSeen.set(firstKana.id, performance.now())
+      engine.kanaLastSeen.set(kanaKey(firstKana), performance.now())
       
       // Spawn multiple tokens
       for (let i = 0; i < 5; i++) {
@@ -881,13 +882,13 @@ describe('engine', () => {
       const kana4 = engine.kanaSet[3]
       
       // Very recent (< 2 seconds)
-      engine.kanaLastSeen.set(kana1.id, now - 1000)
+      engine.kanaLastSeen.set(kanaKey(kana1), now - 1000)
       // Recent (2-10 seconds)
-      engine.kanaLastSeen.set(kana2.id, now - 5000)
+      engine.kanaLastSeen.set(kanaKey(kana2), now - 5000)
       // Moderate (10-30 seconds)
-      engine.kanaLastSeen.set(kana3.id, now - 20000)
+      engine.kanaLastSeen.set(kanaKey(kana3), now - 20000)
       // Old (> 30 seconds)
-      engine.kanaLastSeen.set(kana4.id, now - 40000)
+      engine.kanaLastSeen.set(kanaKey(kana4), now - 40000)
       
       // Spawn multiple times to hit different branches
       for (let i = 0; i < 10; i++) {
@@ -1026,6 +1027,109 @@ describe('engine', () => {
       availableKana.forEach(k => {
         expect(spawnCounts.get(k.id)).toBe(1)
       })
+    })
+  })
+
+  describe('mixed mode kana selection', () => {
+    beforeEach(async () => {
+      await engine.loadKana(KANA_SET_MIXED)
+      engine.correctAnswers = 0
+      engine.includeDakuten = false
+      engine.includeYoon = false
+    })
+
+    it('should select both hiragana and katakana in mixed mode', () => {
+      const types = new Set<string>()
+      
+      // Spawn enough to see both types
+      for (let i = 0; i < 100; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+        types.add(engine.tokens[0].entry.type)
+      }
+      
+      expect(types.has('hiragana')).toBe(true)
+      expect(types.has('katakana')).toBe(true)
+    })
+
+    it('should use unique keys distinguishing hiragana and katakana with same romaji id', () => {
+      // Spawn enough to cover the initial unseen pool
+      const availableKana = engine.getAvailableKana()
+      const totalAvailable = availableKana.length
+      
+      // With basic kana only, mixed mode should have 46 hiragana + 46 katakana = 92
+      expect(totalAvailable).toBe(92)
+      
+      // Spawn all unseen kana
+      for (let i = 0; i < totalAvailable; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+      }
+      
+      // kanaLastSeen should have 92 unique entries (not 46 collapsed ones)
+      expect(engine.kanaLastSeen.size).toBe(92)
+    })
+
+    it('should guarantee round-robin across both hiragana and katakana', () => {
+      const availableKana = engine.getAvailableKana()
+      const kanaCount = availableKana.length // 92 in mixed basic
+      
+      // Track spawn count per unique kana key
+      const spawnCounts: Map<string, number> = new Map()
+      availableKana.forEach(k => spawnCounts.set(kanaKey(k), 0))
+      
+      // Spawn 2 full rounds
+      const totalSpawns = kanaCount * 2
+      
+      for (let i = 0; i < totalSpawns; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+        
+        const spawned = engine.tokens[0].entry
+        const key = kanaKey(spawned)
+        spawnCounts.set(key, (spawnCounts.get(key) || 0) + 1)
+        
+        // Verify round-robin invariant: max - min <= 1
+        const counts = Array.from(spawnCounts.values())
+        const minCount = Math.min(...counts)
+        const maxCount = Math.max(...counts)
+        expect(maxCount - minCount).toBeLessThanOrEqual(1)
+      }
+      
+      // After 2 full rounds, each kana shown exactly twice
+      spawnCounts.forEach((count, key) => {
+        expect(count, `kana ${key} should be shown exactly 2 times`).toBe(2)
+      })
+    })
+
+    it('should give roughly equal time to hiragana and katakana', () => {
+      let hiraganaCount = 0
+      let katakanaCount = 0
+      
+      const availableKana = engine.getAvailableKana()
+      const totalSpawns = availableKana.length // 1 full round
+      
+      for (let i = 0; i < totalSpawns; i++) {
+        engine.tokens = []
+        engine.spawnToken()
+        
+        if (engine.tokens[0].entry.type === 'hiragana') hiraganaCount++
+        else katakanaCount++
+      }
+      
+      // In a full round, should see equal amounts
+      expect(hiraganaCount).toBe(katakanaCount)
+    })
+
+    it('should not collapse tracking for hiragana-a and katakana-a', () => {
+      // Manually mark hiragana 'a' as seen
+      const hiraganaA = engine.kanaSet.find(k => k.id === 'a' && k.type === 'hiragana')!
+      const katakanaA = engine.kanaSet.find(k => k.id === 'a' && k.type === 'katakana')!
+      
+      engine.kanaLastSeen.set(kanaKey(hiraganaA), performance.now())
+      
+      // katakana 'a' should still be unseen
+      expect(engine.kanaLastSeen.has(kanaKey(katakanaA))).toBe(false)
     })
   })
 
