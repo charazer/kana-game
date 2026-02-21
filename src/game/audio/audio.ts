@@ -1,4 +1,4 @@
-import { playArpeggio, playChord, playSlide, type AudioNote } from './audio-helpers'
+import { playArpeggio, playChord, playSlide } from './audio-helpers'
 
 export class AudioManager {
   private ctx: AudioContext | null = null
