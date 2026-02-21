@@ -2,7 +2,7 @@ import kanaHiragana from '../../data/kana/hiragana.json'
 import kanaKatakana from '../../data/kana/katakana.json'
 import type { KanaEntry } from './types'
 import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from '../constants/kana-constants'
-import { findTokenMatch } from './game-helpers'
+import { findTokenMatch, kanaKey } from './game-helpers'
 import { 
   type GameMode, 
   type FloatingTextType,
@@ -75,9 +75,10 @@ export class GameEngine {
   onCombo?: (combo: number) => void
   onSpeedChange?: (multiplier: number) => void
   kanaSet: KanaEntry[] = []
-  kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown
-  kanaSelectionQueue: string[] = [] // queue for round-robin selection (guarantees full cycle)
-  kanaRoundCount: Map<string, number> = new Map() // track how many times each kana has been shown
+  kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown (keyed by kanaKey)
+  kanaSelectionQueue: string[] = [] // queue for round-robin selection (keyed by kanaKey)
+  kanaRoundCount: Map<string, number> = new Map() // track how many times each kana has been shown (keyed by kanaKey)
+  kanaSetFingerprint = '' // fingerprint of available kana set, used to detect set changes
   spawnAccumulator = 0
   spawnInterval = CHALLENGE_SPAWN_INTERVAL // default to challenge mode interval
   baseSpeed = CHALLENGE_BASE_SPEED
@@ -153,6 +154,7 @@ export class GameEngine {
     this.lastSpeedMultiplier = 1.0
     this.kanaSelectionQueue = []
     this.kanaRoundCount.clear()
+    this.kanaSetFingerprint = ''
     this.tokens.forEach(t => this.renderer.removeTokenEl(t.el))
     this.tokens = []
     this.kanaLastSeen.clear()
@@ -304,8 +306,8 @@ export class GameEngine {
     
     const now = performance.now()
     
-    // Separate unseen kana from seen kana
-    const unseenKana = availableKana.filter(kana => !this.kanaLastSeen.has(kana.id))
+    // Separate unseen kana from seen kana (using unique kanaKey to distinguish hiragana/katakana)
+    const unseenKana = availableKana.filter(kana => !this.kanaLastSeen.has(kanaKey(kana)))
     
     let entry
     
@@ -315,35 +317,49 @@ export class GameEngine {
       entry = unseenKana[randomIndex]
     } else {
       // All kana have been seen - use round-robin queue for guaranteed distribution
-      // Refill queue if empty or if available kana set changed
-      const availableIds = availableKana.map(k => k.id).sort().join(',')
-      const queueIds = this.kanaSelectionQueue.join(',')
+      // Detect if the available kana set has changed (e.g. dakuten unlocked)
+      const availableFingerprint = availableKana.map(k => kanaKey(k)).sort().join(',')
       
-      if(this.kanaSelectionQueue.length === 0 || availableIds !== queueIds){
+      if(this.kanaSelectionQueue.length === 0 || this.kanaSetFingerprint !== availableFingerprint){
+        this.kanaSetFingerprint = availableFingerprint
+        
         // Find minimum round count
-        const roundCounts = availableKana.map(k => this.kanaRoundCount.get(k.id) || 0)
+        const roundCounts = availableKana.map(k => this.kanaRoundCount.get(kanaKey(k)) || 0)
         const minRoundCount = roundCounts.length > 0 ? Math.min(...roundCounts) : 0
 
         // Only include kana with minimum round count
-        const eligibleKana = availableKana.filter(k => (this.kanaRoundCount.get(k.id) || 0) === minRoundCount)
+        const eligibleKana = availableKana.filter(k => (this.kanaRoundCount.get(kanaKey(k)) || 0) === minRoundCount)
 
-        // Create new shuffled queue with eligible kana only
-        this.kanaSelectionQueue = eligibleKana.map(k => k.id)
+        // Create new shuffled queue with eligible kana keys
+        this.kanaSelectionQueue = eligibleKana.map(k => kanaKey(k))
         // Fisher-Yates shuffle
         for(let i = this.kanaSelectionQueue.length - 1; i > 0; i--){
           const j = Math.floor(Math.random() * (i + 1))
           ;[this.kanaSelectionQueue[i], this.kanaSelectionQueue[j]] = [this.kanaSelectionQueue[j], this.kanaSelectionQueue[i]]
         }
+
+        // Prevent consecutive repeat: if the first item in the new queue matches the
+        // most recently spawned kana, swap it with a random later position.
+        if(this.kanaSelectionQueue.length > 1){
+          const lastSpawnedKeys = [...this.kanaLastSeen.entries()]
+          if(lastSpawnedKeys.length > 0){
+            const mostRecentKey = lastSpawnedKeys.reduce((a, b) => a[1] > b[1] ? a : b)[0]
+            if(this.kanaSelectionQueue[0] === mostRecentKey){
+              const swapIdx = 1 + Math.floor(Math.random() * (this.kanaSelectionQueue.length - 1))
+              ;[this.kanaSelectionQueue[0], this.kanaSelectionQueue[swapIdx]] = [this.kanaSelectionQueue[swapIdx], this.kanaSelectionQueue[0]]
+            }
+          }
+        }
       }
       
       // Pick from front of queue and remove it
-      const nextId = this.kanaSelectionQueue.shift()!
-      entry = availableKana.find(k => k.id === nextId)!
+      const nextKey = this.kanaSelectionQueue.shift()!
+      entry = availableKana.find(k => kanaKey(k) === nextKey)!
     }
     
-    this.kanaLastSeen.set(entry.id, now)
-    const currentCount = this.kanaRoundCount.get(entry.id) || 0
-    this.kanaRoundCount.set(entry.id, currentCount + 1)
+    this.kanaLastSeen.set(kanaKey(entry), now)
+    const currentCount = this.kanaRoundCount.get(kanaKey(entry)) || 0
+    this.kanaRoundCount.set(kanaKey(entry), currentCount + 1)
     
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
     const width = (this.renderer as any).getWidth ? (this.renderer as any).getWidth() : 400

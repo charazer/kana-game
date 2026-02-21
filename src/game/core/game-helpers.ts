@@ -5,6 +5,11 @@
 import type { KanaEntry } from './types'
 import { exactMatch, longestRomajiMatch } from './matcher'
 
+/** Unique key per kana entry, distinguishing hiragana/katakana with same romaji id */
+export function kanaKey(entry: KanaEntry): string {
+  return `${entry.type}-${entry.id}`
+}
+
 /**
  * Processes a successful token match (common logic extraction)
  */
