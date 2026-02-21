@@ -1,79 +1,33 @@
 /**
  * DOM utility helpers for common UI operations
- * Extracts repeated patterns from main.ts
  */
 
-import {
-  UI_DISABLED_OPACITY,
-  UI_ENABLED_OPACITY,
-  UI_CURSOR_NOT_ALLOWED,
-  UI_CURSOR_POINTER
-} from '../constants/constants'
+type Disableable = (HTMLButtonElement | HTMLSelectElement | HTMLInputElement) | null
 
-/**
- * Interface for elements that can be enabled/disabled
- */
-interface EnableableElement extends HTMLElement {
-  disabled: boolean
-  style: CSSStyleDeclaration
+export function enableElement(el: Disableable): void {
+  if (!el) return
+  el.disabled = false
+  el.style.opacity = '1'
+  el.style.cursor = 'pointer'
+}
+
+export function disableElement(el: Disableable): void {
+  if (!el) return
+  el.disabled = true
+  el.style.opacity = '0.5'
+  el.style.cursor = 'not-allowed'
+}
+
+export function enableElements(...elements: Disableable[]): void {
+  for (const el of elements) enableElement(el)
+}
+
+export function disableElements(...elements: Disableable[]): void {
+  for (const el of elements) disableElement(el)
 }
 
 /**
- * Enables a UI element (button, select, input, etc.)
- */
-export function enableElement(element: EnableableElement | null): void {
-  if (!element) return
-  
-  element.disabled = false
-  element.style.opacity = UI_ENABLED_OPACITY
-  element.style.cursor = UI_CURSOR_POINTER
-}
-
-/**
- * Disables a UI element (button, select, input, etc.)
- */
-export function disableElement(element: EnableableElement | null): void {
-  if (!element) return
-  
-  element.disabled = true
-  element.style.opacity = UI_DISABLED_OPACITY
-  element.style.cursor = UI_CURSOR_NOT_ALLOWED
-}
-
-/**
- * Enables multiple UI elements at once
- */
-export function enableElements(...elements: (EnableableElement | null)[]): void {
-  elements.forEach(element => enableElement(element))
-}
-
-/**
- * Disables multiple UI elements at once
- */
-export function disableElements(...elements: (EnableableElement | null)[]): void {
-  elements.forEach(element => disableElement(element))
-}
-
-/**
- * Creates a modal close handler with optional pause/resume logic
- */
-export function createModalCloseHandler(
-  modal: HTMLElement,
-  options: {
-    onClose?: () => void
-    hideClass?: string
-  } = {}
-): () => void {
-  const { onClose, hideClass = 'hidden' } = options
-  
-  return () => {
-    modal.classList.add(hideClass)
-    if (onClose) onClose()
-  }
-}
-
-/**
- * Sets up modal event handlers (close button, overlay, escape key)
+ * Sets up modal close handlers for close button and overlay click
  */
 export function setupModalHandlers(
   modal: HTMLElement,
@@ -81,22 +35,13 @@ export function setupModalHandlers(
     closeButton?: HTMLElement | null
     overlay?: HTMLElement | null
     onClose?: () => void
-    hideClass?: string
   }
-): () => void {
-  const { closeButton, overlay, onClose, hideClass = 'hidden' } = options
-  const closeHandler = createModalCloseHandler(modal, { onClose, hideClass })
-  
-  // Close button
-  if (closeButton) {
-    closeButton.addEventListener('click', closeHandler)
+): void {
+  const { closeButton, overlay, onClose } = options
+  const close = () => {
+    modal.classList.add('hidden')
+    onClose?.()
   }
-  
-  // Overlay click
-  if (overlay) {
-    overlay.addEventListener('click', closeHandler)
-  }
-  
-  // Return the close handler for programmatic use
-  return closeHandler
+  closeButton?.addEventListener('click', close)
+  overlay?.addEventListener('click', close)
 }
