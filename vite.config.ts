@@ -15,15 +15,17 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      include: ['**/*.ts'],
       exclude: [
         'node_modules/',
-        'src/main.ts', // Main entry point with DOM manipulation
-        'src/globals.d.ts',
-        'src/assets/**', // Static asset files
-        'src/test-setup.ts', // Test setup file
-        'src/data/kana/**', // Kana data files
+        'main.ts', // Main entry point with DOM manipulation
+        'globals.d.ts',
+        'assets/**', // Static asset files
+        'test-setup.ts', // Test setup file
+        'data/kana/**', // Kana data files
         '**/*.config.ts',
         '**/types.ts',
+        '**/test-utils.ts',
         'dist/',
         'coverage/'
       ],
