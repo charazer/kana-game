@@ -129,13 +129,13 @@ describe('dom-helpers', () => {
     let modal: HTMLElement
     let closeButton: HTMLButtonElement
     let overlay: HTMLElement
-    let onClose: ReturnType<typeof vi.fn>
+    let onClose: ReturnType<typeof vi.fn<() => void>>
 
     beforeEach(() => {
       modal = document.createElement('div')
       closeButton = document.createElement('button')
       overlay = document.createElement('div')
-      onClose = vi.fn()
+      onClose = vi.fn<() => void>()
     })
 
     it('should close the modal and call onClose when close button is clicked', () => {
