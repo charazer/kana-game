@@ -129,5 +129,29 @@ describe('matcher', () => {
       const result2 = longestRomajiMatch(entries, 'ka')
       expect(result2?.romaji).toBe('ka')
     })
+
+    it('should keep longer start-match when a shorter one is encountered later', () => {
+      // 'kya' entry comes first, then 'k'. Buffer 'kya' matches both but 'kya' is longer.
+      // This exercises the !(!best || r.length > best.romaji.length) branch.
+      const entries: KanaEntry[] = [
+        { id: 'kya', kana: 'きゃ', romaji: ['kya'], type: 'hiragana' },
+        { id: 'k', kana: 'k', romaji: ['k'], type: 'hiragana' }
+      ]
+      const result = longestRomajiMatch(entries, 'kya')
+      expect(result?.entry.id).toBe('kya')
+      expect(result?.romaji).toBe('kya')
+    })
+
+    it('should keep longer end-match when a shorter one is encountered later in fallback loop', () => {
+      // Buffer 'zxka' has no start match but ends with both 'xka' and 'ka'.
+      // 'xka' is processed first and is longer; 'ka' should not replace it.
+      const entries: KanaEntry[] = [
+        { id: 'xka', kana: 'x', romaji: ['xka'], type: 'hiragana' },
+        { id: 'ka', kana: 'か', romaji: ['ka'], type: 'hiragana' }
+      ]
+      const result = longestRomajiMatch(entries, 'zxka')
+      expect(result?.entry.id).toBe('xka')
+      expect(result?.romaji).toBe('xka')
+    })
   })
 })

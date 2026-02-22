@@ -1,4 +1,4 @@
-import { loadSettings, saveSettings, getHighScores, addHighScore, isHighScore, type Settings } from './storage'
+import { loadSettings, saveSettings, updateSetting, getHighScores, addHighScore, isHighScore, type Settings } from './storage'
 
 describe('storage', () => {
   beforeEach(() => {
@@ -214,6 +214,36 @@ describe('storage', () => {
       addHighScore(50)
       
       expect(isHighScore(11)).toBe(true)
+    })
+  })
+
+  describe('updateSetting', () => {
+    it('should persist a partial setting update', () => {
+      saveSettings({ audioEnabled: true, gameMode: 'challenge' })
+
+      updateSetting({ audioEnabled: false })
+
+      const result = loadSettings()
+      expect(result.audioEnabled).toBe(false)
+      expect(result.gameMode).toBe('challenge')
+    })
+
+    it('should create settings entry when none exists', () => {
+      updateSetting({ kanaSet: 'katakana' })
+
+      const result = loadSettings()
+      expect(result.kanaSet).toBe('katakana')
+    })
+
+    it('should not overwrite unrelated settings', () => {
+      saveSettings({ audioEnabled: true, musicEnabled: false, musicVolume: 0.5 })
+
+      updateSetting({ musicVolume: 0.8 })
+
+      const result = loadSettings()
+      expect(result.audioEnabled).toBe(true)
+      expect(result.musicEnabled).toBe(false)
+      expect(result.musicVolume).toBe(0.8)
     })
   })
 })
