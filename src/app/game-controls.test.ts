@@ -308,6 +308,15 @@ describe('game-controls', () => {
       expect(sharedEngine.onGameOver).toHaveBeenCalled()
     })
 
+    it('should end game on Enter key press while confirm modal is open', () => {
+      sharedEngine.running = true
+      handle.enable()
+      endGameBtn.click() // open modal
+      document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Enter', key: 'Enter', bubbles: true }))
+      expect(confirmEndModal.classList.contains('hidden')).toBe(true)
+      expect(sharedEngine.onGameOver).toHaveBeenCalled()
+    })
+
     it('should close modal on N key press while confirm modal is open', () => {
       sharedEngine.running = true
       handle.enable()
