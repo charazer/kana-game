@@ -6,7 +6,14 @@ export default defineConfig({
   publicDir: '../public',
   build: {
     outDir: '../dist',
-    emptyOutDir: true
+    emptyOutDir: true,
+    // Target modern browsers – avoids legacy polyfill overhead
+    target: 'es2022',
+    // Remove the modulepreload polyfill; all modern browsers support native
+    // module preloading, so the polyfill script just wastes bytes on every load
+    modulePreload: { polyfill: false },
+    // Report compressed sizes during build for visibility into bundle size
+    reportCompressedSize: true
   },
   test: {
     globals: true,
