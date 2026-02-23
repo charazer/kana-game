@@ -25,13 +25,14 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" as="image" href="/assets/img/background.webp" type="image/webp" fetchpriority="high" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
   </head>
   <body>
     <div id="app">
       <header>
         <button id="settings-btn" class="btn-settings" aria-label="Open settings">
-          <span class="btn-icon-wrap"><img src="/assets/img/config.png" alt="" class="btn-icon" aria-hidden="true"></span>
+          <span class="btn-icon-wrap"><img src="/assets/img/config.png" alt="" class="btn-icon" aria-hidden="true" width="87" height="95" fetchpriority="high"></span>
           <span class="btn-label">Settings</span>
         </button>
         
@@ -39,7 +40,6 @@
           <h1>Kana Game | 仮名ゲーム</h1>
         </div>
         <div class="header-controls">
-          <!-- Stats Section -->
           <div class="control-section stats-section" role="region" aria-label="Game statistics">
             <div class="section-items">
               <div class="stat-box score-box">
@@ -57,23 +57,22 @@
               <div class="stat-box lives-box">
                 <span class="stat-label" id="lives-label">Lives</span>
                 <div id="lives" aria-labelledby="lives-label" role="status">
-                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon">
-                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon">
-                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon">
+                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon" width="83" height="71" fetchpriority="high">
+                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon" width="83" height="71">
+                  <img src="/assets/img/heart.png" alt="Life" class="heart-icon" width="83" height="71">
                 </div>
               </div>
             </div>
           </div>
           
-          <!-- Controls Section -->
           <div class="control-section controls-section">
             <div class="section-items">
               <button id="end-game" class="btn-end-game" aria-label="End game">
-                <span class="btn-icon-wrap"><img src="/assets/img/button_x.png" alt="" class="btn-icon" aria-hidden="true"></span>
+                <span class="btn-icon-wrap"><img src="/assets/img/button_x.png" alt="" class="btn-icon" aria-hidden="true" width="82" height="87" fetchpriority="high"></span>
                 <span class="btn-label">End</span>
               </button>
               <button id="pause" class="btn-pause" aria-label="Pause game">
-                <span class="btn-icon-wrap"><img src="/assets/img/button_pause.png" alt="" class="btn-icon" aria-hidden="true"></span>
+                <span class="btn-icon-wrap"><img src="/assets/img/button_pause.png" alt="" class="btn-icon" aria-hidden="true" width="82" height="87" fetchpriority="high"></span>
                 <span class="btn-label">Pause</span>
               </button>
             </div>
@@ -84,7 +83,7 @@
       <main id="game-area" role="application" aria-label="Kana typing game">
         <div id="paused-indicator" class="paused-indicator hidden" role="status" aria-live="polite">
           <div class="paused-text">
-            <img src="/assets/img/button_pause.png" alt="" class="paused-icon" aria-hidden="true">
+            <img src="/assets/img/button_pause.png" alt="" class="paused-icon" aria-hidden="true" width="82" height="87" loading="lazy">
             PAUSED
           </div>
         </div>
@@ -95,7 +94,7 @@
             <p><a href="#" id="how-to-play-link" class="how-to-play-link">📖 How to play</a></p>
             <div id="high-scores-start" class="high-scores-list"></div>
             <button id="start" class="btn-start" aria-label="Start game">
-              <span class="btn-icon-wrap"><img src="/assets/img/button_play.png" alt="" class="btn-icon" aria-hidden="true"></span>
+              <span class="btn-icon-wrap"><img src="/assets/img/button_play.png" alt="" class="btn-icon" aria-hidden="true" width="83" height="88"></span>
               <span class="btn-label">Start Game</span>
             </button>
           </div>
@@ -108,7 +107,7 @@
             <p><a href="#" id="how-to-play-link-end" class="how-to-play-link">📖 How to play</a></p>
             <div id="high-scores-end" class="high-scores-list"></div>
             <button id="restart" class="btn-restart" aria-label="Play again">
-              <span class="btn-icon-wrap"><img src="/assets/img/button_play_again.png" alt="" class="btn-icon" aria-hidden="true"></span>
+              <span class="btn-icon-wrap"><img src="/assets/img/button_play_again.png" alt="" class="btn-icon" aria-hidden="true" width="82" height="87" loading="lazy"></span>
               <span class="btn-label">Play Again</span>
             </button>
           </div>
@@ -123,12 +122,11 @@
       </footer>
     </div>
     
-    <!-- Settings Modal -->
     <div id="settings-modal" class="modal hidden" role="dialog" aria-labelledby="settings-title" aria-modal="true">
       <div class="modal-overlay"></div>
       <div class="modal-content settings-modal-content">
         <div class="modal-header">
-          <h2 id="settings-title"><img src="/assets/img/config.png" alt="" class="modal-header-icon" aria-hidden="true"> Settings</h2>
+          <h2 id="settings-title"><img src="/assets/img/config.png" alt="" class="modal-header-icon" aria-hidden="true" width="87" height="95" loading="lazy"> Settings</h2>
           <button id="settings-close" class="btn-modal-close" aria-label="Close settings">
             <span>✕</span>
           </button>
@@ -196,7 +194,6 @@
       </div>
     </div>
 
-    <!-- Help Modal -->
     <div id="help-modal" class="modal hidden" role="dialog" aria-labelledby="help-title" aria-modal="true">
       <div class="modal-overlay"></div>
       <div class="modal-content help-modal-content">
@@ -290,7 +287,6 @@
       </div>
     </div>
 
-    <!-- Kana Reference Modal -->
     <div id="kana-modal" class="modal hidden" role="dialog" aria-labelledby="kana-title" aria-modal="true">
       <div class="modal-overlay"></div>
       <div class="modal-content kana-modal-content">
@@ -306,13 +302,11 @@
             <button id="tab-katakana" class="kana-tab" role="tab" aria-selected="false" aria-controls="kana-content">Katakana (カタカナ)</button>
           </div>
           <div id="kana-content" class="kana-content">
-            <!-- Content will be dynamically generated -->
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Confirm End Game Modal -->
     <div id="confirm-end-modal" class="modal hidden" role="dialog" aria-labelledby="confirm-end-title" aria-modal="true">
       <div class="modal-overlay"></div>
       <div class="modal-content confirm-end-modal-content">
@@ -333,12 +327,6 @@
       </div>
     </div>
 
-    <script type="module">
-      const basePath = import.meta.env.BASE_URL;
-      document.querySelectorAll('img[src^="/assets/"]').forEach(img => {
-        img.src = basePath + img.getAttribute('src').replace(/^\//, '');
-      });
-    </script>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>
