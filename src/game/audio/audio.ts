@@ -1,4 +1,4 @@
-import { playArpeggio, playChord, playSlide } from './audio-helpers'
+import { playKotoArpeggio, playKotoPluck, playTaikoDrum, playWindChime, YO_SCALE } from './audio-helpers'
 
 export class AudioManager {
   private ctx: AudioContext | null = null
@@ -65,52 +65,79 @@ export class AudioManager {
     this.musicElement.currentTime = 0
   }
 
+  /**
+   * Tile resolved — random koto pluck from the Yo scale.
+   * A different note is chosen each time so the sound stays fresh
+   * even after hundreds of correct answers.
+   *
+   * Two plucks sound together for richness (合わせ awase technique):
+   *   • main note at normal volume
+   *   • octave-below root at lower volume for warmth
+   */
   playSuccess() {
     if (!this.enabled || !this.ctx) return
-    playChord(this.ctx, [523.25, 659.25], { type: 'sine', volume: 0.15, duration: 0.15 })
+    const note = YO_SCALE[Math.floor(Math.random() * YO_SCALE.length)]
+    playKotoPluck(this.ctx, { frequency: note, volume: 0.1, duration: 0.25 })
+    playKotoPluck(this.ctx, { frequency: note * 0.5, volume: 0.06, duration: 0.3 })
   }
 
+  /**
+   * Game over — gentle descending F-major koto phrase.
+   * Stays in the bright pentatonic so the ending feels uplifting.
+   */
   playGameOver() {
     if (!this.enabled || !this.ctx) return
-    playArpeggio(this.ctx, [
-      { frequency: 392, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0 },
-      { frequency: 349.23, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.15 },
-      { frequency: 293.66, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.30 },
-      { frequency: 261.63, type: 'triangle', volume: 0.2, duration: 0.2, delay: 0.45 },
+    playKotoArpeggio(this.ctx, [
+      { frequency: YO_SCALE[5], delay: 0,   duration: 0.4 },
+      { frequency: YO_SCALE[3], delay: 0.2, duration: 0.4 },
+      { frequency: YO_SCALE[1], delay: 0.4, duration: 0.4 },
+      { frequency: YO_SCALE[0], delay: 0.6, duration: 0.6 },
     ])
   }
 
+  /**
+   * Life lost — taiko drum hit (太鼓).
+   * A single impactful low-frequency thud.
+   */
   playLifeLost() {
     if (!this.enabled || !this.ctx) return
-    playSlide(this.ctx, 440, 220, { type: 'sawtooth', volume: 0.3, duration: 0.2 })
+    playTaikoDrum(this.ctx, { volume: 0.2, duration: 0.3 })
   }
 
+  /**
+   * Speed increase — quick ascending koto run on the Yo scale.
+   */
   playSpeedIncrease() {
     if (!this.enabled || !this.ctx) return
-    playArpeggio(this.ctx, [
-      { frequency: 392, type: 'sine', volume: 0.18, duration: 0.15, delay: 0 },
-      { frequency: 493.88, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.08 },
-      { frequency: 587.33, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.16 },
-      { frequency: 783.99, type: 'sine', volume: 0.18, duration: 0.15, delay: 0.24 },
+    playKotoArpeggio(this.ctx, [
+      { frequency: YO_SCALE[3], delay: 0,    duration: 0.2 },
+      { frequency: YO_SCALE[4], delay: 0.06, duration: 0.2 },
+      { frequency: YO_SCALE[5], delay: 0.12, duration: 0.2 },
     ])
   }
 
+  /**
+   * Game start — ascending Yo-scale koto arpeggio (ceremonial feel).
+   */
   playGameStart() {
     if (!this.enabled || !this.ctx) return
-    playArpeggio(this.ctx, [
-      { frequency: 261.63, type: 'sine', volume: 0.15, duration: 0.2, delay: 0 },
-      { frequency: 329.63, type: 'sine', volume: 0.15, duration: 0.2, delay: 0.05 },
-      { frequency: 392, type: 'sine', volume: 0.15, duration: 0.2, delay: 0.10 },
+    playKotoArpeggio(this.ctx, [
+      { frequency: YO_SCALE[0], delay: 0,   duration: 0.3 },
+      { frequency: YO_SCALE[2], delay: 0.1, duration: 0.3 },
+      { frequency: YO_SCALE[3], delay: 0.2, duration: 0.3 },
+      { frequency: YO_SCALE[5], delay: 0.3, duration: 0.3 },
     ])
   }
 
+  /** Pause — gentle wind chime (風鈴) on C5. */
   playPause() {
     if (!this.enabled || !this.ctx) return
-    playSlide(this.ctx, 523.25, 392, { type: 'sine', volume: 0.12, duration: 0.15 })
+    playWindChime(this.ctx, 523.25, { volume: 0.06, duration: 0.4 })
   }
 
+  /** Resume — bright wind chime on F5. */
   playResume() {
     if (!this.enabled || !this.ctx) return
-    playSlide(this.ctx, 392, 523.25, { type: 'sine', volume: 0.12, duration: 0.15 })
+    playWindChime(this.ctx, 698.46, { volume: 0.06, duration: 0.4 })
   }
 }
