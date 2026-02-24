@@ -216,4 +216,239 @@ describe('input', () => {
       expect(mockOnKey).toHaveBeenCalledWith('b')
     })
   })
+
+  describe('bindElement — mobile input support', () => {
+    let inputEl: HTMLInputElement
+
+    beforeEach(() => {
+      inputEl = document.createElement('input')
+      inputEl.type = 'text'
+      document.body.appendChild(inputEl)
+    })
+
+    function triggerInputEvent() {
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }))
+    }
+
+    it('should process characters from the bound input element', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'k'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('k')
+      expect(mockOnKey).toHaveBeenCalledWith('k')
+      expect(mockOnCommit).toHaveBeenCalledWith('k')
+    })
+
+    it('should accumulate characters via input events', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 's'
+      triggerInputEvent()
+      inputEl.value = 'sh'
+      triggerInputEvent()
+      inputEl.value = 'shi'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('shi')
+      expect(mockOnCommit).toHaveBeenCalledTimes(3)
+    })
+
+    it('should filter invalid characters from input element', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'k1a2!'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('ka')
+      expect(inputEl.value).toBe('ka')
+    })
+
+    it('should filter l, q, v, x from input element', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'klqvxa'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('ka')
+      expect(inputEl.value).toBe('ka')
+    })
+
+    it('should handle backspace via input element (shorter value)', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'ka'
+      triggerInputEvent()
+      mockOnKey.mockClear()
+      mockOnCommit.mockClear()
+
+      inputEl.value = 'k'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('k')
+      expect(mockOnKey).toHaveBeenCalledWith('k')
+      // onCommit should NOT be called when deleting
+      expect(mockOnCommit).not.toHaveBeenCalled()
+    })
+
+    it('should clear element value when disabled', () => {
+      inputManager.bindElement(inputEl)
+      inputManager.enabled = false
+
+      inputEl.value = 'abc'
+      triggerInputEvent()
+
+      expect(inputEl.value).toBe('')
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should sync buffer setter to element value', () => {
+      inputManager.bindElement(inputEl)
+      inputManager.buffer = 'test'
+
+      expect(inputEl.value).toBe('test')
+    })
+
+    it('should clear element value when buffer set to empty', () => {
+      inputManager.bindElement(inputEl)
+      inputManager.buffer = 'ka'
+      expect(inputEl.value).toBe('ka')
+
+      inputManager.buffer = ''
+      expect(inputEl.value).toBe('')
+    })
+
+    it('should skip keydown processing when input element is focused', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.focus()
+
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+
+      // keydown handler should skip — buffer remains empty
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should process keydown when input element is NOT focused', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.blur()
+
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+
+      expect(inputManager.buffer).toBe('a')
+      expect(mockOnKey).toHaveBeenCalledWith('a')
+    })
+
+    it('should accept kana characters via input element', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'か'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('か')
+      expect(mockOnCommit).toHaveBeenCalledWith('か')
+    })
+
+    it('should convert uppercase to lowercase via input element', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'KA'
+      triggerInputEvent()
+
+      expect(inputManager.buffer).toBe('ka')
+      expect(inputEl.value).toBe('ka')
+    })
+
+    it('should not call onCommit when input element value is empty after clear', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'a'
+      triggerInputEvent()
+      mockOnCommit.mockClear()
+
+      inputEl.value = ''
+      triggerInputEvent()
+
+      expect(mockOnCommit).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('enabled auto-focus on touch devices', () => {
+    let inputEl: HTMLInputElement
+
+    beforeEach(() => {
+      inputEl = document.createElement('input')
+      inputEl.type = 'text'
+      document.body.appendChild(inputEl)
+    })
+
+    it('should focus element when enabled on touch device', () => {
+      // Simulate touch device
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 1, configurable: true })
+      inputManager.bindElement(inputEl)
+
+      const focusSpy = vi.spyOn(inputEl, 'focus')
+      inputManager.enabled = true
+
+      expect(focusSpy).toHaveBeenCalled()
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true })
+    })
+
+    it('should blur element when disabled on touch device', () => {
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 1, configurable: true })
+      inputManager.bindElement(inputEl)
+      inputManager.enabled = true
+
+      const blurSpy = vi.spyOn(inputEl, 'blur')
+      inputManager.enabled = false
+
+      expect(blurSpy).toHaveBeenCalled()
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true })
+    })
+
+    it('should not auto-focus on non-touch device', () => {
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true })
+
+      // Ensure ontouchstart is not defined
+      const originalOntouchstart = (window as any).ontouchstart
+      delete (window as any).ontouchstart
+
+      inputManager.bindElement(inputEl)
+      const focusSpy = vi.spyOn(inputEl, 'focus')
+      inputManager.enabled = true
+
+      expect(focusSpy).not.toHaveBeenCalled();
+
+      // Restore
+      (window as any).ontouchstart = originalOntouchstart
+    })
+
+    it('should re-focus after blur during active gameplay on touch device', async () => {
+      vi.useFakeTimers()
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 1, configurable: true })
+      inputManager.bindElement(inputEl)
+      inputManager.enabled = true
+
+      // Simulate blur
+      inputEl.dispatchEvent(new Event('blur'))
+      vi.advanceTimersByTime(20)
+
+      // The element should be re-focused
+      expect(document.activeElement).toBe(inputEl)
+
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true })
+      vi.useRealTimers()
+    })
+
+    it('should NOT re-focus after blur when disabled', () => {
+      vi.useFakeTimers()
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 1, configurable: true })
+      inputManager.bindElement(inputEl)
+      inputManager.enabled = true
+      inputManager.enabled = false
+
+      inputEl.dispatchEvent(new Event('blur'))
+      vi.advanceTimersByTime(20)
+
+      // Should not re-focus because enabled is false
+      expect(document.activeElement).not.toBe(inputEl)
+
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true })
+      vi.useRealTimers()
+    })
+  })
 })

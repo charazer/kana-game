@@ -1,7 +1,6 @@
 import { DOMRenderer } from './renderer_dom'
 import {
-  DATASET_KANA_ID,
-  ANIM_DURATION_FLOATING_TEXT
+  DATASET_KANA_ID
 } from '../constants/constants'
 
 describe('renderer_dom', () => {
@@ -254,23 +253,23 @@ describe('renderer_dom', () => {
       expect(floater.style.top).toBe('250px')
     })
 
-    it('should remove element after timeout', () => {
+    it('should remove element after animation ends', () => {
       renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(1)
       
-      vi.advanceTimersByTime(ANIM_DURATION_FLOATING_TEXT)
+      const floater = container.firstChild as HTMLElement
+      floater.dispatchEvent(new Event('animationend'))
       
       expect(container.children.length).toBe(0)
     })
 
-    it('should not remove element before timeout expires', () => {
+    it('should not remove element before animation ends', () => {
       renderer.showFloatingText(100, 200, '+10', 'points')
       
       expect(container.children.length).toBe(1)
       
-      vi.advanceTimersByTime(ANIM_DURATION_FLOATING_TEXT - 100)
-      
+      // Element should remain until animationend fires
       expect(container.children.length).toBe(1)
     })
 
@@ -366,7 +365,8 @@ describe('renderer_dom', () => {
       
       expect(container.children.length).toBe(1)
       
-      vi.advanceTimersByTime(ANIM_DURATION_FLOATING_TEXT)
+      const floater = container.querySelector('.floating-text') as HTMLElement
+      floater.dispatchEvent(new Event('animationend'))
       
       expect(container.children.length).toBe(0)
     })

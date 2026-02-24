@@ -1,4 +1,4 @@
-import { type FloatingTextType, DATASET_KANA_ID, ANIM_DURATION_FLOATING_TEXT } from '../constants/constants'
+import { type FloatingTextType, DATASET_KANA_ID } from '../constants/constants'
 
 export class DOMRenderer {
   container: HTMLElement
@@ -40,7 +40,7 @@ export class DOMRenderer {
     floater.style.left = `${x}px`
     floater.style.top = `${y}px`
     this.container.appendChild(floater)
-    setTimeout(() => floater.remove(), ANIM_DURATION_FLOATING_TEXT)
+    floater.addEventListener('animationend', () => floater.remove(), { once: true })
   }
 
   getWidth() {

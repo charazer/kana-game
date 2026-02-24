@@ -32,9 +32,14 @@ export interface ControlHandle {
 function pressAnimation(btn: HTMLButtonElement | null) {
 	if (!btn) return
 	btn.classList.remove('btn-press-pop')
-	void btn.offsetWidth // force reflow
-	btn.classList.add('btn-press-pop')
-	btn.addEventListener('animationend', () => btn.classList.remove('btn-press-pop'), { once: true })
+	// Double-rAF ensures browser processes the removal before re-adding
+	// the class, restarting the animation without a synchronous reflow.
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			btn.classList.add('btn-press-pop')
+			btn.addEventListener('animationend', () => btn.classList.remove('btn-press-pop'), { once: true })
+		})
+	})
 }
 
 function hideScreenWithAnimation(el: HTMLElement | null, onComplete: () => void) {

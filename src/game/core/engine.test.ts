@@ -41,6 +41,7 @@ describe('engine', () => {
       setTokenPosition: vi.fn(),
       flashToken: vi.fn(),
       showFloatingText: vi.fn(),
+      getWidth: vi.fn(() => 400),
       getHeight: vi.fn(() => 600)
     }
     

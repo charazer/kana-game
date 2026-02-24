@@ -124,16 +124,7 @@
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-.speed-flash {
-  animation: speed-flash-anim 600ms ease-out;
-  will-change: box-shadow;
-}
-
-@keyframes speed-flash-anim {
-  0% { box-shadow: inset 0 0 0px var(--accent-08); }
-  15% { box-shadow: inset 0 0 100px var(--accent-30); }
-  100% { box-shadow: inset 0 0 0px var(--accent-08); }
-}
+/* speed-flash moved to game-area.css as a GPU-friendly opacity overlay */
 
 /* Responsive */
 @media (min-width: 421px) {

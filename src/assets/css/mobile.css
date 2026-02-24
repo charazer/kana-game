@@ -1,0 +1,235 @@
+/* ==========================================================================
+   Mobile Keyboard – Compact Layout Overrides
+   ==========================================================================
+   Applied when the body has the `keyboard-visible` class, toggled via
+   the Visual Viewport resize listener in mobile-support.ts.
+
+   Goal: maximise game-area height by compressing the header into a single
+   row and making the footer as slim as possible while preserving all
+   game-relevant information.
+   ========================================================================== */
+
+/* ── App container — lock to visible viewport ───────────────────────────── */
+
+body.keyboard-visible #app {
+  height: var(--viewport-height, 100dvh);
+  max-height: var(--viewport-height, 100dvh);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Header — ultra-compact single bar ──────────────────────────────────── */
+
+body.keyboard-visible header {
+  padding: var(--space-1) var(--space-3);
+}
+
+body.keyboard-visible .header-title {
+  display: none;
+}
+
+/* Flatten header-controls into one horizontal row.  Using display:contents
+   on the two control-sections lets their children (stat boxes + buttons)
+   all participate as direct flex children so we get a single row. */
+body.keyboard-visible .header-controls {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: auto;
+}
+
+body.keyboard-visible .header-controls .control-section {
+  display: contents;
+}
+
+body.keyboard-visible .header-controls .section-items {
+  display: contents;
+}
+
+/* ── Stat boxes — label-less compact chips ──────────────────────────────── */
+
+body.keyboard-visible .stat-label {
+  display: none;
+}
+
+body.keyboard-visible .stat-box {
+  padding: var(--space-1) var(--space-2);
+  gap: 0;
+  min-width: 0;
+  border-radius: var(--radius-sm);
+}
+
+body.keyboard-visible .stat-box > div {
+  font-size: var(--font-md);
+  line-height: 1.2;
+}
+
+body.keyboard-visible .heart-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Control buttons — icon-only pill ───────────────────────────────────── */
+
+body.keyboard-visible .btn-end-game,
+body.keyboard-visible .btn-pause {
+  min-width: 0;
+  max-width: none;
+  width: auto;
+  padding: var(--space-1) var(--space-3);
+  gap: 0;
+}
+
+/* Position End at the far left, Pause at the far right */
+body.keyboard-visible #end-game {
+  order: -1;
+}
+
+body.keyboard-visible #pause {
+  order: 1;
+}
+
+body.keyboard-visible .btn-end-game .btn-label,
+body.keyboard-visible .btn-pause .btn-label {
+  display: none;
+}
+
+body.keyboard-visible .btn-end-game .btn-icon-wrap,
+body.keyboard-visible .btn-pause .btn-icon-wrap {
+  width: 18px;
+}
+
+body.keyboard-visible .btn-end-game .btn-icon-wrap .btn-icon,
+body.keyboard-visible .btn-pause .btn-icon-wrap .btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Settings button ────────────────────────────────────────────────────── */
+
+body.keyboard-visible .btn-settings {
+  top: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+}
+
+body.keyboard-visible .btn-settings .btn-label {
+  display: none;
+}
+
+body.keyboard-visible .btn-settings .btn-icon-wrap .btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Game area — fill remaining space ───────────────────────────────────── */
+
+body.keyboard-visible main#game-area {
+  flex: 1;
+  max-height: none;
+}
+
+/* ── Tokens — smaller tiles and effects ──────────────────────────────────── */
+
+body.keyboard-visible .token {
+  --token-size: 56px;
+  font-size: var(--font-2xl);
+}
+
+body.keyboard-visible .floating-text {
+  font-size: var(--font-xl);
+  text-shadow: none;
+}
+
+body.keyboard-visible .floating-speed {
+  font-size: var(--font-2xl);
+  text-shadow: 0 0 10px var(--accent-50);
+}
+
+body.keyboard-visible .floating-life {
+  font-size: var(--font-2xl);
+}
+
+/* ── Footer / Input echo — single slim bar ──────────────────────────────── */
+
+body.keyboard-visible #input-display {
+  padding: var(--space-1) var(--space-3);
+  gap: 0;
+  border-width: 1px;
+}
+
+body.keyboard-visible #input-display label {
+  display: none;
+}
+
+body.keyboard-visible #input-echo {
+  font-size: var(--font-md);
+  padding: var(--space-1) var(--space-3);
+  min-height: 0;
+  min-width: 120px;
+}
+
+/* ==========================================================================
+   Small-screen overrides (always active, not just when keyboard is visible)
+   ========================================================================== */
+
+@media (max-width: 420px) {
+  :root {
+    --token-size: 56px;
+    --danger-zone-height: 60px;
+  }
+
+  .token {
+    font-size: var(--font-2xl);
+  }
+
+  /* ── Floating text — smaller sizes + reduced travel ───────────────────── */
+
+  .floating-text {
+    font-size: var(--font-xl);
+    text-shadow: none;
+  }
+
+  .floating-points {
+    color: var(--color-success);
+  }
+
+  .floating-combo {
+    color: var(--color-combo);
+  }
+
+  .floating-speed {
+    font-size: var(--font-2xl);
+    text-shadow: 0 0 10px var(--accent-50);
+  }
+
+  .floating-life {
+    font-size: var(--font-2xl);
+  }
+
+  @keyframes float-up {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-40px) scale(1.05);
+      opacity: 0;
+    }
+  }
+
+  /* ── Settings — hide music volume (iOS ignores programmatic volume) ──── */
+
+  .volume-setting {
+    display: none;
+  }
+
+  /* ── Perf — remove costly backdrop-filter blur on mobile GPUs ─────────── */
+
+  header,
+  #input-display {
+    backdrop-filter: none;
+  }
+}
+

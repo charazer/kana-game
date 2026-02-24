@@ -12,6 +12,27 @@ footer {
   box-sizing: border-box;
 }
 
+/* Hidden input element for mobile software keyboard.
+   Must remain focusable (no display:none / visibility:hidden) so the
+   keyboard can be triggered, but completely invisible to the user. */
+#mobile-input {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  opacity: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px; /* >= 16px prevents iOS auto-zoom on focus */
+  caret-color: transparent;
+  color: transparent;
+  z-index: -1;
+  padding: 0;
+  margin: 0;
+}
+
 #input-display {
   max-width: var(--game-max-width);
   width: 100%;
