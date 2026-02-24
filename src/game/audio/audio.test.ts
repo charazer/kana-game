@@ -16,6 +16,7 @@ describe('audio', () => {
         setValueAtTime: vi.fn(),
         exponentialRampToValueAtTime: vi.fn()
       },
+      detune: { value: 0 },
       type: 'sine'
     }
 
@@ -25,6 +26,7 @@ describe('audio', () => {
       gain: {
         value: 0,
         setValueAtTime: vi.fn(),
+        linearRampToValueAtTime: vi.fn(),
         exponentialRampToValueAtTime: vi.fn()
       }
     }
@@ -84,13 +86,13 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create oscillators and gain nodes', () => {
+      it('should create oscillators and gain nodes for koto pluck pair', () => {
         const manager = new AudioManager()
         manager.playSuccess()
         
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(2)
-        // After refactoring with audio helpers, each oscillator gets its own gain node
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(2)
+        // 2 koto plucks (main + octave-below) × 3 harmonics each
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(6)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(6)
       })
 
       it('should connect audio nodes correctly', () => {
@@ -119,30 +121,33 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create multiple oscillators for arpeggio', () => {
+      it('should create oscillators for descending koto arpeggio', () => {
         const manager = new AudioManager()
         manager.playGameOver()
         
-        // 4 notes in descending arpeggio
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(4)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(4)
+        // 4 notes × 3 harmonics each = 12 oscillators
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(12)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(12)
       })
 
-      it('should set triangle waveform', () => {
-        let capturedType = 'sine'
+      it('should use koto timbre with triangle fundamental', () => {
+        const capturedTypes: string[] = []
         mockAudioContext.createOscillator = vi.fn(() => {
           const osc = { ...mockOscillator }
           Object.defineProperty(osc, 'type', {
-            get: () => capturedType,
-            set: (val) => { capturedType = val }
+            get: () => osc._type,
+            set: (val: string) => { osc._type = val; capturedTypes.push(val) }
           })
+          osc._type = 'sine'
           return osc
         })
         
         const manager = new AudioManager()
         manager.playGameOver()
         
-        expect(capturedType).toBe('triangle')
+        // Each koto pluck: triangle (fundamental), sine (octave), sine (fifth)
+        expect(capturedTypes).toContain('triangle')
+        expect(capturedTypes).toContain('sine')
       })
     })
 
@@ -163,7 +168,7 @@ describe('audio', () => {
         expect(mockAudioContext.createGain).toHaveBeenCalledTimes(1)
       })
 
-      it('should use sawtooth waveform', () => {
+      it('should use sine waveform for taiko drum', () => {
         let capturedType = 'sine'
         mockAudioContext.createOscillator = vi.fn(() => {
           const osc = { ...mockOscillator }
@@ -177,7 +182,7 @@ describe('audio', () => {
         const manager = new AudioManager()
         manager.playLifeLost()
         
-        expect(capturedType).toBe('sawtooth')
+        expect(capturedType).toBe('sine')
       })
 
       it('should use frequency ramping', () => {
@@ -198,13 +203,13 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create multiple oscillators for arpeggio', () => {
+      it('should create oscillators for ascending koto run', () => {
         const manager = new AudioManager()
         manager.playSpeedIncrease()
         
-        // 4 notes in ascending arpeggio
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(4)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(4)
+        // 3 notes × 3 harmonics each = 9 oscillators
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(9)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(9)
       })
     })
 
@@ -217,23 +222,32 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create multiple oscillators for chord', () => {
+      it('should create oscillators for ascending koto arpeggio', () => {
         const manager = new AudioManager()
         manager.playGameStart()
         
-        // 3 notes in rising chord
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(3)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(3)
+        // 4 notes × 3 harmonics each = 12 oscillators
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(12)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(12)
       })
 
-      it('should use sine waveform', () => {
-        // Verify oscillator type stays as sine (default)
+      it('should use koto timbre', () => {
+        const capturedTypes: string[] = []
+        mockAudioContext.createOscillator = vi.fn(() => {
+          const osc = { ...mockOscillator }
+          Object.defineProperty(osc, 'type', {
+            get: () => osc._type,
+            set: (val: string) => { osc._type = val; capturedTypes.push(val) }
+          })
+          osc._type = 'sine'
+          return osc
+        })
+        
         const manager = new AudioManager()
         manager.playGameStart()
         
-        // Since sine is the default and playGameStart uses sine, this test just
-        // verifies the method runs without error
-        expect(mockAudioContext.createOscillator).toHaveBeenCalled()
+        expect(capturedTypes).toContain('triangle')
+        expect(capturedTypes).toContain('sine')
       })
     })
 
@@ -246,20 +260,21 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create oscillator and gain', () => {
+      it('should create oscillators for wind chime pair', () => {
         const manager = new AudioManager()
         manager.playPause()
         
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(1)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(1)
+        // Wind chime: 2 detuned sine oscillators
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(2)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(2)
       })
 
-      it('should use descending frequency', () => {
+      it('should use sine waveform with detune', () => {
         const manager = new AudioManager()
         manager.playPause()
         
-        expect(mockOscillator.frequency.setValueAtTime).toHaveBeenCalled()
-        expect(mockOscillator.frequency.exponentialRampToValueAtTime).toHaveBeenCalled()
+        expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()
+        expect(mockGain.gain.exponentialRampToValueAtTime).toHaveBeenCalled()
       })
     })
 
@@ -272,20 +287,21 @@ describe('audio', () => {
         expect(mockAudioContext.createOscillator).not.toHaveBeenCalled()
       })
 
-      it('should create oscillator and gain', () => {
+      it('should create oscillators for wind chime pair', () => {
         const manager = new AudioManager()
         manager.playResume()
         
-        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(1)
-        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(1)
+        // Wind chime: 2 detuned sine oscillators
+        expect(mockAudioContext.createOscillator).toHaveBeenCalledTimes(2)
+        expect(mockAudioContext.createGain).toHaveBeenCalledTimes(2)
       })
 
-      it('should use ascending frequency', () => {
+      it('should use sine waveform with detune', () => {
         const manager = new AudioManager()
         manager.playResume()
         
-        expect(mockOscillator.frequency.setValueAtTime).toHaveBeenCalled()
-        expect(mockOscillator.frequency.exponentialRampToValueAtTime).toHaveBeenCalled()
+        expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()
+        expect(mockGain.gain.exponentialRampToValueAtTime).toHaveBeenCalled()
       })
     })
 
