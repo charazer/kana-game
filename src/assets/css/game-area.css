@@ -91,6 +91,27 @@ main#game-area {
   filter: drop-shadow(0 0 20px var(--accent-50)) drop-shadow(0 0 40px var(--accent-30));
 }
 
+/* Speed-flash overlay — animates opacity only (GPU-composited) instead of
+   box-shadow which triggers paint every frame. */
+main#game-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-30);
+  opacity: 0;
+  pointer-events: none;
+}
+
+main#game-area.speed-flash::before {
+  animation: speed-flash-anim 600ms ease-out forwards;
+}
+
+@keyframes speed-flash-anim {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 #tokens {
   position: absolute;
   inset: 0;

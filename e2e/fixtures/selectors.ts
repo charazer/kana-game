@@ -37,6 +37,7 @@ export const Selectors = {
   // Game area
   tokens: '#tokens .token',
   inputEcho: '#input-echo',
+  mobileInput: '#mobile-input',
   
   // End screens
   gameOver: '#game-over',

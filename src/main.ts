@@ -6,7 +6,7 @@ import { GameEngine } from './game/core/engine'
 import { DOMRenderer } from './game/ui/renderer_dom'
 import { InputManager } from './game/input/input'
 import { AudioManager } from './game/audio/audio'
-import { tokensLayer, inputEcho, highScoresStartEl } from './app/dom-elements'
+import { tokensLayer, inputEcho, highScoresStartEl, mobileInput, gameArea } from './app/dom-elements'
 import { initializeAudio, initializeGameSettings, createSettingsControl } from './app/settings'
 import { createGameCallbacks } from './app/game-callbacks'
 import {
@@ -23,11 +23,22 @@ import {
 	initializeModalEscapeKeys
 } from './app/modal-handlers'
 import { renderHighScores } from './app/ui-helpers'
+import { initializeMobileKeyboardDetection, initializeTouchFocusProtection } from './app/mobile-support'
 
 async function main() {
 	const renderer = new DOMRenderer(tokensLayer as HTMLElement)
 	const input = new InputManager()
 	const audio = new AudioManager()
+
+	// Mobile support: bind the hidden input element for software keyboard
+	if (mobileInput) {
+		input.bindElement(mobileInput)
+
+		if (gameArea) {
+			initializeTouchFocusProtection(gameArea, mobileInput, () => input.enabled)
+		}
+	}
+	initializeMobileKeyboardDetection()
 
 	// Create engine with placeholder callbacks (resolved below after controls exist)
 	const engine = new GameEngine({

@@ -45,6 +45,7 @@ export type Renderer = {
   setTokenPosition: (el: HTMLElement, x: number, y: number) => void
   flashToken: (el: HTMLElement, success: boolean) => void
   showFloatingText: (x: number, y: number, text: string, type: FloatingTextType) => void
+  getWidth: () => number
   getHeight: () => number
 }
 
@@ -81,6 +82,7 @@ export class GameEngine {
   includeDakuten = true // user setting for including dakuten/handakuten
   includeYoon = true // user setting for including yoon
   currentKanaSet: KanaSet = KANA_SET_HIRAGANA // track current kana set for scoring
+  private readonly boundLoop: (now: number) => void
 
   constructor(opts: {
     renderer: Renderer
@@ -99,6 +101,7 @@ export class GameEngine {
     this.onGameOver = opts.onGameOver ?? (() => {})
     this.onCombo = opts.onCombo
     this.onSpeedChange = opts.onSpeedChange
+    this.boundLoop = this.loop.bind(this)
     this.input.onCommit = (value) => this.handleCommit(value)
     this.loadKana(KANA_SET_HIRAGANA)
   }
@@ -108,7 +111,7 @@ export class GameEngine {
     this.input.enabled = true
     this.last = performance.now()
     this.spawnToken()
-    requestAnimationFrame(this.loop.bind(this))
+    requestAnimationFrame(this.boundLoop)
   }
 
   setGameMode(mode: GameMode) {
@@ -138,7 +141,7 @@ export class GameEngine {
     this.running = true
     this.input.enabled = true
     this.last = performance.now()
-    requestAnimationFrame(this.loop.bind(this))
+    requestAnimationFrame(this.boundLoop)
   }
 
   reset() {
@@ -230,7 +233,7 @@ export class GameEngine {
       this.resetCombo()
     }
 
-    if (this.running) requestAnimationFrame(this.loop.bind(this))
+    if (this.running) requestAnimationFrame(this.boundLoop)
   }
 
   getAvailableKana() {
@@ -273,14 +276,17 @@ export class GameEngine {
     this.kanaRoundCount.set(kanaKey(entry), (this.kanaRoundCount.get(kanaKey(entry)) ?? 0) + 1)
 
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
-    const width = (this.renderer as any).getWidth ? (this.renderer as any).getWidth() : 400
-    const safeWidth = width - (SPAWN_MARGIN * 2) - TOKEN_WIDTH
+    const width = this.renderer.getWidth()
+    // Scale token width and min distance for narrow viewports to prevent overlap
+    const effectiveTokenWidth = Math.min(TOKEN_WIDTH, Math.floor(width * 0.15))
+    const effectiveMinDistance = Math.min(MIN_TOKEN_DISTANCE, Math.floor(width * 0.2))
+    const safeWidth = width - (SPAWN_MARGIN * 2) - effectiveTokenWidth
     let x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))
 
     // Avoid overlap with existing tokens
     for (let attempts = 0; attempts < MAX_SPAWN_ATTEMPTS; attempts++) {
       const overlapping = this.tokens.some(t =>
-        Math.abs(t.x - x) < MIN_TOKEN_DISTANCE && Math.abs(t.y) < VERTICAL_OVERLAP_THRESHOLD
+        Math.abs(t.x - x) < effectiveMinDistance && Math.abs(t.y) < VERTICAL_OVERLAP_THRESHOLD
       )
       if (!overlapping) break
       x = SPAWN_MARGIN + Math.floor(Math.random() * Math.max(0, safeWidth))

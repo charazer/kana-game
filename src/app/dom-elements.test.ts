@@ -8,6 +8,7 @@
 
 function setupDOM() {
   document.body.innerHTML = `
+    <div id="game-area"></div>
     <div id="tokens"></div>
     <div id="paused-indicator"></div>
     <div id="score"></div>
@@ -22,6 +23,7 @@ function setupDOM() {
     <input id="audio-toggle" type="checkbox">
     <input id="include-dakuten" type="checkbox">
     <input id="include-yoon" type="checkbox">
+    <input id="mobile-input" type="text">
     <div id="input-echo"></div>
     <button id="end-game"></button>
     <button id="pause"></button>
@@ -81,6 +83,13 @@ describe('dom-elements', () => {
     expect(els.highScoresEndEl).toBeInstanceOf(HTMLElement)
     expect(els.kanaContent).toBeInstanceOf(HTMLElement)
     expect(els.confirmEndModal).toBeInstanceOf(HTMLElement)
+  })
+
+  it('should export optional game area and mobile input references', async () => {
+    const els = await import('./dom-elements')
+
+    expect(els.gameArea).toBeInstanceOf(HTMLElement)
+    expect(els.mobileInput).toBeInstanceOf(HTMLInputElement)
   })
 
   it('should export modal elements with their overlays', async () => {

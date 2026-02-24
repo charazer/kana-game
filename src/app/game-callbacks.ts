@@ -26,7 +26,8 @@ import {
 	finalScoreEl,
 	newHighScoreEl,
 	highScoresEndEl,
-	gameOverEl
+	gameOverEl,
+	gameArea
 } from './dom-elements'
 
 import heartFullImg from '../assets/img/heart.png'
@@ -60,10 +61,10 @@ export function createGameCallbacks(
 			speedEl.textContent = display
 			flashStat(speedEl.parentElement)
 
-			const gameArea = document.getElementById('game-area')
 			if (gameArea) {
 				gameArea.classList.add('speed-flash')
-				setTimeout(() => gameArea.classList.remove('speed-flash'), ANIM_DURATION_SPEED_FLASH)
+				const el = gameArea
+				setTimeout(() => el.classList.remove('speed-flash'), ANIM_DURATION_SPEED_FLASH)
 			}
 
 			const width = renderer.getHeight() * GAME_AREA_WIDTH_MULTIPLIER

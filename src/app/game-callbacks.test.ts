@@ -19,7 +19,8 @@ const {
   finalScoreEl,
   newHighScoreEl,
   highScoresEndEl,
-  gameOverEl
+  gameOverEl,
+  gameArea
 } = vi.hoisted(() => ({
   scoreEl: makeStatEl(),
   comboEl: makeStatEl(),
@@ -28,7 +29,8 @@ const {
   finalScoreEl: document.createElement('div'),
   newHighScoreEl: document.createElement('div'),
   highScoresEndEl: document.createElement('div'),
-  gameOverEl: document.createElement('div')
+  gameOverEl: document.createElement('div'),
+  gameArea: document.createElement('div')
 }))
 
 vi.mock('./dom-elements', () => ({
@@ -39,7 +41,8 @@ vi.mock('./dom-elements', () => ({
   finalScoreEl,
   newHighScoreEl,
   highScoresEndEl,
-  gameOverEl
+  gameOverEl,
+  gameArea
 }))
 
 vi.mock('../game/storage/storage', () => ({
@@ -208,10 +211,6 @@ describe('game-callbacks', () => {
       })
 
       it('should add speed-flash class to game-area when present', () => {
-        const gameArea = document.createElement('div')
-        gameArea.id = 'game-area'
-        document.body.appendChild(gameArea)
-
         const { onSpeedChange } = createGameCallbacks(renderer as any, audio as any, engine as any, controls)
 
         onSpeedChange(2.0)
@@ -219,8 +218,6 @@ describe('game-callbacks', () => {
         expect(gameArea.classList.contains('speed-flash')).toBe(true)
         vi.runAllTimers()
         expect(gameArea.classList.contains('speed-flash')).toBe(false)
-
-        document.body.removeChild(gameArea)
       })
 
       it('should show floating text via renderer', () => {

@@ -6,6 +6,7 @@
 // DOM element queries - using string literals directly for clarity
 
 // Game area elements
+export const gameArea = document.getElementById('game-area')
 export const tokensLayer = document.getElementById('tokens')!
 export const pausedIndicator = document.getElementById('paused-indicator')!
 
@@ -26,6 +27,7 @@ export const includeDakutenToggle = document.getElementById('include-dakuten') a
 export const includeYoonToggle = document.getElementById('include-yoon') as HTMLInputElement | null
 
 // Input display
+export const mobileInput = document.getElementById('mobile-input') as HTMLInputElement | null
 export const inputEcho = document.getElementById('input-echo')!
 
 // Game control buttons
