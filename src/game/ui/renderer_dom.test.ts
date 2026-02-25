@@ -325,6 +325,28 @@ describe('renderer_dom', () => {
     })
   })
 
+  describe('getDangerZoneHeight', () => {
+    it('should return the parsed --danger-zone-height CSS variable when set', () => {
+      container.style.setProperty('--danger-zone-height', '60px')
+
+      const height = renderer.getDangerZoneHeight()
+
+      expect(height).toBe(60)
+    })
+
+    it('should fall back to DANGER_ZONE constant when CSS variable is not set', () => {
+      // No --danger-zone-height set on the container; getComputedStyle returns ''
+      const height = renderer.getDangerZoneHeight()
+
+      // happy-dom returns '' for unset custom props → parseFloat('') = NaN → fallback 80
+      expect(height).toBe(80)
+    })
+
+    it('should return a number', () => {
+      expect(typeof renderer.getDangerZoneHeight()).toBe('number')
+    })
+  })
+
   describe('integration scenarios', () => {
     it('should handle token lifecycle: create, position, flash, remove', () => {
       const el = renderer.createTokenEl('a', 'あ')

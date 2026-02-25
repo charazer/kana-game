@@ -1,4 +1,4 @@
-import { type FloatingTextType, DATASET_KANA_ID } from '../constants/constants'
+import { type FloatingTextType, DATASET_KANA_ID, DANGER_ZONE } from '../constants/constants'
 
 export class DOMRenderer {
   container: HTMLElement
@@ -49,5 +49,10 @@ export class DOMRenderer {
 
   getHeight() {
     return this.container.clientHeight
+  }
+
+  getDangerZoneHeight() {
+    const raw = getComputedStyle(this.container).getPropertyValue('--danger-zone-height').trim()
+    return parseFloat(raw) || DANGER_ZONE
   }
 }

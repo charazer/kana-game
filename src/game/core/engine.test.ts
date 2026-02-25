@@ -42,7 +42,8 @@ describe('engine', () => {
       flashToken: vi.fn(),
       showFloatingText: vi.fn(),
       getWidth: vi.fn(() => 400),
-      getHeight: vi.fn(() => 600)
+      getHeight: vi.fn(() => 600),
+      getDangerZoneHeight: vi.fn(() => 80)
     }
     
     inputManager = new InputManager()

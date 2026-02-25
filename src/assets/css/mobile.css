@@ -127,7 +127,11 @@ body.keyboard-visible .btn-settings .btn-icon-wrap .btn-icon {
 
 body.keyboard-visible main#game-area {
   flex: 1;
-  max-height: none;
+  max-height: none; 
+  /* Scale danger-zone strip to match the 56px token size, same as the
+     @media (max-width: 420px) rule. Without this override the strip
+     stays at the default 80px even though tokens are rendered at 56px. */
+  --danger-zone-height: 60px;
 }
 
 /* ── Tokens — smaller tiles and effects ──────────────────────────────────── */
