@@ -1,7 +1,7 @@
-import { GameEngine, type Renderer } from './engine'
-import { kanaKey } from './game-helpers'
+import { GameEngine } from './engine'
+import { kanaKey } from './match-helpers'
 import { InputManager } from '../input/input'
-import type { KanaEntry } from './types'
+import type { KanaEntry, Renderer } from './types'
 import {
   GAME_MODE_PRACTICE,
   GAME_MODE_CHALLENGE,

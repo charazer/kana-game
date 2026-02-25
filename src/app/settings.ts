@@ -15,7 +15,7 @@ import {
 	includeYoonToggle,
 	highScoresStartEl
 } from './dom-elements'
-import { updateLivesDisplay } from './game-callbacks'
+import { updateLivesDisplay } from './ui-helpers'
 import { enableElements, disableElements } from '../game/ui/dom-helpers'
 import { renderHighScores } from './ui-helpers'
 

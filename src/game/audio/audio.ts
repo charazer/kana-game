@@ -1,4 +1,4 @@
-import { playKotoArpeggio, playKotoPluck, playTaikoDrum, playWindChime, YO_SCALE } from './audio-helpers'
+import { playKotoArpeggio, playKotoPluck, playTaikoDrum, playWindChime, YO_SCALE } from './instruments'
 
 export class AudioManager {
   private ctx: AudioContext | null = null

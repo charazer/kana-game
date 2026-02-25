@@ -1,5 +1,5 @@
 import { GameEngine } from './game/core/engine'
-import { DOMRenderer } from './game/ui/renderer_dom'
+import { DOMRenderer } from './game/ui/renderer-dom'
 import { InputManager } from './game/input/input'
 import { AudioManager } from './game/audio/audio'
 import { tokensLayer, inputEcho, highScoresStartEl, mobileInput, gameArea } from './app/dom-elements'

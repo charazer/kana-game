@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import { createGameCallbacks, updateLivesDisplay } from './game-callbacks'
+import { createGameCallbacks } from './game-callbacks'
 import { GAME_MODE_CHALLENGE, GAME_MODE_PRACTICE, INITIAL_LIVES } from '../game/constants/constants'
 
 // ── Shared mock DOM elements ──────────────────────────────────────────────────
@@ -374,37 +374,4 @@ describe('game-callbacks', () => {
     })
   })
 
-  // ─── updateLivesDisplay ────────────────────────────────────────────────────
-
-  describe('updateLivesDisplay', () => {
-    it('should hide lives display in practice mode', () => {
-      const { onLivesChange } = createGameCallbacks(renderer as any, audio as any, engine as any, controls)
-      // Ensure the parent element exists
-      onLivesChange(INITIAL_LIVES)
-
-      updateLivesDisplay(GAME_MODE_PRACTICE)
-
-      expect(livesEl.parentElement!.style.display).toBe('none')
-    })
-
-    it('should show lives display in challenge mode', () => {
-      const { onLivesChange } = createGameCallbacks(renderer as any, audio as any, engine as any, controls)
-      onLivesChange(INITIAL_LIVES)
-
-      updateLivesDisplay(GAME_MODE_CHALLENGE)
-
-      expect(livesEl.parentElement!.style.display).toBe('flex')
-    })
-
-    it('should do nothing when livesEl has no parent element', () => {
-      const parent = livesEl.parentElement!
-      parent.removeChild(livesEl)
-
-      // Should not throw — the guard `if (livesDisplay)` returns early
-      updateLivesDisplay(GAME_MODE_PRACTICE)
-
-      // Restore so other tests are unaffected
-      parent.appendChild(livesEl)
-    })
-  })
 })

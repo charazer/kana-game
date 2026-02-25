@@ -1,11 +1,10 @@
 import kanaHiragana from '../../data/kana/hiragana.json'
 import kanaKatakana from '../../data/kana/katakana.json'
-import type { KanaEntry } from './types'
+import type { KanaEntry, Renderer } from './types'
 import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from '../constants/kana-constants'
-import { findTokenMatch, kanaKey } from './game-helpers'
+import { findTokenMatch, kanaKey } from './match-helpers'
 import {
   type GameMode,
-  type FloatingTextType,
   type KanaSet,
   GAME_MODE_PRACTICE,
   GAME_MODE_CHALLENGE,
@@ -37,17 +36,6 @@ import {
   CHALLENGE_MAX_TOKENS,
   CHALLENGE_SPAWN_INTERVAL
 } from '../constants/constants'
-
-export type Renderer = {
-  createTokenEl: (id: string, kana: string) => HTMLElement
-  removeTokenEl: (el: HTMLElement) => void
-  setTokenPosition: (el: HTMLElement, x: number, y: number) => void
-  flashToken: (el: HTMLElement, success: boolean) => void
-  showFloatingText: (x: number, y: number, text: string, type: FloatingTextType) => void
-  getWidth: () => number
-  getHeight: () => number
-  getDangerZoneHeight: () => number
-}
 
 import type { InputManager } from '../input/input'
 

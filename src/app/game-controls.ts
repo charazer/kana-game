@@ -23,7 +23,31 @@ export interface ControlHandle {
 	disable: () => void
 }
 
-// ─── Animation helpers ──────────────────────────────────────────────────────
+// ─── Pause/resume UI helpers ────────────────────────────────────────────────
+
+export function showPausedUI() {
+	pausedIndicator.classList.remove('hidden')
+	if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.resume)
+}
+
+export function showResumedUI() {
+	pausedIndicator.classList.add('hidden')
+	if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.pause)
+}
+
+export function pauseGame(engine: GameEngine, audio: AudioManager) {
+	engine.pause()
+	audio.playPause()
+	showPausedUI()
+}
+
+export function resumeGame(engine: GameEngine, audio: AudioManager) {
+	engine.resume()
+	audio.playResume()
+	showResumedUI()
+}
+
+// ─── Animation helpers ────────────────────────────────────────────────────── 
 
 function pressAnimation(btn: HTMLButtonElement | null) {
 	if (!btn) return
@@ -68,15 +92,9 @@ export function initializePauseButton(engine: GameEngine, audio: AudioManager): 
 		pressAnimation(pauseBtn)
 		isPaused = !isPaused
 		if (isPaused) {
-			engine.pause()
-			audio.playPause()
-			pausedIndicator.classList.remove('hidden')
-			if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.resume)
+			pauseGame(engine, audio)
 		} else {
-			engine.resume()
-			audio.playResume()
-			pausedIndicator.classList.add('hidden')
-			if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.pause)
+			resumeGame(engine, audio)
 		}
 	})
 
@@ -118,10 +136,7 @@ export function initializeEndGameButton(engine: GameEngine, audio: AudioManager)
 		if (confirmOpen) return
 		wasPausedBeforeConfirm = !engine.running
 		if (!wasPausedBeforeConfirm) {
-			engine.pause()
-			audio.playPause()
-			pausedIndicator.classList.remove('hidden')
-			if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.resume)
+			pauseGame(engine, audio)
 		}
 		engine.input.enabled = false
 		engine.input.buffer = ''
@@ -134,10 +149,7 @@ export function initializeEndGameButton(engine: GameEngine, audio: AudioManager)
 		confirmOpen = false
 		confirmEndModal.classList.add('hidden')
 		if (!wasPausedBeforeConfirm) {
-			engine.resume()
-			audio.playResume()
-			pausedIndicator.classList.add('hidden')
-			if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.pause)
+			resumeGame(engine, audio)
 		}
 		engine.input.enabled = true
 		engine.input.buffer = ''

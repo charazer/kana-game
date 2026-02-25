@@ -4,7 +4,7 @@ import { GAME_MODE_PRACTICE, type GameMode } from '../game/constants/constants'
 import kanaHiragana from '../data/kana/hiragana.json'
 import kanaKatakana from '../data/kana/katakana.json'
 import type { KanaEntry } from '../game/core/types'
-import { kanaContent } from './dom-elements'
+import { kanaContent, livesEl } from './dom-elements'
 
 export function renderHighScores(container: HTMLElement, gameMode: GameMode, highlightScore?: number) {
 	const entries: HighScoreEntry[] = getHighScores().map((entry, idx) => ({
@@ -26,5 +26,12 @@ export function updateKanaScrollIndicators() {
 	for (const section of kanaContent.querySelectorAll('.kana-section')) {
 		const table = section.querySelector('.kana-table')
 		if (table) section.classList.toggle('has-scroll', table.scrollWidth > table.clientWidth)
+	}
+}
+
+export function updateLivesDisplay(mode: GameMode) {
+	const livesDisplay = livesEl.parentElement
+	if (livesDisplay) {
+		livesDisplay.style.display = mode === GAME_MODE_PRACTICE ? 'none' : 'flex'
 	}
 }

@@ -1,9 +1,9 @@
-import { DOMRenderer } from './renderer_dom'
+import { DOMRenderer } from './renderer-dom'
 import {
   DATASET_KANA_ID
 } from '../constants/constants'
 
-describe('renderer_dom', () => {
+describe('renderer-dom', () => {
   let container: HTMLElement
   let renderer: DOMRenderer
 
