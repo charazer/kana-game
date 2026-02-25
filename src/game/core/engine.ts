@@ -56,12 +56,12 @@ export class GameEngine {
   input: InputManager
   running = false
   last = 0
-  correctAnswers = 0 // track for progressive difficulty
+  correctAnswers = 0
   tokens: Array<{ id: string; entry: KanaEntry; el: HTMLElement; kana: string; y: number; x:number; spawnTime: number }>
   score = 0
   lives = INITIAL_LIVES
   combo = 0
-  gameTime = 0 // total time elapsed in current game
+  gameTime = 0
   gameMode: GameMode = GAME_MODE_CHALLENGE
   onScore: (s: number) => void
   onLivesChange: (lives: number, previousLives?: number) => void
@@ -69,19 +69,19 @@ export class GameEngine {
   onCombo?: (combo: number) => void
   onSpeedChange?: (multiplier: number) => void
   kanaSet: KanaEntry[] = []
-  kanaLastSeen: Map<string, number> = new Map() // track when each kana was last shown (keyed by kanaKey)
-  kanaSelectionQueue: string[] = [] // queue for round-robin selection (keyed by kanaKey)
-  kanaRoundCount: Map<string, number> = new Map() // track how many times each kana has been shown (keyed by kanaKey)
-  kanaSetFingerprint = '' // fingerprint of available kana set, used to detect set changes
+  kanaLastSeen: Map<string, number> = new Map()
+  kanaSelectionQueue: string[] = []
+  kanaRoundCount: Map<string, number> = new Map()
+  kanaSetFingerprint = ''
   spawnAccumulator = 0
-  spawnInterval = CHALLENGE_SPAWN_INTERVAL // default to challenge mode interval
+  spawnInterval = CHALLENGE_SPAWN_INTERVAL
   baseSpeed = CHALLENGE_BASE_SPEED
   speed = CHALLENGE_BASE_SPEED
-  lastSpeedMultiplier = 1.0 // track last speed multiplier to detect changes
+  lastSpeedMultiplier = 1.0
   maxActiveTokens = CHALLENGE_MAX_TOKENS
-  includeDakuten = true // user setting for including dakuten/handakuten
-  includeYoon = true // user setting for including yoon
-  currentKanaSet: KanaSet = KANA_SET_HIRAGANA // track current kana set for scoring
+  includeDakuten = true
+  includeYoon = true
+  currentKanaSet: KanaSet = KANA_SET_HIRAGANA
   private readonly boundLoop: (now: number) => void
 
   constructor(opts: {
@@ -277,7 +277,7 @@ export class GameEngine {
 
     const el = this.renderer.createTokenEl(entry.id, entry.kana)
     const width = this.renderer.getWidth()
-    // Scale token width and min distance for narrow viewports to prevent overlap
+    // Scale for narrow viewports
     const effectiveTokenWidth = Math.min(TOKEN_WIDTH, Math.floor(width * 0.15))
     const effectiveMinDistance = Math.min(MIN_TOKEN_DISTANCE, Math.floor(width * 0.2))
     const safeWidth = width - (SPAWN_MARGIN * 2) - effectiveTokenWidth
@@ -369,13 +369,12 @@ export class GameEngine {
       ? this.input.buffer.slice(match.matchedLength)
       : ''
 
-    // Delayed echo update (skip if player typed ahead)
     const snapshot = this.input.buffer
     setTimeout(() => {
       if (this.input.buffer === snapshot) this.input.onKey(snapshot)
     }, INPUT_ECHO_CLEAR_DELAY)
 
-    // Instantly spawn if board is empty
+    // Instant spawn if board is empty
     if (this.tokens.length === 0) {
       this.spawnToken()
       this.spawnAccumulator = 0

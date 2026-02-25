@@ -12,7 +12,7 @@ export type KanaSet = typeof KANA_SET_HIRAGANA | typeof KANA_SET_KATAKANA | type
 // Floating text types
 export type FloatingTextType = 'points' | 'combo' | 'life' | 'speed'
 
-// Dataset keys (keep this as it's used in multiple places)
+// Dataset keys
 export const DATASET_KANA_ID = 'kanaId'
 
 // Game configuration
@@ -22,13 +22,13 @@ export const INITIAL_LIVES = 3
 export const ANIM_DURATION_STAT_HIGHLIGHT = 300
 export const ANIM_DURATION_STAT_SHAKE = 400
 export const ANIM_DURATION_SPEED_FLASH = 600
-export const INPUT_ECHO_CLEAR_DELAY = 100 // ms to linger matched input before clearing echo
+export const INPUT_ECHO_CLEAR_DELAY = 100
 
 // UI positioning and sizing
-export const FLOATING_TEXT_OFFSET_X = 36 // pixels - horizontal offset for floating text
-export const FLOATING_TEXT_OFFSET_Y = 36 // pixels - vertical offset for floating text
-export const FLOATING_TEXT_COMBO_OFFSET_Y = 60 // pixels - vertical offset for combo text (below points)
-export const GAME_AREA_WIDTH_MULTIPLIER = 0.6 // multiplier for calculating game area width from height
+export const FLOATING_TEXT_OFFSET_X = 36
+export const FLOATING_TEXT_OFFSET_Y = 36
+export const FLOATING_TEXT_COMBO_OFFSET_Y = 60
+export const GAME_AREA_WIDTH_MULTIPLIER = 0.6
 
 
 
@@ -36,30 +36,30 @@ export const GAME_AREA_WIDTH_MULTIPLIER = 0.6 // multiplier for calculating game
 export const BASE_POINTS = 10
 export const MAX_TIME_BONUS = 10
 export const COMBO_MULTIPLIER = 0.05
-export const DANGER_ZONE = 80 // pixels from bottom
-export const TOKEN_WIDTH = 72 // pixels
-export const SPAWN_MARGIN = 20 // pixels
-export const MIN_TOKEN_DISTANCE = 100 // pixels
+export const DANGER_ZONE = 80
+export const TOKEN_WIDTH = 72
+export const SPAWN_MARGIN = 20
+export const MIN_TOKEN_DISTANCE = 100
 export const MAX_SPAWN_ATTEMPTS = 10
 
-// Speed progression constants (challenge mode)
-export const SPEED_INCREASE_INTERVAL = 15 // seconds
-export const SPEED_BASE_EXPONENT = 1.08 // exponential base (8% growth per interval)
-export const SPEED_CHANGE_DELAY = 1.0 // seconds to wait before first speed increase
+// Speed progression (challenge mode)
+export const SPEED_INCREASE_INTERVAL = 15
+export const SPEED_BASE_EXPONENT = 1.08
+export const SPEED_CHANGE_DELAY = 1.0
 
-// Unlock thresholds (based on correct answers)
-export const UNLOCK_DAKUTEN_THRESHOLD = 10 // unlock after 10 correct answers
-export const UNLOCK_YOON_THRESHOLD = 20 // unlock after 20 correct answers
+// Unlock thresholds (correct answers required)
+export const UNLOCK_DAKUTEN_THRESHOLD = 10
+export const UNLOCK_YOON_THRESHOLD = 20
 
 // Spawn overlap detection
-export const VERTICAL_OVERLAP_THRESHOLD = 150 // pixels
+export const VERTICAL_OVERLAP_THRESHOLD = 150
 
-// Practice mode settings
-export const PRACTICE_BASE_SPEED = 20 // pixels/sec
+// Practice mode
+export const PRACTICE_BASE_SPEED = 20
 export const PRACTICE_MAX_TOKENS = 5
-export const PRACTICE_SPAWN_INTERVAL = 1.8 // seconds (slower spawning for learning)
+export const PRACTICE_SPAWN_INTERVAL = 1.8
 
-// Challenge mode settings
-export const CHALLENGE_BASE_SPEED = 40 // pixels/sec (reduced from 60)
+// Challenge mode
+export const CHALLENGE_BASE_SPEED = 40
 export const CHALLENGE_MAX_TOKENS = 8
-export const CHALLENGE_SPAWN_INTERVAL = 1.2 // seconds (faster spawning for challenge)
+export const CHALLENGE_SPAWN_INTERVAL = 1.2

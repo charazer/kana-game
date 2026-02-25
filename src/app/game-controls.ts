@@ -1,7 +1,3 @@
-/**
- * Game controls — pause, end game, start, and restart
- */
-
 import type { GameEngine } from '../game/core/engine'
 import type { AudioManager } from '../game/audio/audio'
 import { updateButtonContent, ButtonTemplates } from '../game/ui/templates'
@@ -32,8 +28,7 @@ export interface ControlHandle {
 function pressAnimation(btn: HTMLButtonElement | null) {
 	if (!btn) return
 	btn.classList.remove('btn-press-pop')
-	// Double-rAF ensures browser processes the removal before re-adding
-	// the class, restarting the animation without a synchronous reflow.
+	// Double-rAF restarts the animation without a synchronous reflow
 	requestAnimationFrame(() => {
 		requestAnimationFrame(() => {
 			btn.classList.add('btn-press-pop')

@@ -1,7 +1,3 @@
-/**
- * Game logic helpers
- */
-
 import type { KanaEntry } from './types'
 import { exactMatch, longestRomajiMatch } from './matcher'
 

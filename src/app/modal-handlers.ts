@@ -1,7 +1,3 @@
-/**
- * Modal handlers — settings, help, and kana reference
- */
-
 import type { GameEngine } from '../game/core/engine'
 import type { AudioManager } from '../game/audio/audio'
 import { setupModalHandlers } from '../game/ui/dom-helpers'

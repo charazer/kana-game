@@ -65,15 +65,7 @@ export class AudioManager {
     this.musicElement.currentTime = 0
   }
 
-  /**
-   * Tile resolved — random koto pluck from the Yo scale.
-   * A different note is chosen each time so the sound stays fresh
-   * even after hundreds of correct answers.
-   *
-   * Two plucks sound together for richness (合わせ awase technique):
-   *   • main note at normal volume
-   *   • octave-below root at lower volume for warmth
-   */
+  /** Tile resolved — random koto pluck with octave-below warmth. */
   playSuccess() {
     if (!this.enabled || !this.ctx) return
     const note = YO_SCALE[Math.floor(Math.random() * YO_SCALE.length)]
@@ -81,10 +73,7 @@ export class AudioManager {
     playKotoPluck(this.ctx, { frequency: note * 0.5, volume: 0.06, duration: 0.3 })
   }
 
-  /**
-   * Game over — gentle descending F-major koto phrase.
-   * Stays in the bright pentatonic so the ending feels uplifting.
-   */
+  /** Game over — descending F-major koto phrase. */
   playGameOver() {
     if (!this.enabled || !this.ctx) return
     playKotoArpeggio(this.ctx, [
@@ -95,10 +84,7 @@ export class AudioManager {
     ])
   }
 
-  /**
-   * Life lost — taiko drum hit (太鼓).
-   * A single impactful low-frequency thud.
-   */
+  /** Life lost — taiko drum hit. */
   playLifeLost() {
     if (!this.enabled || !this.ctx) return
     playTaikoDrum(this.ctx, { volume: 0.2, duration: 0.3 })

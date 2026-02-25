@@ -1,7 +1,3 @@
-/**
- * Main entry point — initializes and wires all modules
- */
-
 import { GameEngine } from './game/core/engine'
 import { DOMRenderer } from './game/ui/renderer_dom'
 import { InputManager } from './game/input/input'
@@ -30,7 +26,6 @@ async function main() {
 	const input = new InputManager()
 	const audio = new AudioManager()
 
-	// Mobile support: bind the hidden input element for software keyboard
 	if (mobileInput) {
 		input.bindElement(mobileInput)
 
@@ -40,7 +35,6 @@ async function main() {
 	}
 	initializeMobileKeyboardDetection()
 
-	// Create engine with placeholder callbacks (resolved below after controls exist)
 	const engine = new GameEngine({
 		renderer,
 		input,
@@ -51,13 +45,11 @@ async function main() {
 		onGameOver: () => {}
 	})
 
-	// Build control handles
 	const pause = initializePauseButton(engine, audio)
 	const endGame = initializeEndGameButton(engine, audio)
 	const settings = createSettingsControl()
 	const controls = { pause, endGame, settings }
 
-	// Wire actual callbacks now that controls exist
 	const callbacks = createGameCallbacks(renderer, audio, engine, controls)
 	Object.assign(engine, callbacks)
 

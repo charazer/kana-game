@@ -1,7 +1,3 @@
-/**
- * Settings initialization — audio and game settings with persistence
- */
-
 import type { GameMode, KanaSet } from '../game/constants/constants'
 import { GAME_MODE_CHALLENGE, KANA_SET_HIRAGANA } from '../game/constants/constants'
 import { loadSettings, updateSetting } from '../game/storage/storage'

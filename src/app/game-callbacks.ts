@@ -1,7 +1,3 @@
-/**
- * Game engine callback handlers
- */
-
 import {
 	GAME_MODE_PRACTICE,
 	GAME_MODE_CHALLENGE,

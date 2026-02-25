@@ -39,7 +39,7 @@ export class InputManager {
     window.addEventListener('keydown', (e) => {
       if (!this._enabled) return
 
-      // When the bound input element is focused, let the input event handler manage everything
+      // Let the bound input element's handler manage when it has focus
       if (this.inputElement && document.activeElement === this.inputElement) return
 
       if (e.key === 'Backspace') {
@@ -50,7 +50,7 @@ export class InputManager {
       }
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
         const lower = e.key.toLowerCase()
-        // Only accept valid romaji characters or direct kana (IME) input
+        // Only accept valid romaji or direct kana (IME) input
         if (!VALID_ROMAJI_CHARS.has(lower) && !isKanaChar(e.key)) return
         this._buffer += lower
         this.onKey(this._buffer)
@@ -62,8 +62,6 @@ export class InputManager {
 
   /**
    * Bind an HTML input element for mobile software keyboard support.
-   * When bound, the element captures input on touch devices while the
-   * existing keydown listener continues to work on desktop.
    */
   bindElement(el: HTMLInputElement): void {
     this.inputElement = el

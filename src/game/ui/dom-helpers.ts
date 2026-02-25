@@ -1,7 +1,3 @@
-/**
- * DOM utility helpers for common UI operations
- */
-
 type Disableable = (HTMLButtonElement | HTMLSelectElement | HTMLInputElement) | null
 
 export function enableElement(el: Disableable): void {
@@ -26,9 +22,7 @@ export function disableElements(...elements: Disableable[]): void {
   for (const el of elements) disableElement(el)
 }
 
-/**
- * Sets up modal close handlers for close button and overlay click
- */
+/** Sets up modal close handlers. */
 export function setupModalHandlers(
   modal: HTMLElement,
   options: {

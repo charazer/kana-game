@@ -1,7 +1,3 @@
-/**
- * UI helpers — high scores and kana reference rendering
- */
-
 import { getHighScores } from '../game/storage/storage'
 import { createHighScoresList, createKanaReference, type HighScoreEntry } from '../game/ui/templates'
 import { GAME_MODE_PRACTICE, type GameMode } from '../game/constants/constants'

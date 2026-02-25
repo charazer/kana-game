@@ -124,7 +124,6 @@
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-/* speed-flash moved to game-area.css as a GPU-friendly opacity overlay */
 
 /* Responsive */
 @media (min-width: 421px) {

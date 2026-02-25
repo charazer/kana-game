@@ -1,10 +1,3 @@
-/**
- * Centralized DOM element references
- * All DOM queries are performed here to keep them organized and maintainable
- */
-
-// DOM element queries - using string literals directly for clarity
-
 // Game area elements
 export const gameArea = document.getElementById('game-area')
 export const tokensLayer = document.getElementById('tokens')!
