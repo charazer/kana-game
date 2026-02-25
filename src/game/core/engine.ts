@@ -19,7 +19,6 @@ import {
   BASE_POINTS,
   MAX_TIME_BONUS,
   COMBO_MULTIPLIER,
-  DANGER_ZONE,
   TOKEN_WIDTH,
   SPAWN_MARGIN,
   MIN_TOKEN_DISTANCE,
@@ -47,6 +46,7 @@ export type Renderer = {
   showFloatingText: (x: number, y: number, text: string, type: FloatingTextType) => void
   getWidth: () => number
   getHeight: () => number
+  getDangerZoneHeight: () => number
 }
 
 import type { InputManager } from '../input/input'
@@ -201,7 +201,7 @@ export class GameEngine {
     }
 
     // Move tokens and collect failures
-    const failureY = this.renderer.getHeight() - DANGER_ZONE
+    const failureY = this.renderer.getHeight() - this.renderer.getDangerZoneHeight()
     const failed: typeof this.tokens = []
 
     for (const t of this.tokens) {
@@ -257,7 +257,7 @@ export class GameEngine {
 
   calculateScore(token: { spawnTime: number }): number {
     const elapsed = (performance.now() - token.spawnTime) / 1000
-    const lifetime = (this.renderer.getHeight() - DANGER_ZONE) / this.speed
+    const lifetime = (this.renderer.getHeight() - this.renderer.getDangerZoneHeight()) / this.speed
     const timeBonus = Math.max(0, Math.min(MAX_TIME_BONUS, Math.round((lifetime - elapsed) / lifetime * MAX_TIME_BONUS)))
     const comboMultiplier = 1 + (this.combo * COMBO_MULTIPLIER)
     return Math.round((BASE_POINTS + timeBonus) * comboMultiplier * this.getDifficultyMultiplier())
