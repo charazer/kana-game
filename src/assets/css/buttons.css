@@ -167,7 +167,7 @@ kbd {
 }
 
 /* Responsive */
-@media (min-width: 421px) {
+@media (min-width: 480px) {
   .btn-start,
   .btn-restart,
   .btn-end-game,
@@ -200,7 +200,7 @@ kbd {
   }
 }
 
-@media (min-width: 601px) {
+@media (min-width: 768px) {
   .btn-end-game,
   .btn-pause {
     padding: var(--space-4) var(--space-5);
@@ -238,7 +238,7 @@ kbd {
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1024px) {
   .btn-end-game,
   .btn-pause {
     padding: var(--space-4) var(--space-6);
@@ -274,7 +274,7 @@ kbd {
   }
 }
 
-@media (min-width: 1061px) {
+@media (min-width: 1280px) {
   .btn-end-game,
   .btn-pause {
     width: 100%;

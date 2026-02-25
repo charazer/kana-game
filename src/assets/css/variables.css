@@ -80,6 +80,20 @@
   
   /* Layout */
   --game-max-width: 1200px;
+
+  /*
+   * Responsive Breakpoints (reference — CSS does not support custom-property
+   * media queries, so these values are documented here and applied as literal
+   * px values in each stylesheet's @media rules):
+   *
+   *   sm   480px   Large phones / landscape phones
+   *   md   768px   Tablets (iPad portrait)
+   *   lg  1024px   Laptops / desktops
+   *   xl  1280px   Large desktops
+   *
+   * Base styles (no media query) target small phones in portrait (< 480px).
+   * max-width counterparts: 479px (< sm), 767px (< md).
+   */
   
   /* Spacing scale - consistent 2px or 4px intervals */
   --space-1: 2px;

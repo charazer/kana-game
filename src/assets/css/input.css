@@ -73,7 +73,7 @@ footer {
 }
 
 /* Responsive */
-@media (min-width: 421px) {
+@media (min-width: 480px) {
   #input-display {
     padding: var(--space-4) var(--space-6);
     gap: var(--space-3);
@@ -86,7 +86,7 @@ footer {
   }
 }
 
-@media (min-width: 601px) {
+@media (min-width: 768px) {
   #input-display {
     padding: var(--space-5) var(--space-7);
     gap: var(--space-4);
@@ -100,7 +100,7 @@ footer {
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1024px) {
   #input-display {
     padding: var(--space-7) var(--space-9);
   }
