@@ -247,7 +247,7 @@ main#game-area.speed-flash::before {
 }
 
 /* Responsive paused text sizing */
-@media (min-width: 421px) {
+@media (min-width: 480px) {
   .paused-text {
     font-size: var(--font-5xl);
   }
@@ -258,7 +258,7 @@ main#game-area.speed-flash::before {
   }
 }
 
-@media (min-width: 601px) {
+@media (min-width: 768px) {
   .paused-text {
     font-size: 4rem;
   }
@@ -281,25 +281,25 @@ main#game-area.speed-flash::before {
 }
 
 /* Responsive */
-@media (min-width: 421px) {
+@media (min-width: 480px) {
   main#game-area {
     max-height: calc(100vh - 150px);
   }
 }
 
-@media (min-width: 601px) {
+@media (min-width: 768px) {
   main#game-area {
     max-height: calc(100vh - 140px);
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1024px) {
   main#game-area {
     max-height: calc(100vh - 170px);
   }
 }
 
-@media (min-width: 1061px) {
+@media (min-width: 1280px) {
   main#game-area {
     max-height: calc(100vh - 280px);
   }

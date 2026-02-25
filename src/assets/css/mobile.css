@@ -129,7 +129,7 @@ body.keyboard-visible main#game-area {
   flex: 1;
   max-height: none; 
   /* Scale danger-zone strip to match the 56px token size, same as the
-     @media (max-width: 420px) rule. Without this override the strip
+     @media (max-width: 479px) rule. Without this override the strip
      stays at the default 80px even though tokens are rendered at 56px. */
   --danger-zone-height: 60px;
 }
@@ -178,7 +178,7 @@ body.keyboard-visible #input-echo {
    Small-screen overrides (always active, not just when keyboard is visible)
    ========================================================================== */
 
-@media (max-width: 420px) {
+@media (max-width: 479px) {
   :root {
     --token-size: 56px;
     --danger-zone-height: 60px;
