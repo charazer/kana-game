@@ -52,12 +52,9 @@ vi.mock('../game/storage/storage', () => ({
   updateSetting: vi.fn()
 }))
 
-vi.mock('./game-callbacks', () => ({
-  updateLivesDisplay: vi.fn()
-}))
-
 vi.mock('./ui-helpers', () => ({
-  renderHighScores: vi.fn()
+  renderHighScores: vi.fn(),
+  updateLivesDisplay: vi.fn()
 }))
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -229,7 +226,7 @@ describe('settings', () => {
 
     it('should update engine mode, lives display, high scores, and save on game mode change', async () => {
       const { updateSetting } = await import('../game/storage/storage')
-      const { updateLivesDisplay } = await import('./game-callbacks')
+      const { updateLivesDisplay } = await import('./ui-helpers')
       const { renderHighScores } = await import('./ui-helpers')
       const engine = makeEngine()
       initializeGameSettings(engine as any)

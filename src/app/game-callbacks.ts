@@ -1,9 +1,4 @@
-/**
- * Game engine callback handlers
- */
-
 import {
-	GAME_MODE_PRACTICE,
 	GAME_MODE_CHALLENGE,
 	INITIAL_LIVES,
 	ANIM_DURATION_STAT_HIGHLIGHT,
@@ -11,10 +6,9 @@ import {
 	ANIM_DURATION_SPEED_FLASH,
 	GAME_AREA_WIDTH_MULTIPLIER
 } from '../game/constants/constants'
-import type { GameMode } from '../game/constants/constants'
 import { addHighScore, isHighScore } from '../game/storage/storage'
 import { renderHighScores } from './ui-helpers'
-import type { DOMRenderer } from '../game/ui/renderer_dom'
+import type { DOMRenderer } from '../game/ui/renderer-dom'
 import type { AudioManager } from '../game/audio/audio'
 import type { GameEngine } from '../game/core/engine'
 import type { ControlHandle } from './game-controls'
@@ -109,12 +103,5 @@ export function createGameCallbacks(
 
 			gameOverEl.classList.remove('hidden')
 		}
-	}
-}
-
-export function updateLivesDisplay(mode: GameMode) {
-	const livesDisplay = livesEl.parentElement
-	if (livesDisplay) {
-		livesDisplay.style.display = mode === GAME_MODE_PRACTICE ? 'none' : 'flex'
 	}
 }

@@ -5,9 +5,9 @@ import {
   playTaikoDrum,
   playWindChime,
   YO_SCALE,
-} from './audio-helpers'
+} from './instruments'
 
-describe('audio-helpers', () => {
+describe('instruments', () => {
   let mockOscillator: any
   let mockGain: any
   let mockAudioContext: any

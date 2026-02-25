@@ -1,11 +1,6 @@
-/**
- * Modal handlers — settings, help, and kana reference
- */
-
 import type { GameEngine } from '../game/core/engine'
 import type { AudioManager } from '../game/audio/audio'
 import { setupModalHandlers } from '../game/ui/dom-helpers'
-import { updateButtonContent, ButtonTemplates } from '../game/ui/templates'
 import {
 	settingsBtn,
 	settingsModal,
@@ -23,11 +18,10 @@ import {
 	openKanaReferenceBtn,
 	tabHiragana,
 	tabKatakana,
-	endGameBtn,
-	pauseBtn,
-	pausedIndicator
+	endGameBtn
 } from './dom-elements'
 import { renderKanaReference, updateKanaScrollIndicators } from './ui-helpers'
+import { pauseGame, resumeGame } from './game-controls'
 
 export function initializeSettingsModal(engine: GameEngine, audio: AudioManager) {
 	if (!settingsBtn || !settingsModal) return
@@ -41,11 +35,8 @@ export function initializeSettingsModal(engine: GameEngine, audio: AudioManager)
 			activeGameNotice.classList.toggle('hidden', !gameInProgress)
 			autoPausedGame = false
 			if (gameInProgress && engine.running) {
-				engine.pause()
-				audio.playPause()
-				pausedIndicator.classList.remove('hidden')
+				pauseGame(engine, audio)
 				autoPausedGame = true
-				if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.resume)
 			}
 		}
 	})
@@ -53,11 +44,8 @@ export function initializeSettingsModal(engine: GameEngine, audio: AudioManager)
 	const closeSettingsModal = () => {
 		settingsModal.classList.add('hidden')
 		if (autoPausedGame) {
-			engine.resume()
-			audio.playResume()
-			pausedIndicator.classList.add('hidden')
+			resumeGame(engine, audio)
 			autoPausedGame = false
-			if (pauseBtn) updateButtonContent(pauseBtn, ButtonTemplates.pause)
 		}
 	}
 

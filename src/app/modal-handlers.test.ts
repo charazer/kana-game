@@ -12,7 +12,7 @@ const {
   settingsBtn, settingsModal, settingsCloseBtn, settingsModalOverlay, activeGameNotice,
   helpModal, helpCloseBtn, helpModalOverlay, howToPlayLink, howToPlayLinkEnd,
   kanaModal, kanaCloseBtn, kanaModalOverlay, openKanaReferenceBtn, tabHiragana, tabKatakana,
-  endGameBtn, pauseBtn, pausedIndicator
+  endGameBtn, mockPauseGame, mockResumeGame
 } = vi.hoisted(() => ({
   settingsBtn: document.createElement('button'),
   settingsModal: document.createElement('div'),
@@ -31,8 +31,8 @@ const {
   tabHiragana: document.createElement('button'),
   tabKatakana: document.createElement('button'),
   endGameBtn: document.createElement('button'),
-  pauseBtn: document.createElement('button'),
-  pausedIndicator: document.createElement('div')
+  mockPauseGame: vi.fn(),
+  mockResumeGame: vi.fn()
 }))
 
 vi.mock('./dom-elements', () => ({
@@ -52,9 +52,12 @@ vi.mock('./dom-elements', () => ({
   openKanaReferenceBtn,
   tabHiragana,
   tabKatakana,
-  endGameBtn,
-  pauseBtn,
-  pausedIndicator
+  endGameBtn
+}))
+
+vi.mock('./game-controls', () => ({
+  pauseGame: mockPauseGame,
+  resumeGame: mockResumeGame
 }))
 
 vi.mock('./ui-helpers', () => ({
@@ -85,9 +88,7 @@ function resetModals() {
   helpModal.classList.add('hidden')
   kanaModal.classList.add('hidden')
   activeGameNotice.classList.add('hidden')
-  pausedIndicator.classList.add('hidden')
   endGameBtn.disabled = true
-  pauseBtn.disabled = true
   tabHiragana.classList.remove('active')
   tabKatakana.classList.remove('active')
 }
@@ -149,8 +150,7 @@ describe('modal-handlers', () => {
 
       settingsBtn.click()
 
-      expect(engine.pause).toHaveBeenCalledOnce()
-      expect(audio.playPause).toHaveBeenCalledOnce()
+      expect(mockPauseGame).toHaveBeenCalledWith(engine, audio)
     })
 
     it('should close settings modal when close button is clicked', () => {
@@ -184,8 +184,7 @@ describe('modal-handlers', () => {
 
       settingsCloseBtn.click()
 
-      expect(engine.resume).toHaveBeenCalledOnce()
-      expect(audio.playResume).toHaveBeenCalledOnce()
+      expect(mockResumeGame).toHaveBeenCalledWith(engine, audio)
     })
 
     it('should not resume engine on close if it was already paused before opening', () => {
@@ -197,7 +196,7 @@ describe('modal-handlers', () => {
 
       settingsCloseBtn.click()
 
-      expect(engine.resume).not.toHaveBeenCalled()
+      expect(mockResumeGame).not.toHaveBeenCalledWith(engine, audio)
     })
   })
 

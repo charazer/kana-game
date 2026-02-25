@@ -1,9 +1,6 @@
-/**
- * UI template utilities for generating consistent HTML structures
- */
-
 import type { KanaEntry } from '../core/types'
-import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS, GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from '../constants/kana-constants'
+import { BASIC_KANA_IDS, DAKUTEN_KANA_IDS, YOON_KANA_IDS } from '../constants/kana-constants'
+import { GOJUON_COLUMNS, DAKUTEN_COLUMNS, YOON_COLUMNS } from './kana-tables'
 
 import buttonPauseImg from '../../assets/img/button_pause.png'
 import buttonPlayImg from '../../assets/img/button_play.png'

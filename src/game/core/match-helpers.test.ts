@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import { findTokenMatch, kanaKey } from './game-helpers'
+import { findTokenMatch, kanaKey } from './match-helpers'
 import * as matcherModule from './matcher'
 import type { KanaEntry } from './types'
 
@@ -7,7 +7,7 @@ function makeEntry(id: string, kana: string, romaji: string[]): KanaEntry {
   return { id, kana, romaji, type: 'hiragana' }
 }
 
-describe('game-helpers', () => {
+describe('match-helpers', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })

@@ -1,13 +1,6 @@
 /**
- * Audio helper utilities for Japanese-themed sound generation.
- *
- * Instrument timbres synthesised with the Web Audio API:
- *   Koto  (箏)  — plucked string via layered harmonics with fast attack
- *   Taiko (太鼓) — percussive drum via low sine with pitch-bend
- *   Fūrin (風鈴) — wind-chime shimmer via detuned sine pair
- *
- * Scale matched to the background music (F major throughout):
- *   F major pentatonic: F  G  A  C  D
+ * Audio synthesis helpers — koto, taiko, and wind chime timbres
+ * via Web Audio API, tuned to F major pentatonic.
  */
 
 // ─── Japanese Pentatonic Scale (Hz) ─────────────────────────────────────────
@@ -56,7 +49,7 @@ export function playOscillator(
 
   osc.type = config.type
 
-  // Handle frequency (static or slide)
+  // Handle frequency
   if (config.frequency === 'slide' && config.frequencyStart && config.frequencyEnd) {
     osc.frequency.setValueAtTime(config.frequencyStart, config.startTime)
     osc.frequency.exponentialRampToValueAtTime(config.frequencyEnd, config.startTime + config.duration * 0.5)
@@ -64,7 +57,7 @@ export function playOscillator(
     osc.frequency.value = config.frequency
   }
 
-  // Setup gain envelope
+  // Gain envelope
   gain.gain.setValueAtTime(config.volume, config.startTime)
   gain.gain.exponentialRampToValueAtTime(0.01, config.startTime + config.duration)
 
@@ -74,16 +67,7 @@ export function playOscillator(
 
 // ─── Instrument: Koto Pluck (箏) ────────────────────────────────────────────
 
-/**
- * Simulates a koto string pluck using three layered harmonics:
- *   1× fundamental  (triangle) — warm body
- *   2× octave       (sine)     — brightness
- *   3× fifth        (sine)     — shimmer
- *
- * Each partial has a sharp attack (≈ 5 ms linear ramp) followed by an
- * exponential decay whose length decreases for higher harmonics, mimicking
- * the natural behaviour of a plucked string.
- */
+/** Koto pluck via three layered harmonics with sharp attack and exponential decay. */
 export function playKotoPluck(
   ctx: AudioContext,
   config: KotoPluckConfig
@@ -141,10 +125,7 @@ export function playKotoArpeggio(
 
 // ─── Instrument: Taiko Drum (太鼓) ──────────────────────────────────────────
 
-/**
- * Resonant drum hit: a sine with fast pitch-bend downward (150 → 60 Hz)
- * and an exponential volume decay.
- */
+/** Taiko drum hit: sine with fast pitch-bend (150 → 60 Hz) and exponential decay. */
 export function playTaikoDrum(
   ctx: AudioContext,
   options: { volume?: number; duration?: number; startTime?: number } = {}
@@ -174,11 +155,7 @@ export function playTaikoDrum(
 
 // ─── Instrument: Wind Chime / Fūrin (風鈴) ──────────────────────────────────
 
-/**
- * Bright shimmer created by two slightly detuned sine oscillators.
- * The ±6-cent spread produces a gentle beating that evokes the metallic
- * ring of a Japanese wind chime.
- */
+/** Wind chime shimmer via two ±6-cent detuned sine oscillators. */
 export function playWindChime(
   ctx: AudioContext,
   frequency: number,

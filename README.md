@@ -15,7 +15,7 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 - **Combo System** - Chain correct answers for score multipliers
 - **Difficulty Scoring** - Score multipliers based on enabled character types (0.5x to 1.25x)
 - **Alternative Romaji** - Accepts multiple romanisations (e.g., "shi"/"si", "tsu"/"tu")
-- **High Scores** - Top 10 scores saved locally with dates
+- **High Scores** - Top 5 scores saved locally with dates
 - **Responsive Design** - Works on mobile, tablet, and desktop (320px-1920px)
 - **Audio Feedback** - Sound effects for game events (toggleable)
 
@@ -76,6 +76,7 @@ npm run test:e2e:report     # View last test report
 # Other checks
 npm run typecheck           # TypeScript check
 npm run lint                # ESLint check
+npm run preview             # Preview production build
 ```
 
 ## How to Play

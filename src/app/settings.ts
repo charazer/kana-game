@@ -1,7 +1,3 @@
-/**
- * Settings initialization — audio and game settings with persistence
- */
-
 import type { GameMode, KanaSet } from '../game/constants/constants'
 import { GAME_MODE_CHALLENGE, KANA_SET_HIRAGANA } from '../game/constants/constants'
 import { loadSettings, updateSetting } from '../game/storage/storage'
@@ -19,7 +15,7 @@ import {
 	includeYoonToggle,
 	highScoresStartEl
 } from './dom-elements'
-import { updateLivesDisplay } from './game-callbacks'
+import { updateLivesDisplay } from './ui-helpers'
 import { enableElements, disableElements } from '../game/ui/dom-helpers'
 import { renderHighScores } from './ui-helpers'
 

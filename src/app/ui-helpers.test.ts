@@ -1,15 +1,24 @@
 import { vi } from 'vitest'
-import { renderHighScores, renderKanaReference, updateKanaScrollIndicators } from './ui-helpers'
+import { renderHighScores, renderKanaReference, updateKanaScrollIndicators, updateLivesDisplay } from './ui-helpers'
 import { GAME_MODE_PRACTICE, GAME_MODE_CHALLENGE } from '../game/constants/constants'
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
-const { kanaContentEl } = vi.hoisted(() => ({
-  kanaContentEl: document.createElement('div')
+function makeStatEl() {
+  const parent = document.createElement('div')
+  const child = document.createElement('div')
+  parent.appendChild(child)
+  return child
+}
+
+const { kanaContentEl, livesEl } = vi.hoisted(() => ({
+  kanaContentEl: document.createElement('div'),
+  livesEl: makeStatEl()
 }))
 
 vi.mock('./dom-elements', () => ({
-  kanaContent: kanaContentEl
+  kanaContent: kanaContentEl,
+  livesEl
 }))
 
 vi.mock('../game/storage/storage', () => ({
@@ -212,6 +221,33 @@ describe('ui-helpers', () => {
 
       expect((sections[0] as HTMLElement).classList.contains('has-scroll')).toBe(true)
       expect((sections[1] as HTMLElement).classList.contains('has-scroll')).toBe(false)
+    })
+  })
+
+  // ─── updateLivesDisplay ──────────────────────────────────────────────────────
+
+  describe('updateLivesDisplay', () => {
+    it('should hide lives display in practice mode', () => {
+      updateLivesDisplay(GAME_MODE_PRACTICE)
+
+      expect(livesEl.parentElement!.style.display).toBe('none')
+    })
+
+    it('should show lives display in challenge mode', () => {
+      updateLivesDisplay(GAME_MODE_CHALLENGE)
+
+      expect(livesEl.parentElement!.style.display).toBe('flex')
+    })
+
+    it('should do nothing when livesEl has no parent element', () => {
+      const parent = livesEl.parentElement!
+      parent.removeChild(livesEl)
+
+      // Should not throw — the guard `if (livesDisplay)` returns early
+      updateLivesDisplay(GAME_MODE_PRACTICE)
+
+      // Restore so other tests are unaffected
+      parent.appendChild(livesEl)
     })
   })
 })

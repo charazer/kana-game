@@ -23,27 +23,31 @@ src/
   app/                     # UI orchestration layer (DOM wiring, callbacks, settings)
     dom-elements.ts        # Typed references to every DOM element
     game-callbacks.ts      # Engine event handlers (score, lives, game-over, combo, speed)
-    game-controls.ts       # Pause / end-game / restart control flow
-    modal-handlers.ts      # Settings / confirm-end modal open/close
+    game-controls.ts       # Pause / resume / end-game / restart control flow
+    mobile-support.ts      # Mobile keyboard detection, viewport, touch focus
+    modal-handlers.ts      # Settings / help / kana-reference modal open/close
     settings.ts            # Audio + game settings initialisation and persistence
-    ui-helpers.ts          # Rendering helpers (high scores list, etc.)
-  game/                    # Pure game logic — no direct DOM access
-    audio/                 # AudioManager + audio helpers
+    ui-helpers.ts          # Rendering helpers (high scores, lives display, kana reference)
+  game/                    # Game logic — core is DOM-free, boundary modules may access browser APIs
+    audio/                 # AudioManager + instrument synthesis (browser API boundary)
+      audio.ts             # AudioManager class — playback, music, sound effects
+      instruments.ts       # Web Audio API instrument helpers (koto, taiko, wind chime)
     constants/
       constants.ts         # All numeric/string game constants (single source of truth)
-      kana-constants.ts    # Arrays of kana IDs grouped by type (basic, dakuten, yōon)
+      kana-constants.ts    # Kana ID tiers (basic, dakuten, yōon) + valid romaji chars
     core/
       engine.ts            # GameEngine class — the main game loop
-      game-helpers.ts      # Pure helpers (token matching, key generation)
+      match-helpers.ts     # Pure helpers (token matching, key generation)
       matcher.ts           # Romaji matching logic
-      types.ts             # Shared TypeScript types (KanaEntry, etc.)
+      types.ts             # Shared TypeScript types (KanaEntry, Renderer, etc.)
     input/
-      input.ts             # InputManager — keyboard event handling
+      input.ts             # InputManager — keyboard event handling (browser API boundary)
     storage/
-      storage.ts           # localStorage persistence (settings + high scores)
+      storage.ts           # localStorage persistence (settings + high scores, browser API boundary)
     ui/
-      dom-helpers.ts       # Generic DOM utility functions
-      renderer_dom.ts      # Renderer implementation (DOM token creation/update)
+      dom-helpers.ts       # Generic DOM utility functions (browser API boundary)
+      kana-tables.ts       # Kana reference table column layouts (presentation data)
+      renderer-dom.ts      # DOMRenderer — Renderer implementation (DOM token creation/update)
       templates.ts         # HTML string templates
   assets/
     css/                   # Modular CSS files
@@ -118,7 +122,9 @@ Dakuten characters unlock after 10 correct answers; yōon after 20. Speed increa
 - Test files: co-located with source files, same name with `.test.ts` suffix (e.g. `engine.ts` → `engine.test.ts`)
 
 ### Module Boundaries
-- `src/game/**` must remain **DOM-free** — no `document`, `window`, or `HTMLElement` references. All DOM interaction is delegated via the `Renderer` interface or lives in `src/app/` / `src/game/ui/`.
+- `src/game/core/**` and `src/game/constants/**` must remain **DOM-free** — no `document`, `window`, or `HTMLElement` references.
+- `src/game/ui/`, `src/game/input/`, `src/game/audio/`, and `src/game/storage/` are **browser API boundary modules** — they may access `document`, `window`, `HTMLElement`, `localStorage`, and Web Audio APIs as needed.
+- All DOM interaction from the engine is delegated via the `Renderer` interface (defined in `src/game/core/types.ts`) or `InputManager`.
 - `src/app/` is the orchestration layer; it may import from `src/game/` but not vice-versa.
 
 ### CSS
@@ -154,6 +160,7 @@ Dakuten characters unlock after 10 correct answers; yōon after 20. Speed increa
 |---|---|
 | `npm run dev` | Start Vite dev server (`http://localhost:5173`) |
 | `npm run build` | Production build → `dist/` |
+| `npm run preview` | Preview production build |
 | `npm run typecheck` | TypeScript check (no emit) |
 | `npm run lint` | ESLint check |
 | `npm run lint:fix` | ESLint auto-fix |
@@ -161,9 +168,12 @@ Dakuten characters unlock after 10 correct answers; yōon after 20. Speed increa
 | `npm run test:unit` | Unit tests (single run) |
 | `npm run test:unit:watch` | Unit tests (watch mode) |
 | `npm run test:unit:coverage` | Unit tests with coverage report |
+| `npm run test:unit:ui` | Unit tests with interactive UI |
 | `npm run test:e2e` | E2E tests (headless) |
+| `npm run test:e2e:ui` | E2E with Playwright UI mode |
 | `npm run test:e2e:headed` | E2E tests (visible browser) |
 | `npm run test:e2e:debug` | E2E with Playwright inspector |
+| `npm run test:e2e:report` | View last E2E test report |
 
 ---
 
@@ -196,7 +206,7 @@ Dakuten characters unlock after 10 correct answers; yōon after 20. Speed increa
 
 ## Constraints & Things to Avoid
 
-- Do **not** access `document`/`window` from `src/game/**` — inject via `Renderer` or `InputManager`.
+- Do **not** access `document`/`window` from `src/game/core/**` or `src/game/constants/**` — inject via `Renderer` or `InputManager`. Browser API access is allowed in boundary modules (`src/game/ui/`, `src/game/input/`, `src/game/audio/`, `src/game/storage/`).
 - Do **not** lower the 90 % coverage thresholds.
 - Do **not** hardcode selector strings in E2E tests — always use `Selectors`.
 - Do **not** add runtime dependencies (the project has zero `dependencies` in `package.json`).
