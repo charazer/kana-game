@@ -22,8 +22,8 @@ export default defineConfig({
   /* Retry failed tests on GitHub Actions for flake resistance */
   retries: isGitHubActions ? 2 : 0,
   
-  /* Use fewer workers on GitHub Actions for stability and resource management */
-  workers: isGitHubActions ? 1 : undefined,
+  /* Use fewer workers on GitHub Actions than locally, keeping 2 free for the dev server and OS */
+  workers: isGitHubActions ? 2 : undefined,
   
   /* Timeout for each test */
   timeout: 30 * 1000, // 30 seconds
