@@ -61,6 +61,7 @@ export class GameEngine {
   kanaSelectionQueue: string[] = []
   kanaRoundCount: Map<string, number> = new Map()
   kanaSetFingerprint = ''
+  lastSelectedKanaKey: string | null = null
   spawnAccumulator = 0
   spawnInterval = CHALLENGE_SPAWN_INTERVAL
   baseSpeed = CHALLENGE_BASE_SPEED
@@ -144,6 +145,7 @@ export class GameEngine {
     this.kanaSelectionQueue = []
     this.kanaRoundCount.clear()
     this.kanaSetFingerprint = ''
+    this.lastSelectedKanaKey = null
     for (const t of this.tokens) this.renderer.removeTokenEl(t.el)
     this.tokens = []
     this.kanaLastSeen.clear()
@@ -259,6 +261,7 @@ export class GameEngine {
 
     const now = performance.now()
     const entry = this.selectNextKana(availableKana)
+    this.lastSelectedKanaKey = kanaKey(entry)
 
     this.kanaLastSeen.set(kanaKey(entry), now)
     this.kanaRoundCount.set(kanaKey(entry), (this.kanaRoundCount.get(kanaKey(entry)) ?? 0) + 1)
@@ -311,14 +314,10 @@ export class GameEngine {
       }
 
       // Prevent consecutive repeat
-      if (eligible.length > 1) {
-        const entries = [...this.kanaLastSeen.entries()]
-        if (entries.length > 0) {
-          const mostRecent = entries.reduce((a, b) => a[1] > b[1] ? a : b)[0]
-          if (eligible[0] === mostRecent) {
-            const swapIdx = 1 + Math.floor(Math.random() * (eligible.length - 1))
-            ;[eligible[0], eligible[swapIdx]] = [eligible[swapIdx], eligible[0]]
-          }
+      if (eligible.length > 1 && this.lastSelectedKanaKey !== null) {
+        if (eligible[0] === this.lastSelectedKanaKey) {
+          const swapIdx = 1 + Math.floor(Math.random() * (eligible.length - 1))
+          ;[eligible[0], eligible[swapIdx]] = [eligible[swapIdx], eligible[0]]
         }
       }
 

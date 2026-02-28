@@ -154,26 +154,26 @@ Dakuten characters unlock after 10 correct answers; yōon after 20. Speed increa
 
 ---
 
-## npm Scripts Reference
+## pnpm Scripts Reference
 
 | Script | Purpose |
 |---|---|
-| `npm run dev` | Start Vite dev server (`http://localhost:5173`) |
-| `npm run build` | Production build → `dist/` |
-| `npm run preview` | Preview production build |
-| `npm run typecheck` | TypeScript check (no emit) |
-| `npm run lint` | ESLint check |
-| `npm run lint:fix` | ESLint auto-fix |
-| `npm run test` | All tests (unit + E2E) |
-| `npm run test:unit` | Unit tests (single run) |
-| `npm run test:unit:watch` | Unit tests (watch mode) |
-| `npm run test:unit:coverage` | Unit tests with coverage report |
-| `npm run test:unit:ui` | Unit tests with interactive UI |
-| `npm run test:e2e` | E2E tests (headless) |
-| `npm run test:e2e:ui` | E2E with Playwright UI mode |
-| `npm run test:e2e:headed` | E2E tests (visible browser) |
-| `npm run test:e2e:debug` | E2E with Playwright inspector |
-| `npm run test:e2e:report` | View last E2E test report |
+| `pnpm run dev` | Start Vite dev server (`http://localhost:5173`) |
+| `pnpm run build` | Production build → `dist/` |
+| `pnpm run preview` | Preview production build |
+| `pnpm run typecheck` | TypeScript check (no emit) |
+| `pnpm run lint` | ESLint check |
+| `pnpm run lint:fix` | ESLint auto-fix |
+| `pnpm run test` | All tests (unit + E2E) |
+| `pnpm run test:unit` | Unit tests (single run) |
+| `pnpm run test:unit:watch` | Unit tests (watch mode) |
+| `pnpm run test:unit:coverage` | Unit tests with coverage report |
+| `pnpm run test:unit:ui` | Unit tests with interactive UI |
+| `pnpm run test:e2e` | E2E tests (headless) |
+| `pnpm run test:e2e:ui` | E2E with Playwright UI mode |
+| `pnpm run test:e2e:headed` | E2E tests (visible browser) |
+| `pnpm run test:e2e:debug` | E2E with Playwright inspector |
+| `pnpm run test:e2e:report` | View last E2E test report |
 
 ---
 
