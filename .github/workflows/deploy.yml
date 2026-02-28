@@ -27,16 +27,16 @@ jobs:
             - uses: actions/setup-node@v6
               with:
                   node-version: "25"
-            - name: Cache node_modules
+            - uses: pnpm/action-setup@v4
+            - name: Cache pnpm store
               uses: actions/cache@v4
-              id: node-modules-cache
               with:
-                  path: node_modules
-                  key: node-modules-${{ hashFiles('package-lock.json') }}
+                  path: ~/.local/share/pnpm/store/v10
+                  key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+                  restore-keys: pnpm-store-
             - name: Install dependencies
-              if: steps.node-modules-cache.outputs.cache-hit != 'true'
-              run: npm ci
-            - run: npm run build
+              run: pnpm install --frozen-lockfile
+            - run: pnpm run build
             - uses: actions/upload-pages-artifact@v4
               with:
                   path: "./dist"
