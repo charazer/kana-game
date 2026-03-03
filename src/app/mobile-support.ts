@@ -41,6 +41,20 @@ export function initializeMobileKeyboardDetection(): void {
 	update()
 }
 
+/**
+ * When `?keyboard` is present in the URL, immediately apply the `keyboard-visible` class
+ * and a simulated viewport height (55 % of the current window height, approximating a
+ * typical software keyboard consuming ~45 % of the screen).  Useful for iterating on
+ * the compact keyboard layout on desktop without a physical device.
+ */
+export function initializeKeyboardDebugMode(): void {
+	if (!new URLSearchParams(window.location.search).has('keyboard')) return
+
+	const simulatedHeight = Math.round(window.innerHeight * 0.55)
+	document.body.classList.add('keyboard-visible')
+	document.documentElement.style.setProperty('--viewport-height', `${simulatedHeight}px`)
+}
+
 /** Pin `scrollTop` to 0 to prevent scroll-into-view from the hidden input shifting the layout. */
 export function initializeScrollPrevention(): void {
 	const lock = () => {
