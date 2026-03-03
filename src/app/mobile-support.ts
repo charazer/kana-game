@@ -1,20 +1,28 @@
 /**
  * Mobile support — keyboard detection, viewport handling, and touch focus protection.
  *
- * Keyboard detection uses the Visual Viewport API (supported in all modern
- * browsers) to compare the live viewport height against the initial height
- * captured at page load.  When the visible area shrinks below a threshold
- * percentage of that initial height the software keyboard is assumed open.
+ * Four layers prevent the software keyboard from pushing content up on Android:
+ * 1. `interactive-widget=resizes-visual` (index.html) — only the visual viewport shrinks,
+ *    keeping the layout stable (matches iOS behaviour natively).
+ * 2. Visual Viewport API — detects keyboard open/close to toggle compact layout overrides.
+ * 3. VirtualKeyboard API — Chromium-only progressive enhancement for `keyboard-inset-*` CSS vars.
+ * 4. Scroll prevention — pins `scrollTop` to 0 as a safety net for residual scroll attempts.
  */
 
 /**
- * Fraction of initial viewport height below which the software keyboard is
- * assumed visible.  Mobile keyboards typically consume 40-60 % of the screen;
- * a 0.75 threshold reliably distinguishes keyboard appearance from smaller
- * viewport changes caused by the browser chrome (URL / toolbar hide/show,
- * typically only 5-15 % height variation).
+ * Viewport height fraction below which the software keyboard is assumed open.
+ * Keyboards take ~40-60 % of the screen; 0.75 safely ignores browser-chrome hide/show (~5-15 %).
  */
 const KEYBOARD_VISIBILITY_RATIO = 0.75
+
+/**
+ * Opt into VirtualKeyboard overlay mode (Chromium ≥ 94).
+ * Enables `keyboard-inset-*` CSS environment variables; no-op on other browsers.
+ */
+export function initializeVirtualKeyboardAPI(): void {
+	if (!navigator.virtualKeyboard) return
+	navigator.virtualKeyboard.overlaysContent = true
+}
 
 /** Toggle `keyboard-visible` class on `<body>` and update `--viewport-height` on viewport resize. */
 export function initializeMobileKeyboardDetection(): void {
@@ -31,6 +39,17 @@ export function initializeMobileKeyboardDetection(): void {
 
 	vv.addEventListener('resize', update)
 	update()
+}
+
+/** Pin `scrollTop` to 0 to prevent scroll-into-view from the hidden input shifting the layout. */
+export function initializeScrollPrevention(): void {
+	const lock = () => {
+		document.documentElement.scrollTop = 0
+		document.body.scrollTop = 0
+	}
+
+	window.visualViewport?.addEventListener('resize', lock)
+	window.addEventListener('scroll', lock, { passive: false })
 }
 
 /** Prevent touch events on the game area from stealing focus away from the mobile input element. */

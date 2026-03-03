@@ -1,6 +1,50 @@
-import { initializeMobileKeyboardDetection, initializeTouchFocusProtection } from './mobile-support'
+import {
+	initializeMobileKeyboardDetection,
+	initializeTouchFocusProtection,
+	initializeVirtualKeyboardAPI,
+	initializeScrollPrevention
+} from './mobile-support'
 
 describe('mobile-support', () => {
+	describe('initializeVirtualKeyboardAPI', () => {
+		let originalVK: VirtualKeyboard | undefined
+
+		beforeEach(() => {
+			originalVK = navigator.virtualKeyboard
+		})
+
+		afterEach(() => {
+			Object.defineProperty(navigator, 'virtualKeyboard', {
+				value: originalVK,
+				writable: true,
+				configurable: true
+			})
+		})
+
+		it('should do nothing when VirtualKeyboard API is not available', () => {
+			Object.defineProperty(navigator, 'virtualKeyboard', {
+				value: undefined,
+				writable: true,
+				configurable: true
+			})
+			// Should not throw
+			initializeVirtualKeyboardAPI()
+		})
+
+		it('should set overlaysContent to true when VirtualKeyboard API is available', () => {
+			const mockVK = { overlaysContent: false } as VirtualKeyboard
+			Object.defineProperty(navigator, 'virtualKeyboard', {
+				value: mockVK,
+				writable: true,
+				configurable: true
+			})
+
+			initializeVirtualKeyboardAPI()
+
+			expect(mockVK.overlaysContent).toBe(true)
+		})
+	})
+
 	describe('initializeMobileKeyboardDetection', () => {
 		let originalVisualViewport: VisualViewport | null
 
@@ -118,6 +162,85 @@ describe('mobile-support', () => {
 			resizeCallback!(new Event('resize'))
 
 			expect(document.body.classList.contains('keyboard-visible')).toBe(false)
+		})
+	})
+
+	describe('initializeScrollPrevention', () => {
+		let originalVisualViewport: VisualViewport | null
+
+		beforeEach(() => {
+			originalVisualViewport = window.visualViewport
+			document.documentElement.scrollTop = 0
+			document.body.scrollTop = 0
+		})
+
+		afterEach(() => {
+			Object.defineProperty(window, 'visualViewport', {
+				value: originalVisualViewport,
+				writable: true,
+				configurable: true
+			})
+		})
+
+		it('should reset scrollTop to 0 on viewport resize', () => {
+			let resizeCallback: ((e: Event) => void) | undefined
+			const mockVV = {
+				height: 800,
+				addEventListener: (_event: string, cb: (e: Event) => void) => {
+					resizeCallback = cb
+				}
+			}
+			Object.defineProperty(window, 'visualViewport', {
+				value: mockVV,
+				writable: true,
+				configurable: true
+			})
+
+			initializeScrollPrevention()
+
+			document.documentElement.scrollTop = 100
+			document.body.scrollTop = 100
+			resizeCallback!(new Event('resize'))
+
+			expect(document.documentElement.scrollTop).toBe(0)
+			expect(document.body.scrollTop).toBe(0)
+		})
+
+		it('should reset scrollTop to 0 on window scroll', () => {
+			const mockVV = {
+				height: 800,
+				addEventListener: vi.fn()
+			}
+			Object.defineProperty(window, 'visualViewport', {
+				value: mockVV,
+				writable: true,
+				configurable: true
+			})
+
+			initializeScrollPrevention()
+
+			document.documentElement.scrollTop = 50
+			document.body.scrollTop = 50
+			window.dispatchEvent(new Event('scroll'))
+
+			expect(document.documentElement.scrollTop).toBe(0)
+			expect(document.body.scrollTop).toBe(0)
+		})
+
+		it('should not throw when visualViewport is not available', () => {
+			Object.defineProperty(window, 'visualViewport', {
+				value: null,
+				writable: true,
+				configurable: true
+			})
+
+			// Should not throw — scroll listener still attaches
+			initializeScrollPrevention()
+
+			document.documentElement.scrollTop = 50
+			window.dispatchEvent(new Event('scroll'))
+
+			expect(document.documentElement.scrollTop).toBe(0)
 		})
 	})
 
