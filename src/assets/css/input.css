@@ -12,13 +12,13 @@ footer {
   box-sizing: border-box;
 }
 
-/* Hidden input element for mobile software keyboard.
-   Must remain focusable (no display:none / visibility:hidden) so the
-   keyboard can be triggered, but completely invisible to the user. */
+/* Hidden mobile keyboard input — must stay focusable (not display:none / visibility:hidden).
+   Positioned at top:0 so it's always in the visual viewport; prevents Android browsers
+   from scrolling the page to bring the caret into view when the keyboard opens. */
 #mobile-input {
   position: fixed;
   left: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 1px;
   opacity: 0;
