@@ -19,7 +19,7 @@ import {
 	initializeModalEscapeKeys
 } from './app/modal-handlers'
 import { renderHighScores } from './app/ui-helpers'
-import { initializeMobileKeyboardDetection, initializeTouchFocusProtection, initializeVirtualKeyboardAPI, initializeScrollPrevention } from './app/mobile-support'
+import { initializeMobileKeyboardDetection, initializeTouchFocusProtection, initializeVirtualKeyboardAPI, initializeScrollPrevention, initializeKeyboardDebugMode } from './app/mobile-support'
 
 async function main() {
 	const renderer = new DOMRenderer(tokensLayer as HTMLElement)
@@ -35,6 +35,7 @@ async function main() {
 	}
 	initializeVirtualKeyboardAPI()
 	initializeMobileKeyboardDetection()
+	initializeKeyboardDebugMode()
 	initializeScrollPrevention()
 
 	const engine = new GameEngine({

@@ -2,7 +2,8 @@ import {
 	initializeMobileKeyboardDetection,
 	initializeTouchFocusProtection,
 	initializeVirtualKeyboardAPI,
-	initializeScrollPrevention
+	initializeScrollPrevention,
+	initializeKeyboardDebugMode
 } from './mobile-support'
 
 describe('mobile-support', () => {
@@ -241,6 +242,50 @@ describe('mobile-support', () => {
 			window.dispatchEvent(new Event('scroll'))
 
 			expect(document.documentElement.scrollTop).toBe(0)
+		})
+	})
+
+	describe('initializeKeyboardDebugMode', () => {
+		const setSearch = (search: string) => {
+			Object.defineProperty(window, 'location', {
+				value: { search },
+				writable: true,
+				configurable: true
+			})
+		}
+
+		beforeEach(() => {
+			document.body.className = ''
+			document.documentElement.style.removeProperty('--viewport-height')
+			setSearch('')
+		})
+
+		it('should do nothing when ?keyboard param is absent', () => {
+			setSearch('')
+			initializeKeyboardDebugMode()
+			expect(document.body.classList.contains('keyboard-visible')).toBe(false)
+			expect(document.documentElement.style.getPropertyValue('--viewport-height')).toBe('')
+		})
+
+		it('should force keyboard-visible and set --viewport-height when ?keyboard is present', () => {
+			setSearch('?keyboard')
+			initializeKeyboardDebugMode()
+			expect(document.body.classList.contains('keyboard-visible')).toBe(true)
+			const vh = document.documentElement.style.getPropertyValue('--viewport-height')
+			expect(vh).toMatch(/^\d+px$/)
+		})
+
+		it('should set --viewport-height to 55% of window.innerHeight', () => {
+			setSearch('?keyboard')
+			const expected = `${Math.round(window.innerHeight * 0.55)}px`
+			initializeKeyboardDebugMode()
+			expect(document.documentElement.style.getPropertyValue('--viewport-height')).toBe(expected)
+		})
+
+		it('should activate when ?keyboard appears alongside other params', () => {
+			setSearch('?foo=1&keyboard&bar=2')
+			initializeKeyboardDebugMode()
+			expect(document.body.classList.contains('keyboard-visible')).toBe(true)
 		})
 	})
 
