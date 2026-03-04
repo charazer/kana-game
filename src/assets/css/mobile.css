@@ -18,10 +18,10 @@ body.keyboard-visible #app {
   overflow: hidden;
 }
 
-/* ── Header — ultra-compact single bar ──────────────────────────────────── */
+/* ── Header — compact single bar ────────────────────────────────────────── */
 
 body.keyboard-visible header {
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
 }
 
 body.keyboard-visible .header-title {
@@ -55,20 +55,20 @@ body.keyboard-visible .stat-label {
 }
 
 body.keyboard-visible .stat-box {
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
   gap: 0;
   min-width: 0;
   border-radius: var(--radius-sm);
 }
 
 body.keyboard-visible .stat-box > div {
-  font-size: var(--font-md);
+  font-size: var(--font-lg);
   line-height: 1.2;
 }
 
 body.keyboard-visible .heart-icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
 }
 
 /* ── Control buttons — icon-only pill ───────────────────────────────────── */
@@ -78,7 +78,7 @@ body.keyboard-visible .btn-pause {
   min-width: 0;
   max-width: none;
   width: auto;
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-4);
   gap: 0;
 }
 
@@ -98,20 +98,20 @@ body.keyboard-visible .btn-pause .btn-label {
 
 body.keyboard-visible .btn-end-game .btn-icon-wrap,
 body.keyboard-visible .btn-pause .btn-icon-wrap {
-  width: 18px;
+  width: 22px;
 }
 
 body.keyboard-visible .btn-end-game .btn-icon-wrap .btn-icon,
 body.keyboard-visible .btn-pause .btn-icon-wrap .btn-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 
 /* ── Settings button ────────────────────────────────────────────────────── */
 
 body.keyboard-visible .btn-settings {
-  top: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
 body.keyboard-visible .btn-settings .btn-label {
@@ -119,8 +119,8 @@ body.keyboard-visible .btn-settings .btn-label {
 }
 
 body.keyboard-visible .btn-settings .btn-icon-wrap .btn-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 
 /* ── Game area — fill remaining space ───────────────────────────────────── */
