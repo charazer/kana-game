@@ -205,7 +205,6 @@ body.keyboard-visible #input-echo {
 
   .floating-speed {
     font-size: var(--font-2xl);
-    text-shadow: 0 0 10px var(--accent-50);
   }
 
   .floating-life {

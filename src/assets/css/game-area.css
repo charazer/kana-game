@@ -100,6 +100,7 @@ main#game-area::before {
   background: var(--accent-30);
   opacity: 0;
   pointer-events: none;
+  will-change: opacity;
 }
 
 main#game-area.speed-flash::before {
@@ -151,14 +152,12 @@ main#game-area.speed-flash::before {
 }
 
 .token-success {
-  background: var(--color-success-glow) !important;
-  border-color: var(--color-success) !important;
+  box-shadow: 0 0 0 2px var(--color-success), 0 0 12px var(--color-success-glow);
   animation: token-success-anim 150ms ease-out forwards;
 }
 
 .token-miss {
-  background: var(--color-error-glow) !important;
-  border-color: var(--color-error) !important;
+  box-shadow: 0 0 0 2px var(--color-error), 0 0 12px var(--color-error-glow);
   animation: token-miss-anim 200ms ease-out forwards;
 }
 
@@ -176,24 +175,20 @@ main#game-area.speed-flash::before {
 
 .floating-points {
   color: var(--color-success);
-  text-shadow: var(--shadow-success-text);
 }
 
 .floating-combo {
   color: var(--color-combo);
-  text-shadow: var(--shadow-combo-text);
 }
 
 .floating-speed {
   color: var(--accent);
-  text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-60);
   font-size: var(--font-5xl);
   font-weight: var(--font-black);
 }
 
 .floating-life {
   color: var(--color-error);
-  text-shadow: var(--shadow-error-text);
   font-size: var(--font-4xl);
 }
 
@@ -225,24 +220,6 @@ main#game-area.speed-flash::before {
   100% {
     transform: translate3d(var(--tx), var(--ty), 0) scale(0.95);
     opacity: 0;
-  }
-}
-
-@keyframes success-glow {
-  0%, 100% {
-    box-shadow: var(--shadow-success);
-  }
-  50% {
-    box-shadow: 0 0 30px var(--color-success), 0 0 40px var(--color-success-glow);
-  }
-}
-
-@keyframes miss-glow {
-  0%, 100% {
-    box-shadow: var(--shadow-error);
-  }
-  50% {
-    box-shadow: 0 0 30px var(--color-error), 0 0 40px var(--color-error-glow);
   }
 }
 

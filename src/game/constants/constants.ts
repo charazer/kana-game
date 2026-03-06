@@ -19,15 +19,11 @@ export const DATASET_KANA_ID = 'kanaId'
 export const INITIAL_LIVES = 3
 
 // Animation durations (ms)
-export const ANIM_DURATION_STAT_HIGHLIGHT = 300
-export const ANIM_DURATION_STAT_SHAKE = 400
-export const ANIM_DURATION_SPEED_FLASH = 600
 export const INPUT_ECHO_CLEAR_DELAY = 100
 
 // UI positioning and sizing
 export const FLOATING_TEXT_OFFSET_X = 36
 export const FLOATING_TEXT_OFFSET_Y = 36
-export const FLOATING_TEXT_COMBO_OFFSET_Y = 60
 export const GAME_AREA_WIDTH_MULTIPLIER = 0.6
 
 

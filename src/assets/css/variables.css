@@ -136,9 +136,6 @@
   
   /* Shadows - Sakura glow effects */
   --shadow-md: 0 2px 8px rgba(208,135,112,0.3);
-  --shadow-success-text: 0 0 10px rgba(136,192,208,0.9), 0 0 20px rgba(136,192,208,0.5);
-  --shadow-error-text: 0 0 10px rgba(208,135,112,0.9), 0 0 20px rgba(208,135,112,0.5);
-  --shadow-combo-text: 0 0 10px rgba(201,160,220,0.9), 0 0 20px rgba(201,160,220,0.5);
   
   /* Token sizing */
   --token-size: 72px;

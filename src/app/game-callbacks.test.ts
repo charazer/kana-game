@@ -140,6 +140,7 @@ describe('game-callbacks', () => {
         const { onScore } = createGameCallbacks(renderer as any, audio as any, engine as any, controls)
 
         onScore(42)
+        vi.runAllTimers()
 
         expect(scoreEl.textContent).toBe('42')
       })
@@ -149,9 +150,10 @@ describe('game-callbacks', () => {
         const parent = scoreEl.parentElement!
 
         onScore(10)
+        vi.runAllTimers()
 
         expect(parent.classList.contains('stat-highlight')).toBe(true)
-        vi.runAllTimers()
+        parent.dispatchEvent(new Event('animationend'))
         expect(parent.classList.contains('stat-highlight')).toBe(false)
       })
 
@@ -169,6 +171,7 @@ describe('game-callbacks', () => {
         const { onCombo } = createGameCallbacks(renderer as any, audio as any, engine as any, controls)
 
         onCombo(3)
+        vi.runAllTimers()
 
         expect(comboEl.textContent).toBe('3x')
       })
@@ -178,6 +181,7 @@ describe('game-callbacks', () => {
         const parent = comboEl.parentElement!
 
         onCombo(2)
+        vi.runAllTimers()
 
         expect(parent.classList.contains('stat-highlight')).toBe(true)
       })
@@ -187,6 +191,7 @@ describe('game-callbacks', () => {
         const parent = comboEl.parentElement!
 
         onCombo(0)
+        vi.runAllTimers()
 
         expect(parent.classList.contains('stat-highlight')).toBe(false)
       })
@@ -216,7 +221,7 @@ describe('game-callbacks', () => {
         onSpeedChange(2.0)
 
         expect(gameArea.classList.contains('speed-flash')).toBe(true)
-        vi.runAllTimers()
+        gameArea.dispatchEvent(new Event('animationend'))
         expect(gameArea.classList.contains('speed-flash')).toBe(false)
       })
 
