@@ -2,6 +2,7 @@ import { type FloatingTextType, DATASET_KANA_ID, DANGER_ZONE } from '../constant
 
 export class DOMRenderer {
   container: HTMLElement
+  private cachedDangerZoneHeight: number | null = null
 
   constructor(container: HTMLElement) {
     this.container = container
@@ -52,7 +53,13 @@ export class DOMRenderer {
   }
 
   getDangerZoneHeight() {
+    if (this.cachedDangerZoneHeight !== null) return this.cachedDangerZoneHeight
     const raw = getComputedStyle(this.container).getPropertyValue('--danger-zone-height').trim()
-    return parseFloat(raw) || DANGER_ZONE
+    this.cachedDangerZoneHeight = parseFloat(raw) || DANGER_ZONE
+    return this.cachedDangerZoneHeight
+  }
+
+  invalidateCache() {
+    this.cachedDangerZoneHeight = null
   }
 }

@@ -1,9 +1,6 @@
 import {
 	GAME_MODE_CHALLENGE,
 	INITIAL_LIVES,
-	ANIM_DURATION_STAT_HIGHLIGHT,
-	ANIM_DURATION_STAT_SHAKE,
-	ANIM_DURATION_SPEED_FLASH,
 	GAME_AREA_WIDTH_MULTIPLIER
 } from '../game/constants/constants'
 import { addHighScore, isHighScore } from '../game/storage/storage'
@@ -27,9 +24,12 @@ import {
 import heartFullImg from '../assets/img/heart.png'
 import heartEmptyImg from '../assets/img/heart_empty.png'
 
-function flashStat(el: HTMLElement | null, className = 'stat-highlight', duration = ANIM_DURATION_STAT_HIGHLIGHT) {
-	el?.classList.add(className)
-	setTimeout(() => el?.classList.remove(className), duration)
+function flashStat(el: HTMLElement | null, className = 'stat-highlight') {
+	if (!el) return
+	el.classList.remove(className)
+	void el.offsetWidth
+	el.classList.add(className)
+	el.addEventListener('animationend', () => el.classList.remove(className), { once: true })
 }
 
 export function createGameCallbacks(
@@ -40,14 +40,18 @@ export function createGameCallbacks(
 ) {
 	return {
 		onScore: (s: number) => {
-			scoreEl.textContent = `${s}`
-			flashStat(scoreEl.parentElement)
+			requestAnimationFrame(() => {
+				scoreEl.textContent = `${s}`
+				flashStat(scoreEl.parentElement)
+			})
 			audio.playSuccess()
 		},
 
 		onCombo: (combo: number) => {
-			comboEl.textContent = `${combo}x`
-			if (combo > 0) flashStat(comboEl.parentElement)
+			requestAnimationFrame(() => {
+				comboEl.textContent = `${combo}x`
+				if (combo > 0) flashStat(comboEl.parentElement)
+			})
 		},
 
 		onSpeedChange: (multiplier: number) => {
@@ -56,9 +60,11 @@ export function createGameCallbacks(
 			flashStat(speedEl.parentElement)
 
 			if (gameArea) {
-				gameArea.classList.add('speed-flash')
 				const el = gameArea
-				setTimeout(() => el.classList.remove('speed-flash'), ANIM_DURATION_SPEED_FLASH)
+				el.classList.remove('speed-flash')
+				void el.offsetWidth
+				el.classList.add('speed-flash')
+				el.addEventListener('animationend', () => el.classList.remove('speed-flash'), { once: true })
 			}
 
 			const width = renderer.getHeight() * GAME_AREA_WIDTH_MULTIPLIER
@@ -78,7 +84,7 @@ export function createGameCallbacks(
 			}
 
 			if (previousLives !== undefined && lives < previousLives) {
-				flashStat(livesEl.parentElement, 'stat-shake', ANIM_DURATION_STAT_SHAKE)
+				flashStat(livesEl.parentElement, 'stat-shake')
 				audio.playLifeLost()
 			}
 		},

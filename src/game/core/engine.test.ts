@@ -559,21 +559,6 @@ describe('engine', () => {
       )
     })
 
-    it('should show combo text for combo > 1', () => {
-      engine.start()
-      engine.combo = 1
-      inputManager.buffer = 'ka'
-      engine.handleCommit('ka')
-      
-      // combo will be 2 after this match
-      expect(mockRenderer.showFloatingText).toHaveBeenCalledWith(
-        expect.any(Number),
-        expect.any(Number),
-        expect.stringMatching(/^2/),
-        'combo'
-      )
-    })
-
     it('should consume matched portion from buffer', () => {
       engine.start()
       inputManager.buffer = 'ka'

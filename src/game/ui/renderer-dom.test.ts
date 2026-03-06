@@ -345,6 +345,27 @@ describe('renderer-dom', () => {
     it('should return a number', () => {
       expect(typeof renderer.getDangerZoneHeight()).toBe('number')
     })
+
+    it('should cache the value after the first call', () => {
+      container.style.setProperty('--danger-zone-height', '60px')
+      const spy = vi.spyOn(window, 'getComputedStyle')
+
+      renderer.getDangerZoneHeight()
+      renderer.getDangerZoneHeight()
+      renderer.getDangerZoneHeight()
+
+      expect(spy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should re-read value after invalidateCache', () => {
+      container.style.setProperty('--danger-zone-height', '60px')
+      expect(renderer.getDangerZoneHeight()).toBe(60)
+
+      container.style.setProperty('--danger-zone-height', '100px')
+      renderer.invalidateCache()
+
+      expect(renderer.getDangerZoneHeight()).toBe(100)
+    })
   })
 
   describe('integration scenarios', () => {
