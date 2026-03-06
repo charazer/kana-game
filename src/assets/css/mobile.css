@@ -143,12 +143,10 @@ body.keyboard-visible .token {
 
 body.keyboard-visible .floating-text {
   font-size: var(--font-xl);
-  text-shadow: none;
 }
 
 body.keyboard-visible .floating-speed {
   font-size: var(--font-2xl);
-  text-shadow: 0 0 10px var(--accent-50);
 }
 
 body.keyboard-visible .floating-life {
@@ -192,7 +190,6 @@ body.keyboard-visible #input-echo {
 
   .floating-text {
     font-size: var(--font-xl);
-    text-shadow: none;
   }
 
   .floating-points {

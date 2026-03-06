@@ -17,8 +17,8 @@ main#game-area {
 /* --- Paused Indicator Keyframes --- */
 
 @keyframes paused-overlay-in {
-  from { opacity: 0; backdrop-filter: blur(0px); }
-  to   { opacity: 1; backdrop-filter: blur(8px); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes paused-text-enter {
@@ -74,7 +74,6 @@ main#game-area {
   font-size: var(--font-4xl);
   font-weight: var(--font-bold);
   color: var(--accent);
-  text-shadow: 0 0 20px var(--accent-50), 0 0 40px var(--accent-30);
   user-select: none;
 }
 
@@ -88,7 +87,6 @@ main#game-area {
 .paused-icon {
   width: 3rem;
   height: 3rem;
-  filter: drop-shadow(0 0 20px var(--accent-50)) drop-shadow(0 0 40px var(--accent-30));
 }
 
 /* Speed-flash overlay — animates opacity only (GPU-composited) instead of
@@ -152,12 +150,14 @@ main#game-area.speed-flash::before {
 }
 
 .token-success {
-  box-shadow: 0 0 0 2px var(--color-success), 0 0 12px var(--color-success-glow);
+  background: var(--color-resolve-bg);
+  border-color: var(--color-resolve-border);
   animation: token-success-anim 150ms ease-out forwards;
 }
 
 .token-miss {
-  box-shadow: 0 0 0 2px var(--color-error), 0 0 12px var(--color-error-glow);
+  background: var(--color-error-bg);
+  border-color: var(--color-error-border);
   animation: token-miss-anim 200ms ease-out forwards;
 }
 
