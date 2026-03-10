@@ -315,15 +315,32 @@ describe('input', () => {
       expect(inputEl.value).toBe('')
     })
 
-    it('should skip keydown processing when input element is focused', () => {
+    it('should skip character keydown when input element is focused', () => {
       inputManager.bindElement(inputEl)
       inputEl.focus()
 
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
 
-      // keydown handler should skip — buffer remains empty
+      // keydown handler should skip character input — buffer remains empty
       expect(inputManager.buffer).toBe('')
       expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should handle Backspace via keydown even when input element is focused', () => {
+      inputManager.bindElement(inputEl)
+      inputEl.value = 'ka'
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(inputManager.buffer).toBe('ka')
+      mockOnKey.mockClear()
+      mockOnCommit.mockClear()
+
+      inputEl.focus()
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }))
+
+      expect(inputManager.buffer).toBe('k')
+      expect(inputEl.value).toBe('k')
+      expect(mockOnKey).toHaveBeenCalledWith('k')
+      expect(mockOnCommit).not.toHaveBeenCalled()
     })
 
     it('should process keydown when input element is NOT focused', () => {
@@ -364,6 +381,112 @@ describe('input', () => {
       triggerInputEvent()
 
       expect(mockOnCommit).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('beforeinput interception (iOS stutter fix)', () => {
+    let inputEl: HTMLInputElement
+
+    beforeEach(() => {
+      inputEl = document.createElement('input')
+      inputEl.type = 'text'
+      document.body.appendChild(inputEl)
+    })
+
+    function triggerBeforeInput(data: string | null, inputType = 'insertText') {
+      const event = new InputEvent('beforeinput', {
+        inputType,
+        data,
+        bubbles: true,
+        cancelable: true,
+      })
+      inputEl.dispatchEvent(event)
+    }
+
+    it('should process characters via beforeinput without writing el.value', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput('k')
+
+      expect(inputManager.buffer).toBe('k')
+      expect(inputEl.value).toBe('')
+      expect(mockOnKey).toHaveBeenCalledWith('k')
+      expect(mockOnCommit).toHaveBeenCalledWith('k')
+    })
+
+    it('should accumulate characters via beforeinput', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput('s')
+      triggerBeforeInput('h')
+      triggerBeforeInput('i')
+
+      expect(inputManager.buffer).toBe('shi')
+      expect(inputEl.value).toBe('')
+      expect(mockOnCommit).toHaveBeenCalledTimes(3)
+    })
+
+    it('should preventDefault to avoid iOS text processing', () => {
+      inputManager.bindElement(inputEl)
+      const event = new InputEvent('beforeinput', {
+        inputType: 'insertText',
+        data: 'a',
+        bubbles: true,
+        cancelable: true,
+      })
+      const spy = vi.spyOn(event, 'preventDefault')
+      inputEl.dispatchEvent(event)
+
+      expect(spy).toHaveBeenCalled()
+    })
+
+    it('should ignore beforeinput with null data', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput(null)
+
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should ignore beforeinput when disabled', () => {
+      inputManager.bindElement(inputEl)
+      inputManager.enabled = false
+
+      triggerBeforeInput('a')
+
+      expect(inputManager.buffer).toBe('')
+      expect(mockOnKey).not.toHaveBeenCalled()
+    })
+
+    it('should not intercept non-insertText types (Android composition)', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput('ka', 'insertCompositionText')
+
+      // beforeinput didn't handle it — buffer unchanged
+      expect(inputManager.buffer).toBe('')
+
+      // input event handles it instead
+      inputEl.value = 'ka'
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(inputManager.buffer).toBe('ka')
+    })
+
+    it('should filter invalid characters from beforeinput data', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput('k1!')
+
+      expect(inputManager.buffer).toBe('k')
+      expect(inputEl.value).toBe('')
+    })
+
+    it('should not clobber buffer when input fires after cancelled beforeinput', () => {
+      inputManager.bindElement(inputEl)
+      triggerBeforeInput('a')
+      expect(inputManager.buffer).toBe('a')
+
+      // On iOS, el.value stays empty after preventDefault.
+      // If input fires anyway, the guard skips it.
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(inputManager.buffer).toBe('a')
+      expect(mockOnCommit).toHaveBeenCalledTimes(1)
     })
   })
 

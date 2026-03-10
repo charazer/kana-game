@@ -23,6 +23,9 @@ import { initializeMobileKeyboardDetection, initializeTouchFocusProtection, init
 
 async function main() {
 	const renderer = new DOMRenderer(tokensLayer as HTMLElement)
+
+	new ResizeObserver(() => renderer.invalidateCache()).observe(tokensLayer as HTMLElement)
+
 	const input = new InputManager()
 	const audio = new AudioManager()
 

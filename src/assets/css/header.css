@@ -44,7 +44,6 @@ header::before {
   font-weight: var(--font-bold);
   color: var(--accent);
   letter-spacing: 3px;
-  text-shadow: 0 2px 16px var(--accent-60);
   font-family: Georgia, 'Times New Roman', serif;
 }
 

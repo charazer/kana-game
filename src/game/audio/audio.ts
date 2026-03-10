@@ -70,7 +70,7 @@ export class AudioManager {
     if (!this.enabled || !this.ctx) return
     const note = YO_SCALE[Math.floor(Math.random() * YO_SCALE.length)]
     playKotoPluck(this.ctx, { frequency: note, volume: 0.1, duration: 0.25 })
-    playKotoPluck(this.ctx, { frequency: note * 0.5, volume: 0.06, duration: 0.3 })
+    playKotoPluck(this.ctx, { frequency: note * 0.5, volume: 0.06, duration: 0.3, startTime: this.ctx.currentTime + 0.02 })
   }
 
   /** Game over — descending F-major koto phrase. */

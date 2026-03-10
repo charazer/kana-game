@@ -13,7 +13,6 @@ import {
   KANA_SET_MIXED,
   FLOATING_TEXT_OFFSET_X,
   FLOATING_TEXT_OFFSET_Y,
-  FLOATING_TEXT_COMBO_OFFSET_Y,
   INITIAL_LIVES,
   BASE_POINTS,
   MAX_TIME_BONUS,
@@ -347,9 +346,6 @@ export class GameEngine {
 
     // Floating UI feedback
     this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_OFFSET_Y, `+${points}`, 'points')
-    if (this.combo > 1) {
-      this.renderer.showFloatingText(t.x + FLOATING_TEXT_OFFSET_X, t.y + FLOATING_TEXT_COMBO_OFFSET_Y, `${this.combo}x`, 'combo')
-    }
 
     // Consume matched portion from buffer
     this.input.buffer = (match.matchType === 'romaji' && match.matchedLength)
