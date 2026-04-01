@@ -4,6 +4,7 @@
         "config:recommended",
         "schedule:weekly"
     ],
+    "prHourlyLimit": 0,
     "packageRules": [
         {
             "matchUpdateTypes": [
