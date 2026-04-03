@@ -1,6 +1,11 @@
 import { defineConfig } from 'vitest/config'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 export default defineConfig({
+  plugins: [svelte()],
+  resolve: {
+    conditions: ['browser']
+  },
   base: '/kana-game/',
   root: 'src',
   publicDir: '../public',
@@ -22,10 +27,11 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['**/*.ts'],
+      include: ['**/*.{ts,svelte}'],
       exclude: [
         'node_modules/',
-        'main.ts', // Main entry point with DOM manipulation
+        'main.ts', // Main entry point
+        'App.svelte', // Top-level orchestrator — excluded like main.ts
         'globals.d.ts',
         'assets/**', // Static asset files
         'test-setup.ts', // Test setup file
