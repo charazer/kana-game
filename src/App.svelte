@@ -148,8 +148,8 @@
 
   // ── Confirm end modal ─────────────────────────────────────────────────────────
   function openConfirmEnd() {
-    if (gamePhase !== 'playing') return
-    pauseGame()
+    if (gamePhase !== 'playing' && gamePhase !== 'paused') return
+    if (gamePhase === 'playing') pauseGame()
     input.enabled = false
     input.buffer = ''
     confirmEndOpen = true
@@ -173,7 +173,7 @@
 
   // ── Keyboard shortcuts ────────────────────────────────────────────────────────
   function onKeydown(e: KeyboardEvent) {
-    if (e.code === 'Escape' && gamePhase === 'playing' && !confirmEndOpen && !settingsOpen && !helpOpen && !kanaRefOpen) {
+    if (e.code === 'Escape' && (gamePhase === 'playing' || gamePhase === 'paused') && !confirmEndOpen && !settingsOpen && !helpOpen && !kanaRefOpen) {
       e.preventDefault()
       e.stopImmediatePropagation()
       openConfirmEnd()
