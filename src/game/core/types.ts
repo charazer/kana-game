@@ -1,5 +1,7 @@
 import type { FloatingTextType } from '../constants/constants'
 
+export type GamePhase = 'start' | 'playing' | 'paused' | 'over'
+
 export type KanaEntry = {
   id: string
   kana: string
