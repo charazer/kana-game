@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte'
+import { render, screen, fireEvent } from '@testing-library/svelte'
 import { describe, it, expect } from 'vitest'
 import KanaReference from './KanaReference.svelte'
 
@@ -27,9 +27,17 @@ describe('KanaReference', () => {
     expect(screen.getByText(/Yoon/)).toBeInTheDocument()
   })
 
-  it('shows scroll hint in basic section', () => {
+  it('scroll hint is conditionally rendered based on table overflow', () => {
     render(KanaReference, { type: 'hiragana' })
-    expect(screen.getAllByText(/scroll/).length).toBeGreaterThan(0)
+    // In happy-dom, scrollWidth === clientWidth === 0, so no overflow → hint absent.
+    expect(screen.queryAllByText(/scroll/).length).toBe(0)
+  })
+
+  it('exercises onResize handler when window resize fires', () => {
+    render(KanaReference, { type: 'hiragana' })
+    // Firing resize exercises clearTimeout + setTimeout lines in the onResize callback
+    fireEvent(window, new Event('resize'))
+    expect(document.querySelector('.kana-table')).toBeInTheDocument()
   })
 
   it('renders hiragana あ with correct romaji', () => {

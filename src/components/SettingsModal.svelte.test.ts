@@ -194,4 +194,29 @@ describe('SettingsModal', () => {
     await fireEvent.keyDown(window, { code: 'Escape' })
     expect(onClose).not.toHaveBeenCalled()
   })
+
+  it('uses fallback 30% when musicVolume is not set', () => {
+    render(SettingsModal, {
+      open: true,
+      settings: { ...defaultSettings, musicVolume: undefined as unknown as number },
+      isGameActive: false,
+      onClose: vi.fn(),
+      onSettingChange: vi.fn()
+    })
+    // Default musicVolume fallback is 0.3 → displayed as "30%"
+    expect(screen.getAllByText('30%').length).toBeGreaterThan(0)
+  })
+
+  it('does not close on non-Escape key when open', async () => {
+    const onClose = vi.fn()
+    render(SettingsModal, {
+      open: true,
+      settings: defaultSettings,
+      isGameActive: false,
+      onClose,
+      onSettingChange: vi.fn()
+    })
+    await fireEvent.keyDown(window, { code: 'Space' })
+    expect(onClose).not.toHaveBeenCalled()
+  })
 })

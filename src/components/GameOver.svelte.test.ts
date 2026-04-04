@@ -51,4 +51,14 @@ describe('GameOver', () => {
     render(GameOver, { ...defaultProps, gameMode: GAME_MODE_PRACTICE })
     expect(screen.getByText(/not recorded in practice mode/)).toBeInTheDocument()
   })
+
+  it('has hidden class when visible is false', () => {
+    render(GameOver, { ...defaultProps, visible: false })
+    expect(document.getElementById('game-over')).toHaveClass('hidden')
+  })
+
+  it('does not have hidden class when visible is true', () => {
+    render(GameOver, { ...defaultProps, visible: true })
+    expect(document.getElementById('game-over')).not.toHaveClass('hidden')
+  })
 })

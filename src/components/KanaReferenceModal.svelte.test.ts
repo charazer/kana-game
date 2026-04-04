@@ -50,4 +50,20 @@ describe('KanaReferenceModal', () => {
     // あ is hiragana-only
     expect(screen.getByText('あ')).toBeInTheDocument()
   })
+
+  it('does not close on non-Escape key when open', async () => {
+    const onClose = vi.fn()
+    render(KanaReferenceModal, { open: true, onClose })
+    await fireEvent.keyDown(window, { code: 'Space' })
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('resets to hiragana tab when reopened after tab switch', async () => {
+    const onClose = vi.fn()
+    const { rerender } = render(KanaReferenceModal, { open: true, onClose })
+    await fireEvent.click(screen.getByRole('tab', { name: /katakana/i }))
+    await rerender({ open: false, onClose })
+    await rerender({ open: true, onClose })
+    expect(screen.getByRole('tab', { name: /hiragana/i })).toHaveAttribute('aria-selected', 'true')
+  })
 })

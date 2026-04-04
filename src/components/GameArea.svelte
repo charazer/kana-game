@@ -75,3 +75,222 @@
     onOpenHelp={onOpenHelp}
   />
 </main>
+
+<style>
+  /* ── Main game area ─────────────────────────────────────────────────────── */
+  main#game-area {
+    position: relative;
+    flex: 1;
+    max-height: calc(100vh - 110px);
+    overflow: hidden;
+    max-width: var(--game-max-width);
+    margin: 0 auto;
+    width: 100%;
+    background: var(--bg);
+    contain: layout style paint;
+  }
+
+  /* Speed flash overlay — animates opacity only (GPU-composited) */
+  main#game-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-30);
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  /* .speed-flash is added dynamically via classList.add() — must be global */
+  :global(main#game-area.speed-flash)::before {
+    animation: speed-flash-anim 600ms ease-out forwards;
+  }
+
+  @keyframes speed-flash-anim {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* ── Tokens container ───────────────────────────────────────────────────── */
+  #tokens {
+    position: absolute;
+    inset: 0;
+    border-left: 1px solid var(--white-5);
+    border-right: 1px solid var(--white-5);
+    contain: layout style;
+  }
+
+  #tokens::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--danger-zone-height);
+    background: linear-gradient(to top, var(--color-error-bg), transparent);
+    border-top: var(--token-border) dashed var(--color-error-border);
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  /* ── Paused indicator ───────────────────────────────────────────────────── */
+  .paused-indicator {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--black-85);
+    backdrop-filter: blur(8px);
+    z-index: 150;
+    pointer-events: none;
+  }
+
+  .paused-indicator:not(.hidden) {
+    animation: paused-overlay-in 0.22s ease both;
+  }
+
+  @keyframes paused-overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .paused-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-size: var(--font-4xl);
+    font-weight: var(--font-bold);
+    color: var(--accent);
+    user-select: none;
+  }
+
+  .paused-indicator:not(.hidden) .paused-text {
+    animation:
+      paused-text-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+      paused-pulse 2s ease-in-out 0.4s infinite;
+  }
+
+  @keyframes paused-text-enter {
+    from { opacity: 0; transform: scale(0.65); letter-spacing: 0.35em; }
+    to   { opacity: 1; transform: scale(1); letter-spacing: normal; }
+  }
+
+  @keyframes paused-pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.05); }
+  }
+
+  .paused-icon { width: 3rem; height: 3rem; }
+
+  @media (min-width: 480px) {
+    .paused-text { font-size: var(--font-5xl); }
+    .paused-icon { width: 4rem; height: 4rem; }
+  }
+
+  @media (min-width: 768px) {
+    .paused-text { font-size: 4rem; }
+    .paused-icon { width: 5rem; height: 5rem; }
+  }
+
+  /* ── Dynamically-injected tokens (created by DOMRenderer) ──────────────── */
+  :global(.token) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--token-size);
+    height: var(--token-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white-5);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-3xl);
+    border: var(--token-border) solid transparent;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  :global(.token-success) {
+    background: var(--color-resolve-bg);
+    border-color: var(--color-resolve-border);
+    animation: token-success-anim 150ms ease-out forwards;
+  }
+
+  :global(.token-miss) {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    animation: token-miss-anim 200ms ease-out forwards;
+  }
+
+  :global(.floating-text) {
+    position: absolute;
+    font-weight: var(--font-bold);
+    font-size: var(--font-3xl);
+    pointer-events: none;
+    z-index: var(--z-floating);
+    animation: float-up 1s ease-out forwards;
+    font-family: var(--font-mono);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  :global(.floating-points) { color: var(--color-success); }
+  :global(.floating-combo)  { color: var(--color-combo); }
+  :global(.floating-speed)  { color: var(--accent); font-size: var(--font-5xl); font-weight: var(--font-black); }
+  :global(.floating-life)   { color: var(--color-error); font-size: var(--font-4xl); }
+
+  @keyframes token-success-anim {
+    0%   { transform: translate3d(var(--tx), var(--ty), 0) scale(1);    opacity: 1; }
+    50%  { transform: translate3d(var(--tx), var(--ty), 0) scale(1.15); opacity: 1; }
+    100% { transform: translate3d(var(--tx), var(--ty), 0) scale(0.8);  opacity: 0; }
+  }
+
+  @keyframes token-miss-anim {
+    0%   { transform: translate3d(var(--tx), var(--ty), 0) scale(1);    opacity: 1; }
+    50%  { transform: translate3d(var(--tx), var(--ty), 0) scale(1.05); opacity: 0.8; }
+    100% { transform: translate3d(var(--tx), var(--ty), 0) scale(0.95); opacity: 0; }
+  }
+
+  @keyframes float-up {
+    0%   { transform: translateY(0)     scale(1);   opacity: 1; }
+    100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+  }
+
+  /* ── Responsive game area height ────────────────────────────────────────── */
+  @media (min-width: 480px)  { main#game-area { max-height: calc(100vh - 150px); } }
+  @media (min-width: 768px)  { main#game-area { max-height: calc(100vh - 140px); } }
+  @media (min-width: 1024px) { main#game-area { max-height: calc(100vh - 170px); } }
+  @media (min-width: 1280px) { main#game-area { max-height: calc(100vh - 280px); } }
+
+  /* ── Mobile keyboard compact layout ─────────────────────────────────────── */
+  :global(body.keyboard-visible) main#game-area {
+    flex: 1;
+    max-height: none;
+    --danger-zone-height: 60px;
+  }
+
+  :global(body.keyboard-visible) :global(.token)         { --token-size: 56px; font-size: var(--font-2xl); }
+  :global(body.keyboard-visible) :global(.floating-text) { font-size: var(--font-xl); }
+  :global(body.keyboard-visible) :global(.floating-speed){ font-size: var(--font-2xl); }
+  :global(body.keyboard-visible) :global(.floating-life) { font-size: var(--font-2xl); }
+
+  /* ── Small-screen overrides ─────────────────────────────────────────────── */
+  @media (max-width: 479px) {
+    :global(:root) {
+      --token-size: 56px;
+      --danger-zone-height: 60px;
+    }
+
+    :global(.token) { font-size: var(--font-2xl); }
+    :global(.floating-text) { font-size: var(--font-xl); }
+    :global(.floating-speed) { font-size: var(--font-2xl); }
+    :global(.floating-life) { font-size: var(--font-2xl); }
+
+    @keyframes float-up {
+      0%   { transform: translateY(0)     scale(1);    opacity: 1; }
+      100% { transform: translateY(-40px) scale(1.05); opacity: 0; }
+    }
+  }
+</style>

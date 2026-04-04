@@ -43,4 +43,11 @@ describe('HelpModal', () => {
     await fireEvent.keyDown(window, { code: 'Escape' })
     expect(onClose).not.toHaveBeenCalled()
   })
+
+  it('does not close on non-Escape key when open', async () => {
+    const onClose = vi.fn()
+    render(HelpModal, { open: true, onClose, onOpenKanaReference: vi.fn() })
+    await fireEvent.keyDown(window, { code: 'Space' })
+    expect(onClose).not.toHaveBeenCalled()
+  })
 })

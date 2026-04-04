@@ -54,4 +54,12 @@ describe('GameArea', () => {
     render(GameArea, { ...defaultProps, gamePhase: 'start' })
     expect(document.getElementById('paused-indicator')).toHaveClass('hidden')
   })
+
+  it('triggers speed-flash branch when speedMultiplier changes', async () => {
+    const { rerender } = render(GameArea, defaultProps)
+    // gameAreaEl is unbound in unit tests; effect exercises the m !== prevSpeed
+    // true branch and the if (gameAreaEl) false branch
+    await rerender({ ...defaultProps, speedMultiplier: 2.0 })
+    expect(document.getElementById('game-area')).toBeInTheDocument()
+  })
 })

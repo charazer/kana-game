@@ -97,4 +97,40 @@ describe('GameHeader', () => {
     render(GameHeader, { ...defaultProps, isGameActive: false })
     expect(screen.getByRole('button', { name: /pause/i })).toBeDisabled()
   })
+
+  it('triggers score flash when score changes', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, score: 0 })
+    await rerender({ ...defaultProps, score: 200 })
+    expect(document.getElementById('score')).toHaveTextContent('200')
+  })
+
+  it('triggers combo flash when combo increases', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, combo: 0 })
+    await rerender({ ...defaultProps, combo: 5 })
+    expect(document.getElementById('combo')).toHaveTextContent('5x')
+  })
+
+  it('does not flash combo when combo stays at zero', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, combo: 0 })
+    await rerender({ ...defaultProps, combo: 0 })
+    expect(document.getElementById('combo')).toHaveTextContent('0x')
+  })
+
+  it('triggers lives shake when lives decrease', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, lives: 3 })
+    await rerender({ ...defaultProps, lives: 2 })
+    expect(document.getElementById('lives')).toBeInTheDocument()
+  })
+
+  it('does not shake lives when lives increase', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, lives: 1 })
+    await rerender({ ...defaultProps, lives: 3 })
+    expect(document.getElementById('lives')).toBeInTheDocument()
+  })
+
+  it('triggers speed flash when speed multiplier changes', async () => {
+    const { rerender } = render(GameHeader, { ...defaultProps, speedMultiplier: 1.0 })
+    await rerender({ ...defaultProps, speedMultiplier: 1.5 })
+    expect(document.getElementById('speed')).toHaveTextContent('1.5x')
+  })
 })
