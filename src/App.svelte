@@ -69,22 +69,6 @@
   let wasPausedBeforeSettings = false
   let isGameActive = $derived(gamePhase === 'playing' || gamePhase === 'paused')
 
-  // ── Screen transition helper ─────────────────────────────────────────────────
-  function hideScreenWithAnimation(el: HTMLElement | null | undefined, onComplete: () => void) {
-    if (!el) { onComplete(); return }
-    const card = el.querySelector<HTMLElement>('.start-screen-content, .game-over-content')
-    if (!card) { onComplete(); return }
-    let done = false
-    const finish = () => {
-      if (done) return
-      done = true
-      el.classList.remove('screen-exiting')
-      onComplete()
-    }
-    el.classList.add('screen-exiting')
-    card.addEventListener('animationend', finish, { once: true })
-    setTimeout(finish, 500)
-  }
 
   // ── Game control helpers ──────────────────────────────────────────────────────
   function pauseGame() {
@@ -99,8 +83,7 @@
     gamePhase = 'playing'
   }
 
-  function beginGame(screenEl: HTMLElement | undefined) {
-    hideScreenWithAnimation(screenEl, () => {})
+  function beginGame() {
     speedMultiplier = 1.0
     gamePhase = 'playing'
     audio.playGameStart()
@@ -192,13 +175,11 @@
 
   // ── Screen actions ────────────────────────────────────────────────────────────
   function handleStart() {
-    const screenEl = document.getElementById('start-screen') ?? undefined
-    beginGame(screenEl)
+    beginGame()
   }
 
   function handleRestart() {
-    const screenEl = document.getElementById('game-over') ?? undefined
-    beginGame(screenEl)
+    beginGame()
   }
 
   // ── Mount ─────────────────────────────────────────────────────────────────────

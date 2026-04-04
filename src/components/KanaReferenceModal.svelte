@@ -26,6 +26,9 @@
     id="kana-modal"
     {open}
     titleId="kana-title"
+    contentWidth="1400px"
+    contentMaxWidth="95vw"
+    contentMaxHeight="85vh"
     onClose={onClose}
     closeButtonId="kana-close"
     closeLabel="Close kana reference"
@@ -60,17 +63,6 @@
 {/if}
 
 <style>
-  /* ── Kana modal sizing ──────────────────────────────────────────────────── */
-  :global(#kana-modal .modal-content) {
-    width: 1400px;
-    max-width: 95vw;
-    max-height: 85vh;
-  }
-
-  @media (max-width: 767px) {
-    :global(#kana-modal .modal-content) { max-width: 95%; }
-  }
-
   @media (max-height: 500px) and (orientation: landscape) {
     .kana-content { max-height: calc(85vh - 120px); }
   }

@@ -119,11 +119,6 @@
 </Modal>
 
 <style>
-  /* ── Settings-specific modal sizing ─────────────────────────────────────── */
-  :global(#settings-modal .modal-content) { width: 500px; }
-  @media (max-width: 767px) { :global(#settings-modal .modal-content) { width: 400px; } }
-  @media (max-width: 479px) { :global(#settings-modal .modal-content) { width: 320px; } }
-
   /* ── Modal header icon ──────────────────────────────────────────────────── */
   .modal-header-icon {
     width: 28px;

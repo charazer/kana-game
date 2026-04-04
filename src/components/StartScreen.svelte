@@ -46,12 +46,8 @@
     animation: screen-overlay-in 0.35s ease forwards;
   }
 
-  #start-screen :global(.start-screen-content) {
+  #start-screen .start-screen-content {
     animation: card-enter 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-
-  :global(#start-screen.screen-exiting .start-screen-content) {
-    animation: card-exit 0.28s cubic-bezier(0.4, 0, 0.6, 1) both;
   }
 
   @keyframes screen-overlay-in {
@@ -62,11 +58,6 @@
   @keyframes card-enter {
     from { opacity: 0; transform: scale(0.82) translateY(28px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  @keyframes card-exit {
-    from { opacity: 1; transform: scale(1) translateY(0); }
-    to   { opacity: 0; transform: scale(0.88) translateY(16px); }
   }
 
   /* ── Card ───────────────────────────────────────────────────────────────── */

@@ -8,6 +8,8 @@
     title: Snippet
     body: Snippet
     contentWidth?: string
+    contentMaxWidth?: string
+    contentMaxHeight?: string
     onClose?: () => void
     closeButtonId?: string
     closeLabel?: string
@@ -20,6 +22,8 @@
     title,
     body,
     contentWidth,
+    contentMaxWidth,
+    contentMaxHeight,
     onClose,
     closeButtonId,
     closeLabel = 'Close',
@@ -35,7 +39,7 @@
   aria-modal="true"
 >
   <div class="modal-overlay" role="presentation" onclick={onClose}></div>
-  <div class="modal-content" style:width={contentWidth}>
+  <div class="modal-content" style:width={contentWidth} style:max-width={contentMaxWidth} style:max-height={contentMaxHeight}>
     <div class="modal-header">
       <h2 id={titleId}>{@render title()}</h2>
       {#if onClose}
