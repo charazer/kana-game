@@ -10,3 +10,6 @@
 
 /* Foundation Styles */
 @import './base.css';
+
+/* Renderer Subsystem — styles for DOM elements injected by DOMRenderer at runtime */
+@import './renderer.css';

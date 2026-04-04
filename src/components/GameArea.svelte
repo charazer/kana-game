@@ -194,70 +194,6 @@
     .paused-icon { width: 5rem; height: 5rem; }
   }
 
-  /* ── Dynamically-injected tokens (created by DOMRenderer) ──────────────── */
-  :global(.token) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: var(--token-size);
-    height: var(--token-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--white-5);
-    border-radius: var(--radius-lg);
-    font-size: var(--font-3xl);
-    border: var(--token-border) solid transparent;
-    will-change: transform;
-    backface-visibility: hidden;
-  }
-
-  :global(.token-success) {
-    background: var(--color-resolve-bg);
-    border-color: var(--color-resolve-border);
-    animation: token-success-anim 150ms ease-out forwards;
-  }
-
-  :global(.token-miss) {
-    background: var(--color-error-bg);
-    border-color: var(--color-error-border);
-    animation: token-miss-anim 200ms ease-out forwards;
-  }
-
-  :global(.floating-text) {
-    position: absolute;
-    font-weight: var(--font-bold);
-    font-size: var(--font-3xl);
-    pointer-events: none;
-    z-index: var(--z-floating);
-    animation: float-up 1s ease-out forwards;
-    font-family: var(--font-mono);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-  }
-
-  :global(.floating-points) { color: var(--color-success); }
-  :global(.floating-combo)  { color: var(--color-combo); }
-  :global(.floating-speed)  { color: var(--accent); font-size: var(--font-5xl); font-weight: var(--font-black); }
-  :global(.floating-life)   { color: var(--color-error); font-size: var(--font-4xl); }
-
-  @keyframes token-success-anim {
-    0%   { transform: translate3d(var(--tx), var(--ty), 0) scale(1);    opacity: 1; }
-    50%  { transform: translate3d(var(--tx), var(--ty), 0) scale(1.15); opacity: 1; }
-    100% { transform: translate3d(var(--tx), var(--ty), 0) scale(0.8);  opacity: 0; }
-  }
-
-  @keyframes token-miss-anim {
-    0%   { transform: translate3d(var(--tx), var(--ty), 0) scale(1);    opacity: 1; }
-    50%  { transform: translate3d(var(--tx), var(--ty), 0) scale(1.05); opacity: 0.8; }
-    100% { transform: translate3d(var(--tx), var(--ty), 0) scale(0.95); opacity: 0; }
-  }
-
-  @keyframes float-up {
-    0%   { transform: translateY(0)     scale(1);   opacity: 1; }
-    100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
-  }
-
   /* ── Responsive game area height ────────────────────────────────────────── */
   @media (min-width: 480px)  { main#game-area { max-height: calc(100vh - 150px); } }
   @media (min-width: 768px)  { main#game-area { max-height: calc(100vh - 140px); } }
@@ -269,28 +205,5 @@
     flex: 1;
     max-height: none;
     --danger-zone-height: 60px;
-  }
-
-  :global(body.keyboard-visible) :global(.token)         { --token-size: 56px; font-size: var(--font-2xl); }
-  :global(body.keyboard-visible) :global(.floating-text) { font-size: var(--font-xl); }
-  :global(body.keyboard-visible) :global(.floating-speed){ font-size: var(--font-2xl); }
-  :global(body.keyboard-visible) :global(.floating-life) { font-size: var(--font-2xl); }
-
-  /* ── Small-screen overrides ─────────────────────────────────────────────── */
-  @media (max-width: 479px) {
-    :global(:root) {
-      --token-size: 56px;
-      --danger-zone-height: 60px;
-    }
-
-    :global(.token) { font-size: var(--font-2xl); }
-    :global(.floating-text) { font-size: var(--font-xl); }
-    :global(.floating-speed) { font-size: var(--font-2xl); }
-    :global(.floating-life) { font-size: var(--font-2xl); }
-
-    @keyframes float-up {
-      0%   { transform: translateY(0)     scale(1);    opacity: 1; }
-      100% { transform: translateY(-40px) scale(1.05); opacity: 0; }
-    }
   }
 </style>
