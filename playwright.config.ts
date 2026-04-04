@@ -30,7 +30,7 @@ export default defineConfig({
   
   /* Reporter to use */
   reporter: isGitHubActions
-    ? [['html', { open: 'never' }], ['github']]
+    ? [['github', 'list']]
     : [['html', { open: 'never' }], ['list']],
   
   /* Shared settings for all the projects below */
