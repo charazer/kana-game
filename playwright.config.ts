@@ -29,9 +29,9 @@ export default defineConfig({
   timeout: 30 * 1000, // 30 seconds
   
   /* Reporter to use */
-  reporter: isGitHubActions 
-    ? [['html'], ['github']] // GitHub Actions annotations + HTML report
-    : 'html', // Local: just HTML report
+  reporter: isGitHubActions
+    ? [['github', 'list']]
+    : [['html', { open: 'never' }], ['list']],
   
   /* Shared settings for all the projects below */
   use: {

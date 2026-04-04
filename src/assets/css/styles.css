@@ -1,9 +1,8 @@
 /* ==========================================================================
-   Main Stylesheet - Modular Architecture
-   ========================================================================== 
-   
-   This file imports all component-specific stylesheets.
-   Styles follow a mobile-first approach with min-width media queries.
+/* ==========================================================================
+   Main Stylesheet
+   CSS is co-located with Svelte components via <style> blocks.
+   Only global design tokens and foundation styles are imported here.
    ========================================================================== */
 
 /* Design Tokens */
@@ -12,13 +11,5 @@
 /* Foundation Styles */
 @import './base.css';
 
-/* Component Styles */
-@import './header.css';
-@import './stats.css';
-@import './buttons.css';
-@import './forms.css';
-@import './game-area.css';
-@import './input.css';
-@import './screens.css';
-@import './modals.css';
-@import './mobile.css';
+/* Renderer Subsystem — styles for DOM elements injected by DOMRenderer at runtime */
+@import './renderer.css';

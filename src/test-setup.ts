@@ -39,3 +39,5 @@ class LocalStorageMock implements Storage {
 
 // Set up localStorage mock
 globalThis.localStorage = new LocalStorageMock()
+
+import '@testing-library/jest-dom/vitest'

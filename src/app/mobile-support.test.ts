@@ -164,6 +164,67 @@ describe('mobile-support', () => {
 
 			expect(document.body.classList.contains('keyboard-visible')).toBe(false)
 		})
+
+		it('should invoke onKeyboardChange callback with true when keyboard becomes visible', () => {
+			let resizeCallback: ((e: Event) => void) | undefined
+			const mockVV = {
+				height: 800,
+				addEventListener: (_event: string, cb: (e: Event) => void) => {
+					resizeCallback = cb
+				}
+			}
+			Object.defineProperty(window, 'visualViewport', {
+				value: mockVV,
+				writable: true,
+				configurable: true
+			})
+			const onChange = vi.fn()
+
+			initializeMobileKeyboardDetection(onChange)
+			expect(onChange).toHaveBeenCalledWith(false)
+
+			mockVV.height = 400
+			resizeCallback!(new Event('resize'))
+
+			expect(onChange).toHaveBeenCalledWith(true)
+		})
+
+		it('should invoke onKeyboardChange callback with false when keyboard hides', () => {
+			let resizeCallback: ((e: Event) => void) | undefined
+			const mockVV = {
+				height: 400,
+				addEventListener: (_event: string, cb: (e: Event) => void) => {
+					resizeCallback = cb
+				}
+			}
+			Object.defineProperty(window, 'visualViewport', {
+				value: mockVV,
+				writable: true,
+				configurable: true
+			})
+			const onChange = vi.fn()
+
+			initializeMobileKeyboardDetection(onChange)
+
+			mockVV.height = 800
+			resizeCallback!(new Event('resize'))
+
+			expect(onChange).toHaveBeenCalledWith(false)
+		})
+
+		it('should work without a callback (no error thrown)', () => {
+			const mockVV = {
+				height: 800,
+				addEventListener: vi.fn()
+			}
+			Object.defineProperty(window, 'visualViewport', {
+				value: mockVV,
+				writable: true,
+				configurable: true
+			})
+
+			expect(() => initializeMobileKeyboardDetection()).not.toThrow()
+		})
 	})
 
 	describe('initializeScrollPrevention', () => {
@@ -286,6 +347,20 @@ describe('mobile-support', () => {
 			setSearch('?foo=1&keyboard&bar=2')
 			initializeKeyboardDebugMode()
 			expect(document.body.classList.contains('keyboard-visible')).toBe(true)
+		})
+
+		it('should invoke onKeyboardChange callback with true when ?keyboard is present', () => {
+			setSearch('?keyboard')
+			const onChange = vi.fn()
+			initializeKeyboardDebugMode(onChange)
+			expect(onChange).toHaveBeenCalledWith(true)
+		})
+
+		it('should not invoke onKeyboardChange callback when ?keyboard is absent', () => {
+			setSearch('')
+			const onChange = vi.fn()
+			initializeKeyboardDebugMode(onChange)
+			expect(onChange).not.toHaveBeenCalled()
 		})
 	})
 
