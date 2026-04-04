@@ -10,6 +10,7 @@
     label: string
     fetchpriority?: 'high' | 'low' | 'auto'
     loading?: 'eager' | 'lazy'
+    compact?: boolean
     onclick: () => void
   }
 
@@ -24,6 +25,7 @@
     label,
     fetchpriority,
     loading,
+    compact = false,
     onclick,
   }: Props = $props()
 
@@ -46,6 +48,7 @@
   bind:this={btnEl}
   {id}
   class="btn-{variant}"
+  class:compact
   {disabled}
   aria-label={ariaLabel}
   onclick={handleClick}
@@ -258,8 +261,7 @@
 
   /* ── Mobile keyboard compact layout ─────────────────────────────────────── */
 
-  :global(body.keyboard-visible) .btn-end,
-  :global(body.keyboard-visible) .btn-pause {
+  button.compact {
     min-width: 0;
     max-width: none;
     width: auto;
@@ -267,19 +269,20 @@
     gap: 0;
   }
 
-  :global(body.keyboard-visible) .btn-end .btn-label,
-  :global(body.keyboard-visible) .btn-pause .btn-label {
+  button.compact .btn-label {
     display: none;
   }
 
-  :global(body.keyboard-visible) .btn-end .btn-icon-wrap,
-  :global(body.keyboard-visible) .btn-pause .btn-icon-wrap {
+  button.compact .btn-icon-wrap {
     width: 22px;
   }
 
-  :global(body.keyboard-visible) .btn-end .btn-icon,
-  :global(body.keyboard-visible) .btn-pause .btn-icon {
+  button.compact .btn-icon {
     width: 22px;
     height: 22px;
   }
+
+  /* end-game button goes first, pause button goes second in compact flex row */
+  .btn-end.compact { order: -1; }
+  .btn-pause.compact { order: 1; }
 </style>

@@ -17,6 +17,7 @@
     onStart: () => void
     onRestart: () => void
     onOpenHelp: () => void
+    compact?: boolean
   }
 
   let {
@@ -30,6 +31,7 @@
     onStart,
     onRestart,
     onOpenHelp,
+    compact = false,
   }: Props = $props()
 
   let prevSpeed = untrack(() => speedMultiplier)
@@ -48,7 +50,7 @@
   })
 </script>
 
-<main bind:this={gameAreaEl} id="game-area" role="application" aria-label="Kana typing game">
+<main bind:this={gameAreaEl} id="game-area" role="application" aria-label="Kana typing game" class:compact>
   <div id="paused-indicator" class="paused-indicator" class:hidden={gamePhase !== 'paused'} role="status" aria-live="polite">
     <div class="paused-text">
       <img src={buttonPauseImg} alt="" class="paused-icon" aria-hidden="true" width="82" height="87" loading="lazy" />
@@ -201,7 +203,7 @@
   @media (min-width: 1280px) { main#game-area { max-height: calc(100vh - 280px); } }
 
   /* ── Mobile keyboard compact layout ─────────────────────────────────────── */
-  :global(body.keyboard-visible) main#game-area {
+  main#game-area.compact {
     flex: 1;
     max-height: none;
     --danger-zone-height: 60px;

@@ -19,6 +19,7 @@
     gamePhase: GamePhase
     gameMode: GameMode
     isGameActive: boolean
+    compact?: boolean
     onOpenSettings: () => void
     onEndGame: () => void
     onPause: () => void
@@ -28,6 +29,7 @@
   const {
     score, combo, speedMultiplier, lives,
     gamePhase, gameMode, isGameActive,
+    compact = false,
     onOpenSettings, onEndGame, onPause, onResume,
   }: Props = $props()
 
@@ -70,7 +72,7 @@
   })
 </script>
 
-<header>
+<header class:compact>
   <button
     id="settings-btn"
     class="btn-settings"
@@ -132,6 +134,7 @@
           label="End"
           fetchpriority="high"
           disabled={!isGameActive}
+          {compact}
           onclick={onEndGame}
         />
         <GameButton
@@ -143,6 +146,7 @@
           imgHeight={87}
           label={gamePhase === 'paused' ? 'Resume' : 'Pause'}
           disabled={!isGameActive}
+          {compact}
           onclick={gamePhase === 'playing' ? onPause : onResume}
         />
       </div>
@@ -398,21 +402,18 @@
   }
 
   /* ── Mobile keyboard compact layout ─────────────────────────────────────── */
-  :global(body.keyboard-visible) header { padding: var(--space-2) var(--space-3); }
-  :global(body.keyboard-visible) .header-title { display: none; }
-  :global(body.keyboard-visible) .header-controls { flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: center; gap: var(--space-2); min-height: auto; }
-  :global(body.keyboard-visible) .header-controls .control-section { display: contents; }
-  :global(body.keyboard-visible) .header-controls .section-items { display: contents; }
-  :global(body.keyboard-visible) .stat-label { display: none; }
-  :global(body.keyboard-visible) .stat-box { padding: var(--space-2) var(--space-3); gap: 0; min-width: 0; border-radius: var(--radius-sm); }
-  :global(body.keyboard-visible) .stat-box > div { font-size: var(--font-lg); line-height: 1.2; }
-  :global(body.keyboard-visible) .heart-icon { width: 14px; height: 14px; }
-  /* #end-game and #pause live inside GameButton (child component) — must be fully global */
-  :global(body.keyboard-visible #end-game) { order: -1; }
-  :global(body.keyboard-visible #pause) { order: 1; }
-  :global(body.keyboard-visible) .btn-settings { top: var(--space-2); padding: var(--space-2) var(--space-3); }
-  :global(body.keyboard-visible) .btn-settings .btn-label { display: none; }
-  :global(body.keyboard-visible) .btn-settings .btn-icon-wrap .btn-icon { width: 22px; height: 22px; }
+  header.compact { padding: var(--space-2) var(--space-3); }
+  header.compact .header-title { display: none; }
+  header.compact .header-controls { flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: center; gap: var(--space-2); min-height: auto; }
+  header.compact .header-controls .control-section { display: contents; }
+  header.compact .header-controls .section-items { display: contents; }
+  header.compact .stat-label { display: none; }
+  header.compact .stat-box { padding: var(--space-2) var(--space-3); gap: 0; min-width: 0; border-radius: var(--radius-sm); }
+  header.compact .stat-box > div { font-size: var(--font-lg); line-height: 1.2; }
+  header.compact .heart-icon { width: 14px; height: 14px; }
+  header.compact .btn-settings { top: var(--space-2); padding: var(--space-2) var(--space-3); }
+  header.compact .btn-settings .btn-label { display: none; }
+  header.compact .btn-settings .btn-icon-wrap .btn-icon { width: 22px; height: 22px; }
 
   /* ── Small screen ───────────────────────────────────────────────────────── */
   @media (max-width: 479px) {

@@ -2,9 +2,10 @@
   interface Props {
     inputEcho: string
     mobileInputEl?: HTMLInputElement
+    compact?: boolean
   }
 
-  let { inputEcho, mobileInputEl = $bindable() }: Props = $props()
+  let { inputEcho, mobileInputEl = $bindable(), compact = false }: Props = $props()
 </script>
 
 <style>
@@ -95,15 +96,15 @@
   }
 
   /* ── Mobile keyboard compact layout ─────────────────────────────────────── */
-  :global(body.keyboard-visible) #input-display {
+  #input-display.compact {
     padding: var(--space-1) var(--space-3);
     gap: 0;
     border-width: 1px;
   }
 
-  :global(body.keyboard-visible) #input-display label { display: none; }
+  #input-display.compact label { display: none; }
 
-  :global(body.keyboard-visible) #input-echo {
+  #input-display.compact #input-echo {
     font-size: var(--font-md);
     padding: var(--space-1) var(--space-3);
     min-height: 0;
@@ -117,7 +118,7 @@
 </style>
 
 <footer>
-  <div id="input-display">
+  <div id="input-display" class:compact>
     <label for="input-echo">Your input:</label>
     <input
       bind:this={mobileInputEl}

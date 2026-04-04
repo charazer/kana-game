@@ -48,6 +48,9 @@
   let finalScore = $state(0)
   let isNewHighScore = $state(false)
 
+  // ── Mobile keyboard visibility ───────────────────────────────────────────────
+  let keyboardVisible = $state(false)
+
   // ── Modal visibility ─────────────────────────────────────────────────────────
   let settingsOpen = $state(false)
   let helpOpen = $state(false)
@@ -208,8 +211,8 @@
       }
     }
     initializeVirtualKeyboardAPI()
-    initializeMobileKeyboardDetection()
-    initializeKeyboardDebugMode()
+    initializeMobileKeyboardDetection((visible) => { keyboardVisible = visible })
+    initializeKeyboardDebugMode(() => { keyboardVisible = true })
     initializeScrollPrevention()
 
     audio.initMusic(
@@ -267,6 +270,7 @@
     {gamePhase}
     gameMode={(settings.gameMode ?? GAME_MODE_CHALLENGE) as GameMode}
     {isGameActive}
+    compact={keyboardVisible}
     onOpenSettings={openSettings}
     onEndGame={openConfirmEnd}
     onPause={pauseGame}
@@ -279,6 +283,7 @@
     {finalScore}
     {isNewHighScore}
     {speedMultiplier}
+    compact={keyboardVisible}
     bind:tokensLayerEl
     bind:gameAreaEl
     onStart={handleStart}
@@ -286,7 +291,7 @@
     onOpenHelp={() => (helpOpen = true)}
   />
 
-  <InputDisplay {inputEcho} bind:mobileInputEl />
+  <InputDisplay {inputEcho} compact={keyboardVisible} bind:mobileInputEl />
 </div>
 
 <ConfirmEndModal

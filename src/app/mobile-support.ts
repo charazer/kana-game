@@ -25,7 +25,7 @@ export function initializeVirtualKeyboardAPI(): void {
 }
 
 /** Toggle `keyboard-visible` class on `<body>` and update `--viewport-height` on viewport resize. */
-export function initializeMobileKeyboardDetection(): void {
+export function initializeMobileKeyboardDetection(onKeyboardChange?: (visible: boolean) => void): void {
 	if (!window.visualViewport) return
 
 	const vv = window.visualViewport
@@ -35,6 +35,7 @@ export function initializeMobileKeyboardDetection(): void {
 		const keyboardVisible = vv.height < initialHeight * KEYBOARD_VISIBILITY_RATIO
 		document.body.classList.toggle('keyboard-visible', keyboardVisible)
 		document.documentElement.style.setProperty('--viewport-height', `${vv.height}px`)
+		onKeyboardChange?.(keyboardVisible)
 	}
 
 	vv.addEventListener('resize', update)
@@ -47,12 +48,13 @@ export function initializeMobileKeyboardDetection(): void {
  * typical software keyboard consuming ~45 % of the screen).  Useful for iterating on
  * the compact keyboard layout on desktop without a physical device.
  */
-export function initializeKeyboardDebugMode(): void {
+export function initializeKeyboardDebugMode(onKeyboardChange?: (visible: boolean) => void): void {
 	if (!new URLSearchParams(window.location.search).has('keyboard')) return
 
 	const simulatedHeight = Math.round(window.innerHeight * 0.55)
 	document.body.classList.add('keyboard-visible')
 	document.documentElement.style.setProperty('--viewport-height', `${simulatedHeight}px`)
+	onKeyboardChange?.(true)
 }
 
 /** Pin `scrollTop` to 0 to prevent scroll-into-view from the hidden input shifting the layout. */
