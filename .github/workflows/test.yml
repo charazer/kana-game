@@ -15,7 +15,7 @@ jobs:
             - uses: actions/setup-node@v6
               with:
                   node-version: "25"
-            - uses: pnpm/action-setup@v5
+            - uses: pnpm/action-setup@v6
             - name: Get pnpm store path
               id: pnpm-store
               shell: bash
