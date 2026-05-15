@@ -24,12 +24,18 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 ### Prerequisites
 
 - Node.js 25+ (recommended: use `.nvmrc` with `nvm use`)
-- pnpm 10+ (`corepack enable` to activate)
+- pnpm 11+ (`corepack enable` to activate)
 
 ### Installation
 
 ```bash
 pnpm install
+```
+
+For CI, use a clean, lockfile-frozen install:
+
+```bash
+pnpm ci
 ```
 
 **For E2E testing:** Install Playwright browsers (one-time setup):
