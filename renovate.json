@@ -2,6 +2,7 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
         "config:recommended",
+        "security:minimumReleaseAgeNpm",
         "schedule:weekly"
     ],
     "prHourlyLimit": 0,
