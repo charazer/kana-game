@@ -1,12 +1,9 @@
 // Setup file for vitest tests
-// 
-// NOTE: This file provides a localStorage mock that may be needed in certain environments.
-// In Node.js v25+, happy-dom doesn't properly expose localStorage, causing
-// "localStorage.clear is not a function" errors. This mock ensures consistent behavior
-// across all Node.js versions.
 //
-// On older Node versions (v18, v20, v22), the test environment typically provides
-// localStorage automatically, so this setup may not be strictly necessary but doesn't hurt.
+// NOTE: happy-dom's own `localStorage` is a Proxy whose traps break `vi.spyOn`
+// (restoring a spied method silently leaves the mock in place, leaking across
+// tests). Replacing it with a plain class instance keeps spying/restoring
+// predictable.
 
 class LocalStorageMock implements Storage {
   private store: Record<string, string> = {}
@@ -37,7 +34,12 @@ class LocalStorageMock implements Storage {
   }
 }
 
-// Set up localStorage mock
-globalThis.localStorage = new LocalStorageMock()
+// `globalThis` is happy-dom's GlobalWindow, where `localStorage` is an
+// accessor with no setter, so plain assignment throws — redefine it instead.
+Object.defineProperty(globalThis, 'localStorage', {
+  configurable: true,
+  writable: true,
+  value: new LocalStorageMock()
+})
 
 import '@testing-library/jest-dom/vitest'
