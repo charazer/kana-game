@@ -5,7 +5,7 @@
 **Kana Game** is a browser-based typing game for learning Japanese Hiragana and Katakana.
 Players type romaji to clear falling kana tokens before they reach a danger zone.
 
-- **Language / Runtime:** TypeScript (strict), Node.js ≥ 25
+- **Language / Runtime:** TypeScript (strict), Node.js ≥ 26
 - **Bundler:** Vite 7 (`src/` is the root)
 - **Unit tests:** Vitest 4 + happy-dom (coverage threshold: 90 % for lines/functions/branches/statements)
 - **E2E tests:** Playwright (Chromium only, dev server on `http://localhost:5173`)
