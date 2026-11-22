@@ -28,10 +28,10 @@ jobs:
               uses: pnpm/action-setup@v6
               with:
                   run_install: false
-            - name: Set NodeJS version to 25.x
+            - name: Set NodeJS version to 26.x
               uses: actions/setup-node@v7
               with:
-                  node-version: "25"
+                  node-version: "26"
                   cache: pnpm
                   cache-dependency-path: pnpm-lock.yaml
             - name: Install dependencies

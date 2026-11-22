@@ -23,7 +23,7 @@ A fast-paced browser game for learning Japanese Hiragana and Katakana. Type roma
 
 ### Prerequisites
 
-- Node.js 25+ (recommended: use `.nvmrc` with `nvm use`)
+- Node.js 26+ (recommended: use `.nvmrc` with `nvm use`)
 - pnpm 11+ (`corepack enable` to activate)
 
 ### Installation
