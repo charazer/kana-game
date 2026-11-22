@@ -36,6 +36,8 @@ export const Selectors = {
   
   // Game area
   tokens: '#tokens .token',
+  // Excludes tokens already answered/missed that are only waiting for their removal animation to end
+  activeTokens: '#tokens .token:not(.token-success):not(.token-miss)',
   inputEcho: '#input-echo',
   mobileInput: '#mobile-input',
   
