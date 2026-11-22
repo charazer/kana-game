@@ -23,6 +23,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
+    pool: 'vmThreads',
     setupFiles: ['./test-setup.ts'],
     coverage: {
       provider: 'v8',
