@@ -72,7 +72,7 @@ test.describe('Gameplay', () => {
       
       // Answer tokens every couple iterations to keep game alive
       if (i % 2 === 0) {
-        const token = page.locator(Selectors.tokens).first();
+        const token = page.locator(Selectors.activeTokens).first();
         const tokenId = await token.getAttribute('data-kana-id');
         if (tokenId) {
           await page.keyboard.type(tokenId);

@@ -85,7 +85,7 @@ export async function confirmAndEndGame(page: Page): Promise<void> {
  * Gets the first visible token and returns its kana-id attribute
  */
 export async function getFirstTokenId(page: Page): Promise<string | null> {
-  const firstToken = page.locator(Selectors.tokens).first();
+  const firstToken = page.locator(Selectors.activeTokens).first();
   await expect(firstToken).toBeVisible();
   return firstToken.getAttribute('data-kana-id');
 }
